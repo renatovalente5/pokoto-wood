@@ -1,16 +1,17 @@
 {
-  "publicado": true,
   "nome": "Torre/Cadeira de Aprendizagem Montessori",
   "nomeCurto": "Torre/Cadeira",
-  "categoria": "torres-de-aprendizagem",
-  "ordem": 1,
-  "maisVendido": false,
-  "novidade": false,
+  "fotos": [
+    "torre-cadeira-recorte",
+    "torre-cadeira-cozinha",
+    "torre-cadeira-refeicao",
+    "torre-cadeira-fechada"
+  ],
+  "resumo": "Uma torre para ajudar na cozinha que vira cadeira à hora de comer. Fecha para arrumar.",
+  "descricao": "Na torre, a criança sobe até à altura da bancada e participa: lava a fruta, mexe a massa, vê de perto o que se está a fazer. Quando chega a hora de comer, a mesma peça vira cadeira.\n\nFecha para ficar com apenas 25 cm de profundidade e arruma-se num canto da cozinha.\n\nPode levar o nome do seu filho, uma frase ou um desenho gravados na madeira — a personalização está incluída no preço.",
   "preco": 75,
   "precoAnterior": 95,
   "promocaoAte": "2026-12-31",
-  "resumo": "Uma torre para ajudar na cozinha que vira cadeira à hora de comer. Fecha para arrumar.",
-  "descricao": "Na torre, a criança sobe até à altura da bancada e participa: lava a fruta, mexe a massa, vê de perto o que se está a fazer. Quando chega a hora de comer, a mesma peça vira cadeira.\n\nFecha para ficar com apenas 25 cm de profundidade e arruma-se num canto da cozinha.\n\nPode levar o nome do seu filho, uma frase ou um desenho gravados na madeira — a personalização está incluída no preço.",
   "medidas": [
     {
       "rotulo": "Altura",
@@ -41,11 +42,10 @@
     "espanha": 30
   },
   "vendaIsolada": true,
-  "fotos": [
-    "torre-cadeira-recorte",
-    "torre-cadeira-cozinha",
-    "torre-cadeira-refeicao",
-    "torre-cadeira-fechada"
-  ],
-  "video": ""
+  "video": "",
+  "categoria": "torres-de-aprendizagem",
+  "maisVendido": false,
+  "novidade": false,
+  "publicado": true,
+  "ordem": 1
 }

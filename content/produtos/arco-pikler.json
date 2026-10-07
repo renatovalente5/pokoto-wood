@@ -1,16 +1,20 @@
 {
-  "publicado": true,
   "nome": "Arco de Pikler",
   "nomeCurto": "Arco de Pikler",
-  "categoria": "pikler",
-  "ordem": 4,
-  "maisVendido": true,
-  "novidade": false,
+  "fotos": [
+    "arco-recorte",
+    "arco-sentado",
+    "arco-mesa",
+    "arco-rampa",
+    "arco-descanso",
+    "arco-quarto",
+    "arco-prancha"
+  ],
+  "resumo": "Arco, baloiço e mesa de apoio: uma peça para muitas brincadeiras.",
+  "descricao": "Com a curva para cima, é um arco para trepar e passar por baixo. Virado ao contrário, é um baloiço que embala. E ainda serve de mesa de apoio para desenhar e brincar.\n\nCom a prancha dupla face, ganha uma rampa para subir e escorregar.\n\nPode levar o nome do seu filho, uma frase ou um desenho gravados na madeira — a personalização está incluída no preço.\n\nO colchão que aparece nalgumas fotografias não está incluído (e não o vendemos).",
   "preco": 100,
   "precoAnterior": 120,
   "promocaoAte": "2026-12-31",
-  "resumo": "Arco, baloiço e mesa de apoio: uma peça para muitas brincadeiras.",
-  "descricao": "Com a curva para cima, é um arco para trepar e passar por baixo. Virado ao contrário, é um baloiço que embala. E ainda serve de mesa de apoio para desenhar e brincar.\n\nCom a prancha dupla face, ganha uma rampa para subir e escorregar.\n\nPode levar o nome do seu filho, uma frase ou um desenho gravados na madeira — a personalização está incluída no preço.\n\nO colchão que aparece nalgumas fotografias não está incluído (e não o vendemos).",
   "medidas": [
     {
       "rotulo": "Comprimento",
@@ -46,14 +50,10 @@
     "espanha": 80
   },
   "vendaIsolada": true,
-  "fotos": [
-    "arco-recorte",
-    "arco-sentado",
-    "arco-mesa",
-    "arco-rampa",
-    "arco-descanso",
-    "arco-quarto",
-    "arco-prancha"
-  ],
-  "video": "trio-pikler"
+  "video": "trio-pikler",
+  "categoria": "pikler",
+  "maisVendido": true,
+  "novidade": false,
+  "publicado": true,
+  "ordem": 4
 }

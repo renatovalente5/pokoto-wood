@@ -1,16 +1,17 @@
 {
-  "publicado": true,
   "nome": "Roupeiro Montessori",
   "nomeCurto": "Roupeiro Montessori",
-  "categoria": "mobiliario-montessori",
-  "ordem": 7,
-  "maisVendido": false,
-  "novidade": false,
+  "fotos": [
+    "roupeiro-amelia",
+    "roupeiro-sofia",
+    "roupeiro-crianca",
+    "roupeiro-lateral"
+  ],
+  "resumo": "Um roupeiro aberto, à altura da criança, para escolher a roupa e arrumar sozinha.",
+  "descricao": "A roupa fica à vista e ao alcance: a criança escolhe o que vestir e aprende a pendurar e a arrumar. Em baixo há uma prateleira para sapatos, cestos ou brinquedos.\n\nA personalização está incluída no preço.",
   "preco": 65,
   "precoAnterior": null,
   "promocaoAte": "",
-  "resumo": "Um roupeiro aberto, à altura da criança, para escolher a roupa e arrumar sozinha.",
-  "descricao": "A roupa fica à vista e ao alcance: a criança escolhe o que vestir e aprende a pendurar e a arrumar. Em baixo há uma prateleira para sapatos, cestos ou brinquedos.\n\nA personalização está incluída no preço.",
   "medidas": [
     {
       "rotulo": "Altura",
@@ -37,11 +38,10 @@
     "espanha": 40
   },
   "vendaIsolada": true,
-  "fotos": [
-    "roupeiro-amelia",
-    "roupeiro-sofia",
-    "roupeiro-crianca",
-    "roupeiro-lateral"
-  ],
-  "video": ""
+  "video": "",
+  "categoria": "mobiliario-montessori",
+  "maisVendido": false,
+  "novidade": false,
+  "publicado": true,
+  "ordem": 7
 }

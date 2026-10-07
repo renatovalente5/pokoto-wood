@@ -1,16 +1,15 @@
 {
-  "publicado": true,
   "nome": "Régua de Crescimento",
   "nomeCurto": "Régua de crescimento",
-  "categoria": "decoracao",
-  "ordem": 8,
-  "maisVendido": false,
-  "novidade": false,
+  "fotos": [
+    "regua-recorte",
+    "regua-simao-carlota"
+  ],
+  "resumo": "Com o nome do seu filho, para pendurar no quarto e ir marcando quanto cresceu.",
+  "descricao": "Uma régua de madeira com o nome do seu filho, para pendurar na parede do quarto e ir marcando os centímetros de cada aniversário.\n\nO nome está incluído no preço: escreva-o ao encomendar.",
   "preco": 40,
   "precoAnterior": null,
   "promocaoAte": "",
-  "resumo": "Com o nome do seu filho, para pendurar no quarto e ir marcando quanto cresceu.",
-  "descricao": "Uma régua de madeira com o nome do seu filho, para pendurar na parede do quarto e ir marcando os centímetros de cada aniversário.\n\nO nome está incluído no preço: escreva-o ao encomendar.",
   "medidas": [
     {
       "rotulo": "Comprimento",
@@ -33,9 +32,10 @@
     "espanha": 25
   },
   "vendaIsolada": true,
-  "fotos": [
-    "regua-recorte",
-    "regua-simao-carlota"
-  ],
-  "video": ""
+  "video": "",
+  "categoria": "decoracao",
+  "maisVendido": false,
+  "novidade": false,
+  "publicado": true,
+  "ordem": 8
 }

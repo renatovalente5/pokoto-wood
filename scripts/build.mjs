@@ -18,11 +18,15 @@ import { execFileSync } from 'node:child_process';
 import { fileURLToPath } from 'node:url';
 import { esc, euros, hojeEmLisboa, markdown, numeroWhatsApp, numeroLegivel, custoChamada, precoDe, moradaCompleta } from '../src/templates/util.mjs';
 import { pagina } from '../src/templates/layout.mjs';
+import * as R from '../src/lib/regras.mjs';
 import * as paginas from '../src/templates/paginas.mjs';
 
 const RAIZ = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
-const SAIDA = path.join(RAIZ, '_site');
 const args = process.argv.slice(2);
+// --conteudo=<pasta> e --saida=<pasta>: para as baterias e o ensaio do painel gerarem o site a
+// partir de outro conteúdo (o media/, os modelos e a cache das imagens são sempre os daqui).
+const CONTEUDO = path.resolve(args.find((a) => a.startsWith('--conteudo='))?.slice(11) || path.join(RAIZ, 'content'));
+const SAIDA = path.resolve(args.find((a) => a.startsWith('--saida='))?.slice(8) || path.join(RAIZ, '_site'));
 const producao = args.includes('--producao');
 const base = producao ? '' : (args.find((a) => a.startsWith('--base='))?.slice(7) || '').replace(/\/$/, '');
 const semImagens = args.includes('--sem-imagens');
@@ -37,112 +41,51 @@ const avisos = [];
 const ler = (rel) => JSON.parse(fs.readFileSync(path.join(RAIZ, rel), 'utf8'));
 const existe = (rel) => fs.existsSync(path.join(RAIZ, rel));
 
-// ---------------------------------------------------------------- conteúdo
-const site = ler('content/site.json');
-const inicio = ler('content/inicio.json');
-const categorias = ler('content/categorias.json');
-const fotos = ler('content/fotos.json');
-const todosProdutos = fs.readdirSync(path.join(RAIZ, 'content/produtos'))
-  .filter((f) => f.endsWith('.json'))
-  .map((f) => ({ slug: f.replace(/\.json$/, ''), ...ler(`content/produtos/${f}`) }));
-const produtos = todosProdutos.filter((p) => p.publicado !== false).sort((a, b) => (a.ordem ?? 99) - (b.ordem ?? 99) || a.nome.localeCompare(b.nome, 'pt'));
+// ---------------------------------------------------------------- conteúdo e regras
+// As regras dos dados estão em src/lib/regras.mjs, o MESMO ficheiro que o painel usa (cópia byte a
+// byte em pokoto-painel/estatico/js/regras.js): o que o painel deixa gravar é o que a publicação
+// aceita. Classes: «bloqueia» pára a publicação; «neutraliza» esconde só aquele artigo (ou tira-lhe
+// a fotografia que falta) na cópia que o gerador lê; «avisa» só avisa.
+const lerTexto = (rel) => fs.readFileSync(path.join(CONTEUDO, rel.replace(/^content\//, '')), 'utf8');
+const dadosRegras = {
+  site: lerTexto('content/site.json'),
+  inicio: lerTexto('content/inicio.json'),
+  categorias: lerTexto('content/categorias.json'),
+  fotos: lerTexto('content/fotos.json'),
+  artigos: Object.fromEntries(fs.readdirSync(path.join(CONTEUDO, 'produtos')).filter((f) => f.endsWith('.json')).map((f) => [f.slice(0, -5), lerTexto(`content/produtos/${f}`)])),
+  ficheirosFotos: fs.readdirSync(path.join(RAIZ, 'media/fotos')).filter((f) => f.endsWith('.jpg')).map((f) => f.slice(0, -4)),
+  videos: fs.readdirSync(path.join(RAIZ, 'media/video')).filter((f) => f.endsWith('.mp4')).map((f) => f.slice(0, -4)),
+};
 const hoje = hojeEmLisboa();
-
-// ---------------------------------------------------------------- guardas
-const DATA = /^\d{4}-\d{2}-\d{2}$/;
-const ZONAS = site.entrega.zonas.map((z) => z.id);
-const ZONAS_ENVIO = site.entrega.zonas.filter((z) => z.morada).map((z) => z.id);
-const fotoExiste = (f) => fotos[f] && fs.existsSync(path.join(RAIZ, 'media/fotos', `${f}.jpg`));
-
-function nifValido(nif) {
-  const d = String(nif).replace(/\D/g, '');
-  if (!/^[123456789]\d{8}$/.test(d)) return false;
-  const soma = [...d.slice(0, 8)].reduce((s, c, i) => s + Number(c) * (9 - i), 0);
-  const resto = soma % 11;
-  const controlo = resto < 2 ? 0 : 11 - resto;
-  return controlo === Number(d[8]);
+const listaRegras = R.problemas(dadosRegras, { hoje, producao });
+for (const p of listaRegras.filter((x) => x.classe === 'bloqueia')) erros.push(`${p.ecra}: ${p.mensagem}`);
+for (const p of listaRegras.filter((x) => x.classe === 'avisa')) avisos.push(`${p.ecra}: ${p.mensagem}`);
+if (erros.length) {
+  console.error(`\nA publicação parou: ${erros.length} ${erros.length === 1 ? 'problema' : 'problemas'} no conteúdo.\n`);
+  for (const e of erros) console.error(`  ✗ ${e}`);
+  process.exit(1);
 }
+const neutro = R.neutralizar(dadosRegras, listaRegras);
+for (const e of neutro.efeitos) avisos.push(`Artigos › ${e.nome}: ${R.descreverEfeitos(e)} (${e.motivos.join(' ')})`);
 
-if (!site.marca) erros.push('content/site.json: falta a marca');
-if (site.contactos.email && !/^[^@\s]+@[^@\s]+\.[a-z]{2,}$/i.test(site.contactos.email)) erros.push('Os seus dados › Email: o endereço não parece válido');
-if (site.contactos.whatsapp && !/^\d{11,15}$/.test(numeroWhatsApp(site.contactos.whatsapp))) erros.push('Os seus dados › WhatsApp: o número não parece válido (ex.: 912 345 678)');
-if (site.empresa.nif && !nifValido(site.empresa.nif)) erros.push('Os seus dados › NIF: o número não é um NIF português válido');
-if (site.aviso?.ate && !DATA.test(site.aviso.ate)) erros.push('Aviso do topo › «até»: a data tem de ser AAAA-MM-DD');
-if (!ZONAS.includes('levantamento') || ZONAS_ENVIO.length === 0) erros.push('content/site.json › entrega.zonas: faltam zonas de entrega');
+const site = JSON.parse(dadosRegras.site);
+const inicio = JSON.parse(dadosRegras.inicio);
+const categorias = JSON.parse(dadosRegras.categorias);
+const fotos = JSON.parse(dadosRegras.fotos);
+// Os artigos como o gerador os lê: a cópia neutralizada (um artigo com problemas sai escondido).
+const produtos = Object.entries(neutro.artigos)
+  .map(([slug, a]) => ({ slug, ...a }))
+  .filter((p) => p.publicado !== false)
+  .sort((a, b) => (a.ordem ?? 999) - (b.ordem ?? 999) || a.nome.localeCompare(b.nome, 'pt'));
+const fotoExiste = (f) => fotos[f] && dadosRegras.ficheirosFotos.includes(f);
 
-const slugsCat = new Set();
-for (const c of categorias) {
-  if (!/^[a-z0-9-]+$/.test(c.slug || '')) erros.push(`Categorias: «${c.nome}» tem um endereço inválido`);
-  if (slugsCat.has(c.slug)) erros.push(`Categorias: «${c.slug}» repetida`);
-  slugsCat.add(c.slug);
-  if (!fotoExiste(c.foto)) erros.push(`Categorias › ${c.nome}: a fotografia «${c.foto}» não existe`);
+// As páginas de texto (content/paginas/*.md) não passam pelo painel: só o Renato as muda.
+// Conferem-se aqui as alegações e a fotografia.
+for (const f of fs.readdirSync(path.join(CONTEUDO, 'paginas'))) {
+  const t = lerTexto(`content/paginas/${f}`);
+  const m = t.match(R.RE_ALEGACOES);
+  if (m) erros.push(`Páginas › ${f}: «${m[0]}» é uma alegação que a lei só deixa fazer com prova (ou uma certificação que não temos). Tire a palavra.`);
 }
-
-for (const p of todosProdutos) {
-  const onde = `Artigos › ${p.nome || p.slug}`;
-  if (!/^[a-z0-9-]+$/.test(p.slug)) erros.push(`${onde}: o nome do ficheiro tem de ser só letras minúsculas, algarismos e hífenes`);
-  if (!p.nome) erros.push(`${onde}: falta o nome`);
-  if (!slugsCat.has(p.categoria)) erros.push(`${onde}: a categoria «${p.categoria}» não existe`);
-  if (!(Number(p.preco) > 0)) erros.push(`${onde}: falta o preço`);
-  if (p.precoAnterior != null && p.precoAnterior !== '' && !(Number(p.precoAnterior) > Number(p.preco))) erros.push(`${onde}: o preço anterior tem de ser maior do que o preço (ou ficar vazio)`);
-  if (p.promocaoAte && !DATA.test(p.promocaoAte)) erros.push(`${onde}: a data do fim da promoção tem de ser AAAA-MM-DD`);
-  if (p.promocaoAte && !p.precoAnterior) erros.push(`${onde}: tem data de fim de promoção mas não tem preço anterior`);
-  if (!p.fotos?.length) erros.push(`${onde}: precisa de pelo menos uma fotografia`);
-  for (const f of p.fotos || []) if (!fotoExiste(f)) erros.push(`${onde}: a fotografia «${f}» não existe`);
-  if (p.video && !existe(`media/video/${p.video}.mp4`)) erros.push(`${onde}: o vídeo «${p.video}» não existe`);
-  if (p.vendaIsolada !== false) {
-    if (!p.envio) erros.push(`${onde}: faltam os portes de envio`);
-    else for (const z of ZONAS_ENVIO) {
-      const v = p.envio[z];
-      if (v !== null && v !== undefined && !(Number.isFinite(v) && v >= 0)) erros.push(`${onde}: os portes para «${z}» têm de ser um número (ou ficar vazios = a confirmar)`);
-      if (v === null || v === undefined) avisos.push(`${onde}: portes para «${z}» por preencher (o carrinho diz «a confirmar»)`);
-    }
-  }
-  for (const k of p.complementos || []) {
-    const alvo = todosProdutos.find((x) => x.slug === k.produto);
-    if (!alvo) erros.push(`${onde}: o complemento «${k.produto}» não existe`);
-    else if (alvo.publicado === false) avisos.push(`${onde}: o complemento «${alvo.nome}» está escondido e não aparece`);
-  }
-}
-for (const p of produtos.filter((x) => x.vendaIsolada === false)) {
-  if (!produtos.some((x) => (x.complementos || []).some((k) => k.produto === p.slug))) erros.push(`Artigos › ${p.nome}: só se vende como complemento, mas nenhum artigo publicado o tem como complemento`);
-}
-
-const refsInicio = [inicio.capa.foto, inicio.personalizacao.foto, ...inicio.emCasa.fotos.map((f) => f.foto), ...inicio.instagram.fotos];
-for (const f of refsInicio) if (!fotoExiste(f)) erros.push(`Página inicial: a fotografia «${f}» não existe`);
-for (const f of inicio.emCasa.fotos) if (!produtos.some((p) => p.slug === f.produto)) erros.push(`Página inicial › Em casa: o artigo «${f.produto}» não existe ou está escondido`);
-if (inicio.oficina.video && !existe(`media/video/${inicio.oficina.video}.mp4`)) erros.push(`Página inicial › Oficina: o vídeo «${inicio.oficina.video}» não existe`);
-
-// Alegações ambientais genéricas: proibidas desde 27 set 2026 sem prova (Diretiva (UE) 2024/825).
-// E nada de certificações que a Pokóto não nos mostrou (CE, EN 71, FSC).
-const PROIBIDAS = /\b(ecol[óo]gic[oa]s?|sustent[áa]ve(l|is)|sustentabilidade|amig[oa]s? do ambiente|eco-?friendly|biodegrad[áa]ve(l|is)|neutr[oa]s? em carbono|certificad[oa]s?|FSC|EN ?71|marca[çc][ãa]o CE)\b/i;
-const textosLivres = [
-  ['content/site.json', JSON.stringify(site)],
-  ['content/inicio.json', JSON.stringify(inicio)],
-  ['content/categorias.json', JSON.stringify(categorias)],
-  ...todosProdutos.map((p) => [`Artigos › ${p.nome}`, JSON.stringify(p)]),
-  ...fs.readdirSync(path.join(RAIZ, 'content/paginas')).map((f) => [`Páginas › ${f}`, fs.readFileSync(path.join(RAIZ, 'content/paginas', f), 'utf8')]),
-];
-for (const [onde, t] of textosLivres) {
-  const m = t.match(PROIBIDAS);
-  if (m) erros.push(`${onde}: «${m[0]}» é uma alegação que a lei só deixa fazer com prova (ou uma certificação que não temos). Tire a palavra.`);
-}
-
-// Avisos legais do VIVO: em produção estes campos são obrigatórios (DL 7/2004 art. 10.º; DL 24/2014 art. 4.º).
-const OBRIGATORIOS = [
-  ['empresa.nome', site.empresa.nome, 'o nome da empresa (ou do empresário em nome individual)'],
-  ['empresa.nif', site.empresa.nif, 'o NIF'],
-  ['empresa.morada', site.empresa.morada, 'a morada da sede'],
-  ['empresa.codigoPostal', site.empresa.codigoPostal, 'o código postal da sede'],
-  ['empresa.iva', site.empresa.iva, 'a menção ao IVA (incluído ou isento ao abrigo do art. 53.º)'],
-  ['contactos.whatsapp', site.contactos.whatsapp, 'o número de WhatsApp das encomendas'],
-  ['entrega.prazo', site.entrega.prazo, 'o prazo de produção e entrega'],
-  ['entrega.pagamento', site.entrega.pagamento, 'as formas de pagamento'],
-];
-for (const [campo, valor, desc] of OBRIGATORIOS) {
-  if (!String(valor || '').trim()) (producao ? erros : avisos).push(`Os seus dados › ${campo}: falta ${desc}`);
-}
-
 if (erros.length) {
   console.error(`\nA publicação parou: ${erros.length} ${erros.length === 1 ? 'problema' : 'problemas'} no conteúdo.\n`);
   for (const e of erros) console.error(`  ✗ ${e}`);
@@ -290,7 +233,7 @@ function resolverMarcadores(fonte, onde) {
 }
 
 function paginaMarkdown(ficheiro) {
-  const fonte = fs.readFileSync(path.join(RAIZ, 'content/paginas', ficheiro), 'utf8');
+  const fonte = fs.readFileSync(path.join(CONTEUDO, 'paginas', ficheiro), 'utf8');
   const [cabeca, ...corpo] = fonte.split(/\n---\n/);
   const meta = Object.fromEntries(cabeca.split('\n').filter(Boolean).map((l) => { const i = l.indexOf(':'); return [l.slice(0, i).trim(), l.slice(i + 1).trim()]; }));
   const { texto, tokens } = resolverMarcadores(corpo.join('\n---\n'), `Páginas › ${ficheiro}`);
@@ -310,7 +253,7 @@ for (const c of categorias) saidas.push(paginas.loja(ctx, c.slug));
 for (const p of produtos) saidas.push(paginas.produto(ctx, p));
 saidas.push(paginas.carrinho(ctx));
 saidas.push(paginas.contactos(ctx));
-for (const f of fs.readdirSync(path.join(RAIZ, 'content/paginas')).filter((x) => x.endsWith('.md'))) saidas.push(paginas.texto(ctx, paginaMarkdown(f)));
+for (const f of fs.readdirSync(path.join(CONTEUDO, 'paginas')).filter((x) => x.endsWith('.md'))) saidas.push(paginas.texto(ctx, paginaMarkdown(f)));
 saidas.push(paginas.erro404(ctx));
 
 if (erros.length) {

@@ -16,7 +16,7 @@ export function inicio(ctx) {
       <p class="etiqueta etiqueta--terracota">${esc(h.capa.etiqueta)}</p>
       <h1 class="capa__titulo"><span class="capa__l1">${esc(h.capa.tituloLinha1)}</span> <span class="capa__l2">${esc(h.capa.tituloLinha2)}</span></h1>
       <p class="capa__subtitulo">${esc(h.capa.texto)}</p>
-      ${botaoSeta(ctx.url(h.capa.ligacao), h.capa.botao, { classe: 'botao botao--mel' })}
+      ${botaoSeta(ctx.url(h.capa.ligacao || '/loja/'), h.capa.botao, { classe: 'botao botao--mel' })}
     </div>
     <div class="capa__foto">${imagem(ctx, h.capa.foto, { tamanhos: '(min-width: 900px) 55vw, 100vw', prioridade: true })}</div>
   </div>
@@ -80,11 +80,13 @@ export function inicio(ctx) {
   <ul>${h.vantagens.map((v) => `<li>${ilustracoes[v.icone] || ''}<h3>${esc(v.titulo)}</h3><p>${esc(v.texto)}</p></li>`).join('')}</ul>
 </section>`;
 
-  const emCasa = `<section class="em-casa" aria-labelledby="casa-titulo">
+  // Só as fotografias cujo artigo está no site (um artigo escondido, ou com um problema que o
+  // esconde, sai daqui em vez de partir a página).
+  const casas = h.emCasa.fotos.map((f) => ({ f, p: ctx.produtos.find((x) => x.slug === f.produto) })).filter((x) => x.p);
+  const emCasa = !casas.length ? '' : `<section class="em-casa" aria-labelledby="casa-titulo">
   <div class="em-casa__topo"><h2 id="casa-titulo" class="titulo-seccao">${esc(h.emCasa.titulo)}</h2><p>${esc(h.emCasa.texto)}</p></div>
   <ul class="em-casa__lista">
-    ${h.emCasa.fotos.map((f) => {
-      const p = ctx.produtos.find((x) => x.slug === f.produto);
+    ${casas.map(({ f, p }) => {
       return `<li class="em-casa__item">${imagem(ctx, f.foto, { tamanhos: '(min-width: 900px) 30vw, 80vw', classe: 'em-casa__foto' })}
       <div class="em-casa__cartao">${imagem(ctx, p.fotos[0], { tamanhos: '64px', classe: 'em-casa__mini', alt: '' })}<div><p class="em-casa__nome">${esc(p.nomeCurto || p.nome)}</p>${preco(ctx, p)}</div><a class="botao botao--terracota botao--pequeno" href="${ctx.url(`/produtos/${p.slug}/`)}">Ver<span class="visualmente-escondido"> ${esc(p.nome)}</span></a></div></li>`;
     }).join('\n')}
@@ -157,7 +159,7 @@ export function organizacao(ctx) {
     url: ctx.absoluto('/'),
     logo: ctx.absoluto(`/assets/img/${ctx.manifesto.logo.altura[256].png}`),
     image: ctx.absoluto(`/assets/img/${ctx.manifesto.partilha._site}`),
-    founder: ctx.site.fundadores.split(/ e /).map((n) => ({ '@type': 'Person', name: n.trim() })),
+    ...(ctx.site.fundadores ? { founder: ctx.site.fundadores.split(/ e /).map((n) => ({ '@type': 'Person', name: n.trim() })) } : {}),
     address: { '@type': 'PostalAddress', addressLocality: ctx.site.local.localidade, addressRegion: ctx.site.local.distrito, addressCountry: 'PT' },
     sameAs: [c.instagram && `https://www.instagram.com/${c.instagram}/`, c.facebook && `https://www.facebook.com/${c.facebook}`].filter(Boolean),
   };
@@ -230,7 +232,7 @@ export function produto(ctx, p) {
     ? (() => {
       const hospedeiros = ctx.produtos.filter((x) => (x.complementos || []).some((k) => k.produto === p.slug));
       return `<div class="so-complemento">
-        <p>A ${esc(p.nomeCurto.toLowerCase())} junta-se ao ${hospedeiros.map((x) => `<strong>${esc(x.nome)}</strong>`).join(' ou ao ')}. Escolha-a na página de um deles:</p>
+        <p>A ${esc((p.nomeCurto || p.nome).toLowerCase())} junta-se ao ${hospedeiros.map((x) => `<strong>${esc(x.nome)}</strong>`).join(' ou ao ')}. Escolha-a na página de um deles:</p>
         <div class="so-complemento__botoes">${hospedeiros.map((x) => botaoSeta(ctx.url(`/produtos/${x.slug}/`) + `?com=${p.slug}`, `Juntar ao ${x.nomeCurto || x.nome}`, { classe: 'botao botao--mel' })).join('')}</div>
       </div>`;
     })()
@@ -268,7 +270,7 @@ export function produto(ctx, p) {
   </div>`;
 
   const medidas = p.medidas?.length ? `<table class="medidas"><tbody>${p.medidas.map((l) => `<tr><th scope="row">${esc(l.rotulo)}</th><td>${esc(l.valor)}</td></tr>`).join('')}</tbody></table>` : '';
-  const quadroEnvio = envio ? `<table class="medidas"><thead><tr><th scope="col">Entrega</th><th scope="col">${esc(p.nomeCurto || p.nome)}</th>${complementos.map((k) => `<th scope="col">Com ${esc(k.p.nomeCurto.toLowerCase())}</th>`).join('')}</tr></thead><tbody>
+  const quadroEnvio = envio ? `<table class="medidas"><thead><tr><th scope="col">Entrega</th><th scope="col">${esc(p.nomeCurto || p.nome)}</th>${complementos.map((k) => `<th scope="col">Com ${esc((k.p.nomeCurto || k.p.nome).toLowerCase())}</th>`).join('')}</tr></thead><tbody>
     <tr><th scope="row">Levantamento em ${esc(ctx.site.local.localidade)}</th><td>Grátis</td>${complementos.map(() => '<td>Grátis</td>').join('')}</tr>
     ${zonasEnvio.map((z) => `<tr><th scope="row">${esc(z.curto)}</th><td>${linhaEnvio(z)}</td>${complementos.map((k) => `<td>${Number.isFinite(envio[z.id]) && Number.isFinite(k.envioExtra?.[z.id]) ? euros(envio[z.id] + k.envioExtra[z.id]) : 'a confirmar'}</td>`).join('')}</tr>`).join('')}
   </tbody></table>` : '';

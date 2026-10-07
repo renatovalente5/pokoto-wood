@@ -1,16 +1,17 @@
 {
-  "publicado": true,
   "nome": "Prancha Dupla Face",
   "nomeCurto": "Prancha dupla face",
-  "categoria": "pikler",
-  "ordem": 5,
-  "maisVendido": true,
-  "novidade": false,
+  "fotos": [
+    "arco-rampa",
+    "triangulo-rampa-brincar",
+    "trio-sala",
+    "arco-prancha"
+  ],
+  "resumo": "De um lado escorrega, do outro rampa para trepar. Junta-se ao triângulo ou ao arco de Pikler.",
+  "descricao": "Encosta-se ao triângulo ou ao arco de Pikler e transforma-os: de um lado é um escorrega, do outro uma rampa com apoios para trepar.\n\nJuntamo-la ao Triângulo Pikler ou ao Arco de Pikler: escolha-a na página de um deles. Com os três, fica com o trio que mais vendemos.",
   "preco": 70,
   "precoAnterior": 75,
   "promocaoAte": "2026-12-31",
-  "resumo": "De um lado escorrega, do outro rampa para trepar. Junta-se ao triângulo ou ao arco de Pikler.",
-  "descricao": "Encosta-se ao triângulo ou ao arco de Pikler e transforma-os: de um lado é um escorrega, do outro uma rampa com apoios para trepar.\n\nJuntamo-la ao Triângulo Pikler ou ao Arco de Pikler: escolha-a na página de um deles. Com os três, fica com o trio que mais vendemos.",
   "medidas": [
     {
       "rotulo": "Comprimento",
@@ -29,11 +30,10 @@
   "complementos": [],
   "envio": null,
   "vendaIsolada": false,
-  "fotos": [
-    "arco-rampa",
-    "triangulo-rampa-brincar",
-    "trio-sala",
-    "arco-prancha"
-  ],
-  "video": "trio-pikler"
+  "video": "trio-pikler",
+  "categoria": "pikler",
+  "maisVendido": true,
+  "novidade": false,
+  "publicado": true,
+  "ordem": 5
 }
