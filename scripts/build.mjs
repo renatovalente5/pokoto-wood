@@ -104,7 +104,7 @@ const copiar = (de, para) => { fs.mkdirSync(path.dirname(para), { recursive: tru
 const resumo = (buf) => crypto.createHash('sha256').update(buf).digest('hex').slice(0, 10);
 
 for (const f of fs.readdirSync(path.join(RAIZ, '.cache/imagens'))) {
-  if (f !== 'manifesto.json') copiar(path.join(RAIZ, '.cache/imagens', f), path.join(SAIDA, 'assets/img', f));
+  if (f !== 'manifesto.json' && !f.endsWith('.resumo')) copiar(path.join(RAIZ, '.cache/imagens', f), path.join(SAIDA, 'assets/img', f));
 }
 for (const f of fs.readdirSync(path.join(RAIZ, 'src/fontes'))) copiar(path.join(RAIZ, 'src/fontes', f), path.join(SAIDA, 'assets/fontes', f));
 

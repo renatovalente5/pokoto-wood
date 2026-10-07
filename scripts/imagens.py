@@ -84,6 +84,25 @@ def versoes(nome, origem):
             'formatos': list(FORMATOS)}
 
 
+def miniatura(nome, origem):
+    """A miniatura que o PAINEL mostra (o painel só sabe o nome da fotografia, não o resumo das
+    versões web): assets/img/miniatura-<nome>.webp, 320 px no lado maior. Nome fixo de propósito:
+    uma fotografia nova tem sempre um nome novo, por isso o conteúdo de um nome nunca muda."""
+    destino = os.path.join(CACHE, f'miniatura-{nome}.webp')
+    marca = destino + '.resumo'
+    h = resumo(origem, extra='miniatura')
+    if os.path.exists(destino) and os.path.exists(marca) and open(marca).read() == h:
+        return os.path.basename(destino)
+    im = abrir(origem).convert('RGB')
+    im.thumbnail((320, 320), Image.LANCZOS)
+    if os.path.exists(destino):
+        os.remove(destino)
+    guardar(im, destino, 'webp')
+    with open(marca, 'w') as f:
+        f.write(h)
+    return os.path.basename(destino)
+
+
 def cartao_produto(nome, origem):
     """Cartão de partilha de um artigo: a fotografia num quadrado ao centro, sobre o creme.
     O WhatsApp mostra a miniatura QUADRADA e cortada ao centro (x 285–915 num 1200×630): o
@@ -179,6 +198,7 @@ def principal():
             continue
         origens[nome] = os.path.join(FOTOS, f)
         manifesto['fotos'][nome] = versoes(nome, origens[nome])
+        manifesto['fotos'][nome]['miniatura'] = miniatura(nome, origens[nome])
     for f in sorted(glob.glob(os.path.join(VIDEO, '*.jpg'))):
         nome = 'video-' + os.path.splitext(os.path.basename(f))[0]
         manifesto['posters'][nome] = versoes(nome, f)
@@ -201,6 +221,8 @@ def principal():
                 for fmt in d['formatos']:
                     vivos.add(f'{nome}-{d["resumo"]}-{w}.{fmt}')
     vivos.update(manifesto['partilha'].values())
+    for d in manifesto['fotos'].values():
+        vivos.update([d['miniatura'], d['miniatura'] + '.resumo'])
     if manifesto['logo']:
         for d in manifesto['logo']['altura'].values():
             vivos.update([d['webp'], d['png']])

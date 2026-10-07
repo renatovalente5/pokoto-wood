@@ -677,8 +677,10 @@ export function problemasDoInicio(valor, { fotos = null, artigos = null, videos 
   else ec.forEach((x, i) => {
     if (!eObjecto(x)) { bloqueia(`emCasa.fotos.${i}:forma`, `emCasa.fotos.${i}`, `A fotografia ${i + 1} não tem a forma certa.`); return; }
     umaFoto(`emCasa.fotos.${i}.foto`, x.foto);
+    /* Um artigo escondido não pára nada: o site salta esse cartão (e esconder um artigo nunca
+       pode ficar preso por causa da página inicial). Só lembra. */
     if (typeof x.produto !== 'string' || (artigos && !(eObjecto(artigos[x.produto]) && noSite(artigos[x.produto])))) {
-      bloqueia(`emCasa.fotos.${i}.produto`, `emCasa.fotos.${i}.produto`, `A fotografia ${i + 1} de «Em casa de quem já tem» aponta para um artigo que não está no site: escolha outro.`);
+      avisa(`emCasa.fotos.${i}.produto`, `emCasa.fotos.${i}.produto`, `A fotografia ${i + 1} de «Em casa de quem já tem» é de um artigo que não está no site: não aparece. Escolha outro artigo, ou tire a fotografia.`, { lembrete: true });
     }
   });
   const ig = h.instagram.fotos;
