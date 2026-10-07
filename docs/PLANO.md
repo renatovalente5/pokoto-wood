@@ -91,7 +91,12 @@ montado exceto o roupeiro; o colchão do arco não está incluído nem se vende.
 14. Versão em **espanhol** (vendem para Espanha)?
 15. O destaque «Filhos 4 patas» do Instagram: há artigos para animais a pôr no site?
 
-## 4. O backoffice (a seguir)
+## 4. O backoffice (em `~/Websites/pokoto-painel`; o plano dele em docs/PLANO.md de lá)
+
+Feito a 7–8 out 2026 e a correr no ensaio local; vai para o ar com o domínio. O que ficou
+diferente do que estava previsto: as páginas de texto ficam para uma fase 2 (o painel só as lê,
+para não apagar as fotografias que usam); as zonas de entrega são fixas (os portes mudam-se por
+artigo); há um ecrã «Fotografias» com a descrição de cada uma (content/fotos.json).
 
 No molde do painel da AMMA (`~/Websites/amma-painel`, o mais recente com artigos e fotografias):
 repositório privado `pokoto-painel`, Worker na Cloudflare em `backoffice.<domínio>`, entrada por

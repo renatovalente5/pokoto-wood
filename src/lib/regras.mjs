@@ -111,7 +111,7 @@ export const LIMITES = Object.freeze({ preco: [0.01, 100000], portes: [0, 10000]
 export const TAMANHOS = Object.freeze({
   nome: 120, nomeCurto: 40, resumo: 300, descricao: 6000, montagem: 200,
   medidaRotulo: 40, medidaValor: 60, medidas: 12, complementos: 6, fotos: 16, nomeFoto: 120, alt: 300,
-  marca: 60, descricaoSite: 300, assinatura: 80, email: 160, telefone: 20, rede: 60, horario: 120,
+  marca: 60, descricaoSite: 300, assinatura: 80, fundadores: 80, email: 160, telefone: 20, rede: 60, horario: 120,
   empresaNome: 160, empresaTipo: 80, nif: 20, morada: 160, codigoPostal: 12, localidade: 60, concelho: 60, iva: 200,
   avisoTexto: 140, ligacao: 200, prazo: 400, pagamento: 400, levantamento: 300, notaVarios: 300,
   catNome: 40, catTitulo: 80, catResumo: 300,
@@ -555,6 +555,7 @@ export function problemasDoSite(d, { producao = false } = {}) {
   // --- a marca ----------------------------------------------------------------------
   textoSimples(d.descricao, 'descricao', 'marca', 'descricao', 'Descrição da marca', TAMANHOS.descricaoSite, { linha: false });
   textoSimples(d.assinatura, 'assinatura', 'marca', 'assinatura', 'Assinatura do rodapé', TAMANHOS.assinatura);
+  textoSimples(d.fundadores, 'fundadores', 'marca', 'fundadores', 'Quem faz', TAMANHOS.fundadores);
   return out;
 }
 
@@ -664,10 +665,14 @@ export function problemasDoInicio(valor, { fotos = null, artigos = null, videos 
   };
   blocos('vantagens', 2, 6);
   blocos('comoEncomendar.passos', 2, 6);
-  /* Os separadores da vitrine: os filtros são do gerador. */
+  /* Os separadores da vitrine: os filtros são do gerador; os nomes, textos curtos. */
   const sep = h.vitrine.separadores;
   const FILTROS = ['todos', 'maisVendido', 'promocao', 'novidade'];
   if (!Array.isArray(sep) || !sep.length || sep.some((s) => !eObjecto(s) || !temTexto(s.nome) || !FILTROS.includes(s.filtro))) bloqueia('vitrine.separadores', 'vitrine.separadores', 'Os separadores da vitrine não estão como deviam. Só o Renato os pode corrigir.');
+  else sep.forEach((s, i) => umTexto(`vitrine.separadores.${i}.nome`, TAMANHOS.inicioCurto, true));
+  /* Os desenhos das vantagens são os do site (o painel não os muda). */
+  const DESENHOS = ['mao', 'gravar', 'pronto', 'local'];
+  if (Array.isArray(h.vantagens)) h.vantagens.forEach((v, i) => { if (eObjecto(v) && !DESENHOS.includes(v.icone)) avisa(`vantagens.${i}.icone`, `vantagens.${i}`, `O desenho da vantagem ${i + 1} não é nenhum dos do site: aparece sem desenho. Só o Renato o pode corrigir.`); });
   /* As fotografias. */
   const umaFoto = (caminho, f) => { if (!nomeDeFotoValido(f) || (fotos && !fotos.has(f))) bloqueia(`${caminho}:foto`, caminho, 'Esta fotografia já não está na biblioteca: escolha outra.'); };
   umaFoto('capa.foto', h.capa.foto);
@@ -717,7 +722,12 @@ export function problemasDasFotos(valor, ficheirosFotos = null) {
     if (!ausente(f.foco) && !focoValido(f.foco)) avisa(`${nome}:foco`, `${nome}.foco`, 'O ponto de foco de uma fotografia não está como devia.', { foto: nome });
   }
   if (Array.isArray(ficheirosFotos)) {
-    for (const n of ficheirosFotos) if (!tem(l.obj, n)) bloqueia(`${n}:sem-entrada`, n, `A fotografia «${n}» não tem descrição: escreva-a.`, { foto: n });
+    for (const n of ficheirosFotos) {
+      /* Um ficheiro com um nome que o site não aceita (posto à mão: «Foto 1.jpg»): o painel não lhe
+         consegue dar descrição — é do Renato. */
+      if (!nomeDeFotoValido(n)) { bloqueia(`${String(n).slice(0, 60)}:nome-do-ficheiro`, undefined, `Há uma fotografia na biblioteca com um nome que o site não aceita («${String(n).slice(0, 60)}»: só minúsculas, algarismos e hífens). Só o Renato a pode corrigir.`, { foto: n }); continue; }
+      if (!tem(l.obj, n)) bloqueia(`${n}:sem-entrada`, n, `A fotografia «${n}» não tem descrição: escreva-a.`, { foto: n });
+    }
   }
   return out;
 }
@@ -908,10 +918,14 @@ export function fotosDasPaginas(paginas = {}) {
    biblioteca se não estiver aqui. → Set */
 export function fotosEmUso(dados = {}, extra = []) {
   const d = eObjecto(dados) ? dados : {};
-  const usadas = new Set([...extra, ...fotosDasPaginas(d.paginas)]);
-  if (eObjecto(d.artigos)) for (const v of Object.values(d.artigos)) { const a = lerJson(v).obj; if (eObjecto(a) && Array.isArray(a.fotos)) for (const f of a.fotos) if (typeof f === 'string') usadas.add(f); }
+  const usadas = new Set();
+  /* Um nome com espaços à volta (escrito à mão) não aparece no site, mas conta como usado: na
+     dúvida, uma fotografia nunca sai da biblioteca. */
+  const juntar = (f) => { if (typeof f === 'string') { usadas.add(f); usadas.add(f.trim()); } };
+  [...extra, ...fotosDasPaginas(d.paginas)].forEach(juntar);
+  if (eObjecto(d.artigos)) for (const v of Object.values(d.artigos)) { const a = lerJson(v).obj; if (eObjecto(a) && Array.isArray(a.fotos)) a.fotos.forEach(juntar); }
   const cs = lerJson(d.categorias).obj;
-  if (Array.isArray(cs)) for (const c of cs) if (eObjecto(c) && typeof c.foto === 'string') usadas.add(c.foto);
-  for (const f of fotosDoInicio(lerJson(d.inicio).obj)) usadas.add(f);
+  if (Array.isArray(cs)) for (const c of cs) if (eObjecto(c)) juntar(c.foto);
+  fotosDoInicio(lerJson(d.inicio).obj).forEach(juntar);
   return usadas;
 }

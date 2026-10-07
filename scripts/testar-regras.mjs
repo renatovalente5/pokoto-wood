@@ -137,6 +137,34 @@ caso('prancha sem quem a ofereça é lembrete', () => {
   assert.ok(l.some((p) => p.chave === 'artigo:prancha-dupla-face:complemento-sem-artigo' && p.lembrete));
 });
 
+// --- as fotografias -----------------------------------------------------------------------
+caso('um ficheiro com um nome que o site não aceita: pára, e é do Renato', () => {
+  const d = dados(); d.ficheirosFotos = [...d.ficheirosFotos, 'Foto 1'];
+  const p = R.problemas(d, { hoje: '2026-10-07' }).find((x) => x.chave === 'fotos:Foto 1:nome-do-ficheiro');
+  assert.ok(p && p.classe === 'bloqueia' && /Só o Renato/.test(p.mensagem), JSON.stringify(p));
+  assert.ok(!R.problemas(d, { hoje: '2026-10-07' }).some((x) => x.chave === 'fotos:Foto 1:sem-entrada'));
+});
+caso('uma referência com espaços à volta conta como usada (nunca sai da biblioteca)', () => {
+  const d = dados(); const a = JSON.parse(d.artigos['regua-de-crescimento']); a.fotos = [' regua-recorte ', 'regua-simao-carlota']; d.artigos['regua-de-crescimento'] = JSON.stringify(a);
+  assert.ok(R.fotosEmUso(d).has('regua-recorte'));
+});
+caso('quem faz: texto como os outros (tamanho, sem «</script»)', () => {
+  const s = JSON.parse(ler('content/site.json'));
+  s.fundadores = 'x'.repeat(81);
+  assert.ok(R.problemasDoSite(s).some((p) => p.chave === 'site:fundadores:tamanho'));
+  s.fundadores = 'Sandro </script>';
+  assert.ok(R.problemasDoSite(s).some((p) => p.chave === 'site:fundadores:parte' && p.classe === 'bloqueia'));
+});
+
+caso('página inicial: o nome de um separador é um texto curto; um desenho que não existe só avisa', () => {
+  const h = JSON.parse(ler('content/inicio.json'));
+  h.vitrine.separadores[1].nome = 'x'.repeat(61);
+  assert.ok(R.problemasDoInicio(h).some((p) => p.chave === 'inicio:vitrine.separadores.1.nome:tamanho'));
+  h.vitrine.separadores[1].nome = 'Mais vendidos'; h.vantagens[0].icone = 'estrela';
+  const p = R.problemasDoInicio(h).find((x) => x.chave === 'inicio:vantagens.0.icone');
+  assert.ok(p && p.classe === 'avisa' && !p.lembrete && /Só o Renato/.test(p.mensagem));
+});
+
 // --- neutralizar ---------------------------------------------------------------------------
 caso('neutralizar esconde o artigo com problema e tira-o dos complementos', () => {
   const d = dados();

@@ -10,6 +10,9 @@ encomenda escrita numa mensagem. A encomenda fica feita quando a Pokóto a confi
 - Pré-visualização: https://renatovalente5.github.io/pokoto-wood/ (fechada aos motores de busca)
 - Referência de desenho escolhida pela cliente: https://atoca.pt/
 - Plano, decisões e perguntas em aberto: [`docs/PLANO.md`](docs/PLANO.md)
+- O painel (backoffice) da loja vive noutro repositório, `pokoto-painel`: grava aqui, um commit por
+  «Gravar», e só em `content/` e `media/fotos/`. As regras dos dados são as deste repositório
+  (`src/lib/regras.mjs`, copiado para lá byte a byte).
 
 ## Como se constrói
 
@@ -35,7 +38,8 @@ dias à meia-noite de Lisboa (as promoções e o aviso do topo têm data de fim)
 | `content/inicio.json` | os textos e as fotografias da página inicial |
 | `content/paginas/*.md` | páginas de texto (sobre nós, personalização, legais…), com marcadores `{{…}}` |
 | `content/fotos.json` | texto alternativo e ponto de foco de cada fotografia |
-| `media/fotos/` | as fotografias que o site usa (as versões web faz o `scripts/imagens.py`) |
+| `media/fotos/` | as fotografias que o site usa (as versões web, e a miniatura e a grande que o painel mostra, faz o `scripts/imagens.py`) |
+| `src/lib/regras.mjs` | as regras dos dados: as mesmas no gerador, no painel e no Worker dele |
 | `media/video/` | vídeos (MP4 sem som) e a imagem de capa de cada um |
 | `media/legal/` | o aviso oficial da garantia da Comissão Europeia — **não se edita** |
 | `src/` | modelos das páginas, CSS, JavaScript (carrinho incluído) e letras |
