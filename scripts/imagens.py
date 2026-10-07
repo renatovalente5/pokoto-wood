@@ -84,17 +84,22 @@ def versoes(nome, origem):
             'formatos': list(FORMATOS)}
 
 
-def miniatura(nome, origem):
-    """A miniatura que o PAINEL mostra (o painel só sabe o nome da fotografia, não o resumo das
-    versões web): assets/img/miniatura-<nome>.webp, 320 px no lado maior. Nome fixo de propósito:
-    uma fotografia nova tem sempre um nome novo, por isso o conteúdo de um nome nunca muda."""
-    destino = os.path.join(CACHE, f'miniatura-{nome}.webp')
+# As duas versões que o PAINEL mostra (o painel só sabe o nome da fotografia, não o resumo das
+# versões web): a miniatura das grelhas e a grande da janela de cada fotografia.
+PAINEL = {'miniatura': 320, 'grande': 1024}
+
+
+def para_o_painel(nome, origem, tipo):
+    """assets/img/<tipo>-<nome>.webp, com o lado maior de PAINEL[tipo] px. Nome fixo de propósito:
+    uma fotografia nova tem sempre um nome novo, por isso o conteúdo de um nome nunca muda. O
+    <ficheiro>.resumo ao lado diz de que original foi feita (e não vai para o site)."""
+    destino = os.path.join(CACHE, f'{tipo}-{nome}.webp')
     marca = destino + '.resumo'
-    h = resumo(origem, extra='miniatura')
+    h = resumo(origem, extra=f'{tipo}-{PAINEL[tipo]}')
     if os.path.exists(destino) and os.path.exists(marca) and open(marca).read() == h:
         return os.path.basename(destino)
     im = abrir(origem).convert('RGB')
-    im.thumbnail((320, 320), Image.LANCZOS)
+    im.thumbnail((PAINEL[tipo], PAINEL[tipo]), Image.LANCZOS)
     if os.path.exists(destino):
         os.remove(destino)
     guardar(im, destino, 'webp')
@@ -168,23 +173,44 @@ def logotipo(logo):
 
 
 def verificar():
+    """→ (erros, avisos). Uma fotografia sem descrição pára (o site não a pode mostrar sem o texto
+    alternativo); uma descrição sem fotografia só avisa (não faz mal a nada: o gerador nunca a
+    usa)."""
     indice = json.load(open(INDICE, encoding='utf-8'))
     ficheiros = {os.path.splitext(f)[0] for f in os.listdir(FOTOS) if f.lower().endswith(('.jpg', '.jpeg', '.png', '.webp'))}
-    erros = []
+    erros, avisos = [], []
     for nome in sorted(ficheiros - set(indice)):
-        erros.append(f'media/fotos/{nome}: falta em content/fotos.json (texto alternativo)')
+        erros.append(f'Fotografias: a fotografia «{nome}» não tem descrição (texto alternativo) em content/fotos.json')
     for nome in sorted(set(indice) - ficheiros):
-        erros.append(f'content/fotos.json: «{nome}» não tem ficheiro em media/fotos/')
+        avisos.append(f'Fotografias: a descrição de «{nome}» não tem fotografia em media/fotos/')
     for nome, d in indice.items():
-        if not (d.get('alt') or '').strip():
-            erros.append(f'content/fotos.json: «{nome}» sem texto alternativo')
-    return erros
+        if nome in ficheiros and not (d.get('alt') or '').strip():
+            erros.append(f'Fotografias: a fotografia «{nome}» não tem descrição (texto alternativo)')
+    return erros, avisos
+
+
+def anotar(nivel, texto):
+    """No GitHub Actions, a mensagem vai também como anotação: é o que o painel lê para dizer porque
+    é que a publicação parou (o título é o ecrã, antes dos dois pontos)."""
+    if os.environ.get('GITHUB_ACTIONS') != 'true':
+        return
+    dados = lambda t: t.replace('%', '%25').replace('\r', '%0D').replace('\n', '%0A')
+    titulo, _, resto = texto.partition(': ')
+    if resto:
+        print(f'::{nivel} title={dados(titulo).replace(":", "%3A").replace(",", "%2C")}::{dados(resto)}')
+    else:
+        print(f'::{nivel}::{dados(texto)}')
 
 
 def principal():
-    erros = verificar()
+    erros, avisos = verificar()
+    for a in avisos:
+        print(f'  ! {a}', file=sys.stderr)
+        anotar('warning', a)
     if erros:
         print('\n'.join(erros), file=sys.stderr)
+        for e in erros[:10]:
+            anotar('error', e)
         sys.exit(1)
     if '--verificar' in sys.argv:
         print('fotografias conferidas:', len(json.load(open(INDICE, encoding='utf-8'))))
@@ -198,7 +224,7 @@ def principal():
             continue
         origens[nome] = os.path.join(FOTOS, f)
         manifesto['fotos'][nome] = versoes(nome, origens[nome])
-        manifesto['fotos'][nome]['miniatura'] = miniatura(nome, origens[nome])
+        manifesto['fotos'][nome]['painel'] = [para_o_painel(nome, origens[nome], t) for t in PAINEL]
     for f in sorted(glob.glob(os.path.join(VIDEO, '*.jpg'))):
         nome = 'video-' + os.path.splitext(os.path.basename(f))[0]
         manifesto['posters'][nome] = versoes(nome, f)
@@ -222,7 +248,8 @@ def principal():
                     vivos.add(f'{nome}-{d["resumo"]}-{w}.{fmt}')
     vivos.update(manifesto['partilha'].values())
     for d in manifesto['fotos'].values():
-        vivos.update([d['miniatura'], d['miniatura'] + '.resumo'])
+        for f in d['painel']:
+            vivos.update([f, f + '.resumo'])
     if manifesto['logo']:
         for d in manifesto['logo']['altura'].values():
             vivos.update([d['webp'], d['png']])

@@ -38,6 +38,26 @@ const ORIGEM = producao ? `https://${DOMINIO}` : (base ? 'https://renatovalente5
 
 const erros = [];
 const avisos = [];
+// NO GITHUB ACTIONS, CADA PROBLEMA VAI TAMBÉM COMO ANOTAÇÃO (::error / ::warning): é o que o painel
+// lê para dizer à dona porque é que a publicação parou («Dados da loja › Contactos: falta o
+// email»), com a ligação para o ecrã onde se corrige. O título é o ecrã («A › B: mensagem»).
+const NO_CI = process.env.GITHUB_ACTIONS === 'true';
+const escaparDados = (s) => String(s).replace(/%/g, '%25').replace(/\r/g, '%0D').replace(/\n/g, '%0A');
+const escaparPropriedade = (s) => escaparDados(s).replace(/:/g, '%3A').replace(/,/g, '%2C');
+function anotar(nivel, texto) {
+  if (!NO_CI) return;
+  const m = /^([^:]{3,80}?): (.+)$/s.exec(String(texto));
+  console.log(m ? `::${nivel} title=${escaparPropriedade(m[1])}::${escaparDados(m[2])}` : `::${nivel}::${escaparDados(texto)}`);
+}
+/** Pára a publicação: a lista no registo e, no CI, uma anotação por problema (10 no máximo: o
+ *  GitHub não guarda mais por passo; a lista inteira calcula-a o painel). `tecnico`: um defeito do
+ *  gerador, e não do conteúdo — a anotação di-lo, e o painel manda falar com o Renato. */
+function parar(titulo, lista, { tecnico = false } = {}) {
+  console.error(`\n${titulo}\n`);
+  for (const e of lista) console.error(`  ✗ ${e}`);
+  for (const e of [...new Set(lista)].slice(0, 10)) anotar('error', tecnico ? `${e} (Só o Renato pode corrigir.)` : e);
+  process.exit(1);
+}
 const ler = (rel) => JSON.parse(fs.readFileSync(path.join(RAIZ, rel), 'utf8'));
 const existe = (rel) => fs.existsSync(path.join(RAIZ, rel));
 
@@ -60,13 +80,12 @@ const hoje = hojeEmLisboa();
 const listaRegras = R.problemas(dadosRegras, { hoje, producao });
 for (const p of listaRegras.filter((x) => x.classe === 'bloqueia')) erros.push(`${p.ecra}: ${p.mensagem}`);
 for (const p of listaRegras.filter((x) => x.classe === 'avisa')) avisos.push(`${p.ecra}: ${p.mensagem}`);
-if (erros.length) {
-  console.error(`\nA publicação parou: ${erros.length} ${erros.length === 1 ? 'problema' : 'problemas'} no conteúdo.\n`);
-  for (const e of erros) console.error(`  ✗ ${e}`);
-  process.exit(1);
-}
+if (erros.length) parar(`A publicação parou: ${erros.length} ${erros.length === 1 ? 'problema' : 'problemas'} no conteúdo.`, erros);
 const neutro = R.neutralizar(dadosRegras, listaRegras);
-for (const e of neutro.efeitos) avisos.push(`Artigos › ${e.nome}: ${R.descreverEfeitos(e)} (${e.motivos.join(' ')})`);
+for (const e of neutro.efeitos) {
+  avisos.push(`Artigos › ${e.nome}: ${R.descreverEfeitos(e)} (${e.motivos.join(' ')})`);
+  anotar('warning', `Artigos › ${e.nome}: ${R.descreverEfeitos(e)}.`);
+}
 
 const site = JSON.parse(dadosRegras.site);
 const inicio = JSON.parse(dadosRegras.inicio);
@@ -86,16 +105,15 @@ for (const f of fs.readdirSync(path.join(CONTEUDO, 'paginas'))) {
   const m = t.match(R.RE_ALEGACOES);
   if (m) erros.push(`Páginas › ${f}: «${m[0]}» é uma alegação que a lei só deixa fazer com prova (ou uma certificação que não temos). Tire a palavra.`);
 }
-if (erros.length) {
-  console.error(`\nA publicação parou: ${erros.length} ${erros.length === 1 ? 'problema' : 'problemas'} no conteúdo.\n`);
-  for (const e of erros) console.error(`  ✗ ${e}`);
-  process.exit(1);
-}
+if (erros.length) parar(`A publicação parou: ${erros.length} ${erros.length === 1 ? 'problema' : 'problemas'} no conteúdo.`, erros);
 
 // ---------------------------------------------------------------- imagens
 if (!semImagens) execFileSync('python3', [path.join(RAIZ, 'scripts/imagens.py')], { stdio: 'inherit' });
 const manifesto = JSON.parse(fs.readFileSync(path.join(RAIZ, '.cache/imagens/manifesto.json'), 'utf8'));
-for (const f of Object.keys(fotos)) if (!manifesto.fotos[f]) { console.error(`Falta correr scripts/imagens.py para «${f}»`); process.exit(1); }
+/* Só as que têm ficheiro: uma descrição sem fotografia (sobra de uma mudança à mão) não faz mal a
+   nada, e o gerador nunca a usa (fotoExiste pede as duas coisas). */
+const semVersoes = Object.keys(fotos).filter((f) => dadosRegras.ficheirosFotos.includes(f) && !manifesto.fotos[f]);
+if (semVersoes.length) parar('A publicação parou: faltam as versões web de fotografias.', semVersoes.map((f) => `Fotografias: «${f}» não tem as versões web (scripts/imagens.py)`), { tecnico: true });
 
 // ---------------------------------------------------------------- saída
 fs.rmSync(SAIDA, { recursive: true, force: true });
@@ -115,7 +133,7 @@ const AVISO_SHA = {
 };
 for (const [f, sha] of Object.entries(AVISO_SHA)) {
   const buf = fs.readFileSync(path.join(RAIZ, 'media/legal', f));
-  if (crypto.createHash('sha256').update(buf).digest('hex') !== sha) { console.error(`media/legal/${f} foi alterado: o aviso da garantia não se pode editar`); process.exit(1); }
+  if (crypto.createHash('sha256').update(buf).digest('hex') !== sha) parar('A publicação parou: o aviso da garantia foi alterado.', [`Garantia: media/legal/${f} foi alterado, e o aviso oficial da garantia não se pode editar`], { tecnico: true });
   copiar(path.join(RAIZ, 'media/legal', f), path.join(SAIDA, 'assets/legal', f));
 }
 const AVISO_ALT = 'GARANTIA LEGAL. Proteção da garantia legal mínima de dois anos para os bens vendidos na União Europeia. Os consumidores podem invocar os seus direitos ao abrigo da garantia legal de conformidade, por exemplo, se os bens: não corresponderem à descrição; não funcionarem como previsto. Os vendedores são responsáveis por qualquer falta de conformidade que exista no momento em que os bens forem entregues e se manifeste no período de garantia legal. Os vendedores nessa situação estão obrigados a oferecer: reparação gratuita ou substituição gratuita; em alguns casos, redução do preço ou reembolso integral. Alguns países têm um período de garantia legal mais longo. Para os bens em segunda mão, pode aplicar-se um período mais curto, mas não inferior a um ano. Para mais informações sobre os seus direitos num determinado país, digitalize o código QR abaixo ou consulte o vendedor. europa.eu/youreurope/garantias. O que fazer se receber bens não conformes: 1. Contactar o vendedor o mais rapidamente possível para expor o problema; 2. Apresentar uma prova de compra, como um recibo, uma fatura ou um extrato bancário. Os vendedores e os produtores também podem oferecer garantias comerciais, que se aplicam independentemente da garantia legal. Por exemplo, pode ver este rótulo GARAN, que representa uma garantia comercial de durabilidade oferecida pelo produtor sem custos adicionais e cobrindo a totalidade do bem.';
@@ -256,11 +274,7 @@ saidas.push(paginas.contactos(ctx));
 for (const f of fs.readdirSync(path.join(CONTEUDO, 'paginas')).filter((x) => x.endsWith('.md'))) saidas.push(paginas.texto(ctx, paginaMarkdown(f)));
 saidas.push(paginas.erro404(ctx));
 
-if (erros.length) {
-  console.error(`\nA publicação parou: ${erros.length} problemas.\n`);
-  for (const e of erros) console.error(`  ✗ ${e}`);
-  process.exit(1);
-}
+if (erros.length) parar(`A publicação parou: ${erros.length} ${erros.length === 1 ? 'problema' : 'problemas'}.`, erros, { tecnico: true });
 
 for (const s of saidas) {
   const html = pagina(ctx, s);
@@ -325,11 +339,7 @@ for (const f of todosHtml) {
   const og = html.match(/property="og:image" content="([^"]+)"/)?.[1];
   if (og && !fs.existsSync(path.join(SAIDA, og.replace(ORIGEM + base, '')))) problemas.push(`${onde}: o cartão de partilha não existe: ${og}`);
 }
-if (problemas.length) {
-  console.error(`\nO site saiu com ${problemas.length} problemas:\n`);
-  for (const p of [...new Set(problemas)].slice(0, 60)) console.error(`  ✗ ${p}`);
-  process.exit(1);
-}
+if (problemas.length) parar(`A publicação parou: o site saiu com ${problemas.length} problemas.`, [...new Set(problemas)].slice(0, 60).map((p) => `Gerador: ${p}`), { tecnico: true });
 
 for (const a of avisos) console.warn(`  ! ${a}`);
 console.log(`site: ${saidas.length} páginas em _site/ (${producao ? `produção, ${DOMINIO}` : base ? `pré-visualização, ${ORIGEM}${base}/` : 'local'}), ${produtos.length} artigos, hoje ${hoje}`);
