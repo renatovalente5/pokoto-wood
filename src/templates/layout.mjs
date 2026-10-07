@@ -92,6 +92,8 @@ function rodape(ctx) {
         <li><a href="${ctx.url('/termos-e-condicoes/')}">Termos e condições</a></li>
         <li><a href="${ctx.url('/politica-de-privacidade/')}">Política de privacidade</a></li>
         <li><a href="${ctx.url('/politica-de-cookies/')}">Política de cookies</a></li>
+        <li><a href="${ctx.url('/garantia/')}">Garantia legal</a></li>
+        <li><a href="${ctx.url('/desistir/')}">Desistir de uma compra</a></li>
         <li><a href="${ctx.url('/resolucao-de-litigios/')}">Resolução de litígios</a></li>
         <li><a href="${LIVRO}" target="_blank" rel="noopener">Livro de Reclamações</a></li>
       </ul>
