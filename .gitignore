@@ -1,0 +1,11 @@
+# Material do cliente (conversas, fotografias originais, áudios): nunca vai para o repositório.
+# A pasta do projecto e a dos materiais são a mesma por desenho — por isso a regra é esta e
+# não uma pasta irmã (ver nome-de-pasta-sem-maiusculas: no macOS «Pokoto» e «pokoto» são iguais).
+_cliente/
+
+# Gerado
+_site/
+.cache/
+node_modules/
+.DS_Store
+*.log

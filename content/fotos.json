@@ -1,0 +1,134 @@
+{
+  "torre-cadeira-recorte": {
+    "alt": "Torre/cadeira de aprendizagem em madeira clara, com animais gravados na barra de cima",
+    "foco": "50% 50%"
+  },
+  "torre-cadeira-cozinha": {
+    "alt": "Uma menina de pé na torre de aprendizagem, à altura da bancada da cozinha",
+    "foco": "50% 40%"
+  },
+  "torre-cadeira-refeicao": {
+    "alt": "Uma criança a comer sentada na mesma peça, já transformada em cadeira, com o nome gravado nas costas",
+    "foco": "50% 45%"
+  },
+  "torre-cadeira-fechada": {
+    "alt": "A torre fechada, encostada à parede da cozinha, com «Mini-Chef» gravado",
+    "foco": "50% 50%"
+  },
+  "torre-mesa-recorte": {
+    "alt": "Torre/mesa de aprendizagem em madeira clara, com animais gravados no painel da frente",
+    "foco": "50% 50%"
+  },
+  "torre-mesa-cozinha": {
+    "alt": "Torre/mesa de aprendizagem junto à bancada de uma cozinha, com uma frase gravada",
+    "foco": "50% 50%"
+  },
+  "torre-mesa-crianca": {
+    "alt": "Um bebé de pé na torre/mesa, a brincar em cima da bancada da cozinha",
+    "foco": "50% 45%"
+  },
+  "torre-mesa-subir": {
+    "alt": "Um bebé a subir sozinho para a torre/mesa",
+    "foco": "50% 55%"
+  },
+  "torre-mesa-modo-mesa": {
+    "alt": "A torre transformada em mesa e banco, com um bebé a folhear um livro",
+    "foco": "50% 50%"
+  },
+  "triangulo-recorte": {
+    "alt": "Triângulo Pikler em madeira clara, com um gato gravado no topo",
+    "foco": "50% 50%"
+  },
+  "triangulo-coelho": {
+    "alt": "Triângulo Pikler com um coelho gravado no topo",
+    "foco": "50% 45%"
+  },
+  "triangulo-benedita": {
+    "alt": "Uma menina mascarada de morcego ao lado de um triângulo Pikler com o nome dela gravado",
+    "foco": "45% 50%"
+  },
+  "triangulo-nomes": {
+    "alt": "Três triângulos Pikler na oficina, cada um gravado com um nome ou desenhos diferentes",
+    "foco": "50% 35%"
+  },
+  "triangulo-rampa-brincar": {
+    "alt": "Duas crianças a brincar no triângulo Pikler com a prancha encostada",
+    "foco": "50% 55%"
+  },
+  "arco-recorte": {
+    "alt": "Arco de Pikler em madeira clara, com desenhos gravados de lado",
+    "foco": "60% 50%"
+  },
+  "arco-prancha": {
+    "alt": "Arco de Pikler com a prancha dupla face encostada, na oficina",
+    "foco": "50% 55%"
+  },
+  "arco-mesa": {
+    "alt": "O arco de Pikler a servir de mesa, com uma criança de pé a desenhar",
+    "foco": "50% 50%"
+  },
+  "arco-sentado": {
+    "alt": "Uma criança sentada em cima do arco de Pikler",
+    "foco": "50% 40%"
+  },
+  "arco-quarto": {
+    "alt": "Arco de Pikler num quarto, ao lado de uma tenda de brincar",
+    "foco": "50% 60%"
+  },
+  "arco-rampa": {
+    "alt": "Um bebé a gatinhar pela prancha encostada ao arco de Pikler",
+    "foco": "50% 55%"
+  },
+  "arco-descanso": {
+    "alt": "O arco virado ao contrário, como baloiço, com uma criança a descansar lá dentro",
+    "foco": "50% 55%"
+  },
+  "trio-sala": {
+    "alt": "Triângulo, prancha e arco de Pikler montados juntos numa sala clara",
+    "foco": "50% 60%"
+  },
+  "estante-recorte": {
+    "alt": "Estante Montessori em madeira clara, com «Era uma vez…» gravado na base",
+    "foco": "50% 50%"
+  },
+  "estante-leitura": {
+    "alt": "Um bebé sentado no chão a ler, em frente à estante cheia de livros de capa para a frente",
+    "foco": "50% 55%"
+  },
+  "estante-dinossauro": {
+    "alt": "Estante Montessori com livros infantis e a frase «Os sonhos vivem nos livros» gravada",
+    "foco": "45% 60%"
+  },
+  "estante-rafael": {
+    "alt": "Uma criança a escolher um livro na estante com o nome dela gravado",
+    "foco": "50% 50%"
+  },
+  "estante-tapete": {
+    "alt": "Uma criança sentada no tapete a tirar livros da estante",
+    "foco": "50% 55%"
+  },
+  "roupeiro-amelia": {
+    "alt": "Uma menina a escolher a roupa no roupeiro Montessori, com o nome dela pendurado na barra",
+    "foco": "50% 50%"
+  },
+  "roupeiro-sofia": {
+    "alt": "Uma menina pequena a pendurar roupa no roupeiro Montessori",
+    "foco": "45% 55%"
+  },
+  "roupeiro-crianca": {
+    "alt": "Uma criança a mexer nas roupas penduradas no roupeiro",
+    "foco": "50% 50%"
+  },
+  "roupeiro-lateral": {
+    "alt": "Roupeiro Montessori visto de lado, com roupa pendurada e uma prateleira em baixo",
+    "foco": "50% 50%"
+  },
+  "regua-recorte": {
+    "alt": "Duas réguas de crescimento em madeira com os nomes recortados",
+    "foco": "50% 50%"
+  },
+  "regua-simao-carlota": {
+    "alt": "Duas réguas de crescimento com os nomes Simão e Carlota, pousadas no chão",
+    "foco": "50% 45%"
+  }
+}

@@ -1,0 +1,64 @@
+{
+  "marca": "Pokóto Wood",
+  "descricao": "Torres de aprendizagem, Pikler e mobiliário Montessori em madeira, feitos à mão em Vila Nova de Famalicão e personalizados sem custos.",
+  "assinatura": "Feito à mão, com amor, em Famalicão.",
+  "fundadores": "Sandro Hora e Célia Marques",
+  "contactos": {
+    "whatsapp": "",
+    "telefone": "",
+    "email": "pokotowood@sapo.pt",
+    "instagram": "pokotowood",
+    "facebook": "PokotoWood.SC",
+    "horario": ""
+  },
+  "local": {
+    "localidade": "Vila Nova de Famalicão",
+    "distrito": "Braga"
+  },
+  "empresa": {
+    "nome": "",
+    "tipo": "",
+    "nif": "",
+    "morada": "",
+    "codigoPostal": "",
+    "localidade": "Vila Nova de Famalicão",
+    "iva": ""
+  },
+  "aviso": {
+    "texto": "🎄 Encomendas para o Natal até 15 de outubro",
+    "ate": "2026-10-15",
+    "ligacao": "/loja/"
+  },
+  "entrega": {
+    "zonas": [
+      {
+        "id": "levantamento",
+        "nome": "Levantamento em Vila Nova de Famalicão",
+        "curto": "Levantamento (grátis)",
+        "morada": false
+      },
+      {
+        "id": "continente",
+        "nome": "Envio para Portugal Continental",
+        "curto": "Portugal Continental",
+        "morada": true
+      },
+      {
+        "id": "ilhas",
+        "nome": "Envio para a Madeira e os Açores",
+        "curto": "Madeira e Açores",
+        "morada": true
+      },
+      {
+        "id": "espanha",
+        "nome": "Envio para Espanha (exceto ilhas)",
+        "curto": "Espanha (exceto ilhas)",
+        "morada": true
+      }
+    ],
+    "prazo": "",
+    "notaVariosArtigos": "Com vários artigos na mesma encomenda, confirmamos consigo o valor final dos portes pelo WhatsApp antes de avançarmos.",
+    "pagamento": "",
+    "levantamento": "Na nossa oficina, em Vila Nova de Famalicão, sem custos. Combinamos o dia e a hora pelo WhatsApp."
+  }
+}

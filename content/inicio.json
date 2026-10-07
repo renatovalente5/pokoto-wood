@@ -1,0 +1,81 @@
+{
+  "seo": {
+    "titulo": "Pokóto Wood — torres de aprendizagem e Pikler em madeira",
+    "descricao": "Torres de aprendizagem, triângulo e arco Pikler e mobiliário Montessori em madeira, feitos à mão em Famalicão e personalizados sem custos."
+  },
+  "capa": {
+    "etiqueta": "Feito à mão em Famalicão",
+    "tituloLinha1": "Pequenos passos,",
+    "tituloLinha2": "grandes conquistas",
+    "texto": "Torres de aprendizagem, Pikler e mobiliário Montessori, personalizados com o nome do seu filho — sem custos.",
+    "botao": "Ver a loja",
+    "ligacao": "/loja/",
+    "foto": "trio-sala"
+  },
+  "vitrine": {
+    "titulo": "Feitos à medida da infância",
+    "separadores": [
+      { "nome": "Todos", "filtro": "todos" },
+      { "nome": "Mais vendidos", "filtro": "maisVendido" },
+      { "nome": "Promoções", "filtro": "promocao" },
+      { "nome": "Novidades", "filtro": "novidade" }
+    ]
+  },
+  "categorias": {
+    "titulo": "Para cada fase, uma peça",
+    "texto": "Do primeiro passo às grandes aventuras"
+  },
+  "personalizacao": {
+    "etiqueta": "Personalização grátis",
+    "opcoes": ["O nome", "Uma frase", "Um desenho"],
+    "titulo": "Feita para ser só dela",
+    "texto": "Cada peça pode levar o nome do seu filho, uma frase ou um desenho, gravados na madeira. Está incluído no preço.",
+    "botao": "Como funciona",
+    "foto": "triangulo-nomes",
+    "legenda": "Cada nome, uma peça"
+  },
+  "historia": {
+    "etiqueta": "Quem está por trás da Pokóto",
+    "titulo": "Feito por nós, à mão e com muito amor",
+    "texto": "Somos o Sandro e a Célia. Na nossa oficina, em Vila Nova de Famalicão, desenhamos e fazemos artigos educativos em madeira para bebés e crianças — inspirados nos métodos Montessori e Pikler e pensados para crescerem com elas.",
+    "botao": "Conhecer a nossa história",
+    "bolhas": ["Feito à mão", "Montessori", "Pikler"]
+  },
+  "vantagens": [
+    { "icone": "mao", "titulo": "Feito à mão", "texto": "Cada peça sai da nossa oficina, feita por nós, uma a uma." },
+    { "icone": "gravar", "titulo": "Personalização grátis", "texto": "O nome, uma frase ou um desenho, gravados sem custos." },
+    { "icone": "pronto", "titulo": "Pronto a usar", "texto": "Seguem montados e prontos a brincar (só o roupeiro vai desmontado)." },
+    { "icone": "local", "titulo": "Levantamento grátis", "texto": "Em Vila Nova de Famalicão, ou enviamos para Portugal e Espanha." }
+  ],
+  "emCasa": {
+    "titulo": "Em casa de quem já tem",
+    "texto": "Fotografias que as famílias nos mandam.",
+    "fotos": [
+      { "foto": "torre-cadeira-cozinha", "produto": "torre-cadeira-montessori" },
+      { "foto": "arco-descanso", "produto": "arco-pikler" },
+      { "foto": "estante-leitura", "produto": "estante-montessori" },
+      { "foto": "roupeiro-amelia", "produto": "roupeiro-montessori" }
+    ]
+  },
+  "faixa": ["Crescer", "Brincar", "Explorar", "Aprender", "Sonhar"],
+  "oficina": {
+    "etiqueta": "Da nossa oficina",
+    "titulo": "Cada peça passa pelas nossas mãos",
+    "texto": "Cortamos, lixamos, gravamos e montamos tudo na nossa oficina. É daí que sai a torre, o triângulo ou a estante que vai chegar a sua casa — com o nome de quem a vai usar.",
+    "video": "oficina-torres",
+    "botao": "Ver a loja"
+  },
+  "comoEncomendar": {
+    "titulo": "Como encomendar",
+    "passos": [
+      { "titulo": "Escolha e personalize", "texto": "Junte ao carrinho as peças que quer e escreva o nome, a frase ou a ideia de desenho." },
+      { "titulo": "Envie pelo WhatsApp", "texto": "No carrinho, escolha a entrega e carregue em «Enviar encomenda»: a mensagem segue pronta para nós." },
+      { "titulo": "Confirmamos consigo", "texto": "Respondemos com o total, o pagamento e o prazo. Depois é só levantar ou esperar pela entrega." }
+    ]
+  },
+  "instagram": {
+    "titulo": "Para crianças livres, felizes e autónomas",
+    "texto": "Segue-nos no Instagram",
+    "fotos": ["triangulo-benedita", "torre-mesa-crianca", "arco-sentado", "estante-rafael", "roupeiro-sofia", "torre-cadeira-refeicao"]
+  }
+}

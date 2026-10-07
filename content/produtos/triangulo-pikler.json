@@ -1,0 +1,58 @@
+{
+  "publicado": true,
+  "nome": "Triângulo Pikler",
+  "nomeCurto": "Triângulo Pikler",
+  "categoria": "pikler",
+  "ordem": 3,
+  "maisVendido": true,
+  "novidade": false,
+  "preco": 75,
+  "precoAnterior": 85,
+  "promocaoAte": "2026-12-31",
+  "resumo": "Para subir, descer e ganhar confiança. Fecha para arrumar e junta-se à prancha dupla face.",
+  "descricao": "O triângulo Pikler convida a criança a trepar ao seu ritmo: sobe, desce, passa por baixo e vai descobrindo até onde consegue ir. Com a prancha dupla face encostada, ganha um escorrega ou uma rampa para trepar.\n\nFecha para arrumar quando não está a ser usado.\n\nPode levar o nome do seu filho, uma frase ou um desenho gravados na madeira — a personalização está incluída no preço.",
+  "medidas": [
+    {
+      "rotulo": "Altura",
+      "valor": "77 cm"
+    },
+    {
+      "rotulo": "Largura",
+      "valor": "80 cm"
+    },
+    {
+      "rotulo": "Profundidade",
+      "valor": "90 cm"
+    }
+  ],
+  "montagem": "Vai montado e pronto a usar.",
+  "personalizacao": {
+    "disponivel": true,
+    "obrigatoria": false
+  },
+  "complementos": [
+    {
+      "produto": "prancha-dupla-face",
+      "envioExtra": {
+        "continente": 0,
+        "ilhas": 0,
+        "espanha": 0
+      }
+    }
+  ],
+  "envio": {
+    "continente": 20,
+    "ilhas": 110,
+    "espanha": 80
+  },
+  "vendaIsolada": true,
+  "fotos": [
+    "triangulo-recorte",
+    "triangulo-benedita",
+    "triangulo-rampa-brincar",
+    "triangulo-nomes",
+    "triangulo-coelho",
+    "trio-sala"
+  ],
+  "video": "trio-pikler"
+}

@@ -1,0 +1,38 @@
+[
+  {
+    "slug": "torres-de-aprendizagem",
+    "nome": "Torres de aprendizagem",
+    "titulo": "Torres de aprendizagem Montessori",
+    "resumo": "Para chegar à bancada da cozinha e ajudar, em segurança. As nossas torres mudam de forma: viram cadeira ou mesa quando a brincadeira é outra.",
+    "foto": "torre-mesa-crianca",
+    "icone": "torre",
+    "nomeMenu": "Torres de aprendizagem"
+  },
+  {
+    "slug": "pikler",
+    "nome": "Pikler",
+    "titulo": "Triângulo, arco e prancha Pikler",
+    "resumo": "Subir, descer, escorregar e baloiçar: peças para o movimento livre, que se juntam umas às outras e crescem com a brincadeira.",
+    "foto": "triangulo-rampa-brincar",
+    "icone": "triangulo",
+    "nomeMenu": "Pikler"
+  },
+  {
+    "slug": "mobiliario-montessori",
+    "nome": "Mobiliário Montessori",
+    "titulo": "Mobiliário Montessori",
+    "resumo": "Estantes e roupeiros à altura da criança, para escolher o livro e a roupa sozinha.",
+    "foto": "estante-leitura",
+    "icone": "estante",
+    "nomeMenu": "Mobiliário"
+  },
+  {
+    "slug": "decoracao",
+    "nome": "Decoração",
+    "titulo": "Decoração para o quarto",
+    "resumo": "Peças com o nome de quem lá dorme, para ir marcando o crescimento.",
+    "foto": "regua-simao-carlota",
+    "icone": "regua",
+    "nomeMenu": "Decoração"
+  }
+]
