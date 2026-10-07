@@ -1,6 +1,6 @@
 // As páginas do site. Cada função devolve { caminho, titulo, descricao, conteudo, ... } e o
 // build.mjs veste-a com a moldura (layout.mjs).
-import { esc, euros, precoDe, dataPorExtenso, markdown, numeroWhatsApp } from './util.mjs';
+import { esc, euros, precoDe, dataPorExtenso, markdown, numeroWhatsApp, moradaCompleta } from './util.mjs';
 import { icones, ilustracoes } from './icones.mjs';
 import { imagem, preco, cartaoProduto, migalhas, botaoSeta, desconto, promocaoAte } from './componentes.mjs';
 
@@ -273,7 +273,7 @@ export function produto(ctx, p) {
     ${zonasEnvio.map((z) => `<tr><th scope="row">${esc(z.curto)}</th><td>${linhaEnvio(z)}</td>${complementos.map((k) => `<td>${Number.isFinite(envio[z.id]) && Number.isFinite(k.envioExtra?.[z.id]) ? euros(envio[z.id] + k.envioExtra[z.id]) : 'a confirmar'}</td>`).join('')}</tr>`).join('')}
   </tbody></table>` : '';
   const e = ctx.site.empresa;
-  const fabricante = [e.nome || ctx.site.marca, [e.morada, e.codigoPostal, e.localidade].filter(Boolean).join(', '), ctx.site.contactos.email].filter(Boolean).map(esc).join(' · ');
+  const fabricante = [e.nome ? `${e.nome} (${ctx.site.marca})` : ctx.site.marca, e.morada ? moradaCompleta(e) : '', ctx.site.contactos.email].filter(Boolean).map(esc).join(' · ');
 
   const acordeoes = `<div class="acordeoes">
     <details open><summary>${icones.info}Descrição</summary><div class="acordeoes__corpo">${markdown(p.descricao, ctx.url)}</div></details>

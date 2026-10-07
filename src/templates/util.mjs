@@ -118,3 +118,8 @@ export function custoChamada(n) {
   if (/^2/.test(local)) return 'Chamada para a rede fixa nacional';
   return 'Chamada para a rede nacional';
 }
+
+// A morada da sede por extenso: «Rua dos Portais, n.º 940, 4770-465 Requião, Vila Nova de Famalicão»
+export function moradaCompleta(e) {
+  return [e.morada, [e.codigoPostal, e.localidade].filter(Boolean).join(' '), e.concelho].filter(Boolean).join(', ');
+}

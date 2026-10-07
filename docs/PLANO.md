@@ -54,7 +54,20 @@ montado exceto o roupeiro; o colchão do arco não está incluído nem se vende.
 - **Alojamento de produção:** Cloudflare (Worker só de ficheiros, grátis), como a ithos: os termos
   do GitHub Pages proíbem lojas. A pré-visualização fica no GitHub Pages.
 
+## 2-A. Respondido no email «Pokóto Wood - Logo» (pokotowood@sapo.pt → Renato, 7 out 2026, 20:38)
+
+- **Domínio:** «pokotowood» (falta comprar: pokotowood.pt estava livre a 7 out).
+- **Empresário em nome individual:** Sandro Filipe Cardoso Hora, **NIF 226 971 740** (válido).
+- **Telemóvel/WhatsApp das encomendas:** o da Célia, **916 949 456** (confirmado também pelo Renato
+  no chat).
+- **Morada da sede:** Rua dos Portais, n.º 940, 4770-465 Requião, Vila Nova de Famalicão.
+- **Logótipos** (em `_cliente/marca/email-2026-10-07/`): o de cor (344 px, fundo branco — recortado
+  para `media/marca/logo.png`), um a traço preto transparente (530 px, `media/marca/logo-traco.png`,
+  para o painel e os emails) e dois a preto e branco em fundo branco (198 e 790 px).
+
 ## 3. Perguntas para a Pokóto (ou para o Renato)
+
+(Já respondidas pelo email: domínio, número de WhatsApp, identificação legal, NIF, morada, logótipo.)
 
 1. **Domínio**: `pokotowood.pt` e `pokotowood.com` estão livres (7 out). Compra-se o .pt?
 2. **Número de WhatsApp** das encomendas (o do Sandro, o da Célia, ou outro).

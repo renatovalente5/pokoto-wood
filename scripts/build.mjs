@@ -16,7 +16,7 @@ import path from 'node:path';
 import crypto from 'node:crypto';
 import { execFileSync } from 'node:child_process';
 import { fileURLToPath } from 'node:url';
-import { esc, euros, hojeEmLisboa, markdown, numeroWhatsApp, numeroLegivel, custoChamada, precoDe } from '../src/templates/util.mjs';
+import { esc, euros, hojeEmLisboa, markdown, numeroWhatsApp, numeroLegivel, custoChamada, precoDe, moradaCompleta } from '../src/templates/util.mjs';
 import { pagina } from '../src/templates/layout.mjs';
 import * as paginas from '../src/templates/paginas.mjs';
 
@@ -250,7 +250,7 @@ function identificacao() {
   partes.push(e.nome ? `<strong>${esc(e.nome)}</strong>` : ctx.marcador('o nome da empresa ou do empresário'));
   if (e.tipo) partes.push(esc(e.tipo));
   partes.push(e.nif ? `NIF ${esc(e.nif)}` : `NIF ${ctx.marcador('o NIF')}`);
-  const morada = [e.morada, e.codigoPostal && `${e.codigoPostal} ${e.localidade || ''}`.trim()].filter(Boolean).join(', ');
+  const morada = e.morada ? moradaCompleta(e) : '';
   partes.push(morada ? `com sede em ${esc(morada)}` : `com sede em ${ctx.marcador('a morada da sede')}`);
   return `${partes.join(', ')}, que vende com a marca ${esc(site.marca)}.`;
 }

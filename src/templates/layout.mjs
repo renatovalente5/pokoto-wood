@@ -60,8 +60,6 @@ function redes(ctx, classe = 'redes') {
 }
 
 function rodape(ctx) {
-  const e = ctx.site.empresa;
-  const identificacao = [e.nome, e.nif ? `NIF ${e.nif}` : ''].filter(Boolean).join(' · ');
   return `<footer class="rodape">
   <div class="rodape__grelha">
     <div class="rodape__marca">
@@ -100,7 +98,7 @@ function rodape(ctx) {
     </div>
   </div>
   <div class="rodape__fim">
-    <p>© ${ctx.hoje.slice(0, 4)} ${esc(ctx.site.marca)}${identificacao ? ` · ${esc(identificacao)}` : ''}</p>
+    <p>© ${ctx.hoje.slice(0, 4)} ${esc(ctx.site.marca)}</p>
     <p>Feito em ${esc(ctx.site.local.localidade)}, Portugal</p>
   </div>
 </footer>`;

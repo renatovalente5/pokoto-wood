@@ -5,7 +5,7 @@ Lê:
   media/fotos/*.jpg        as fotografias (cada uma tem de estar em content/fotos.json, com o
                            texto alternativo e o ponto de foco)
   media/video/*.jpg        a imagem de capa de cada vídeo
-  media/marca/logo*.png    o logótipo (com transparência)
+  media/marca/logo.png     o logótipo de cor, com transparência (recortado do ficheiro que a Pokóto mandou)
   content/produtos/*.json  para saber a primeira fotografia de cada artigo (o cartão de partilha)
 
 Escreve em .cache/imagens/ (fica entre publicações; cada ficheiro leva no nome um resumo do
@@ -110,7 +110,7 @@ def cartao_logotipo(logo):
     destino = os.path.join(CACHE, f'pokoto-wood-{h}-partilha.jpg')
     if not os.path.exists(destino):
         marca = Image.open(logo).convert('RGBA')
-        alto = 460
+        alto = min(460, marca.height)   # nunca aumentar o logótipo (o original de cor tem 312 px)
         largo = round(marca.width * alto / marca.height)
         marca = marca.resize((largo, alto), Image.LANCZOS)
         cartao = Image.new('RGBA', PARTILHA, CREME + (255,))
@@ -189,9 +189,8 @@ def principal():
         fotos = p.get('fotos') or []
         if fotos and fotos[0] in origens:
             manifesto['partilha'][slug] = cartao_produto(slug, origens[fotos[0]])
-    logos = sorted(glob.glob(os.path.join(MARCA, 'logo*.png')))
-    if logos:
-        logo = logos[0]
+    logo = os.path.join(MARCA, 'logo.png')   # o de cor (o de traço, logo-traco.png, fica para o painel e os emails)
+    if os.path.exists(logo):
         manifesto['logo'] = logotipo(logo)
         manifesto['partilha']['_site'] = cartao_logotipo(logo)
     # tira da cache o que já não é de nenhuma versão actual (fotografias trocadas ou apagadas)
