@@ -315,7 +315,7 @@ export function produto(ctx, p) {
     url: ctx.absoluto(caminho),
     priceCurrency: 'EUR',
     price: v.atual.toFixed(2),
-    availability: 'https://schema.org/InStock',
+    availability: 'https://schema.org/MadeToOrder',   // não há stock: tudo é feito por encomenda (Célia, 8 out 2026)
     itemCondition: 'https://schema.org/NewCondition',
     seller: { '@id': ctx.absoluto('/#loja') },
   };

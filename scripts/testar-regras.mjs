@@ -71,9 +71,20 @@ caso('o conteúdo de hoje só tem lembretes', () => {
   const l = R.problemas(dados(), { hoje: '2026-10-07' });
   assert.deepEqual(l.filter((p) => !(p.classe === 'avisa' && p.lembrete)), []);
 });
+caso('o conteúdo de hoje publica-se no domínio final (o IVA e o prazo vieram a 8 out)', () => {
+  const l = R.problemas(dados(), { hoje: '2026-10-08', producao: true });
+  assert.deepEqual(chaves(l.filter((p) => p.classe === 'bloqueia')), []);
+});
 caso('em produção, o IVA e o prazo em falta param a publicação', () => {
-  const l = R.problemas(dados(), { hoje: '2026-10-07', producao: true });
+  const d = dados();
+  const site = JSON.parse(d.site);
+  site.empresa.iva = '';
+  site.entrega.prazo = '';
+  const l = R.problemas({ ...d, site: R.serializar(site) }, { hoje: '2026-10-08', producao: true });
   assert.deepEqual(chaves(l.filter((p) => p.classe === 'bloqueia')).sort(), ['site:empresa.iva:vazio:producao', 'site:entrega.prazo:vazio:producao']);
+  const fora = R.problemas({ ...d, site: R.serializar(site) }, { hoje: '2026-10-08' });
+  const lembretes = chaves(fora.filter((p) => p.classe === 'avisa' && p.lembrete));
+  assert.ok(lembretes.includes('site:empresa.iva:vazio') && lembretes.includes('site:entrega.prazo:vazio') && !fora.some((p) => p.classe === 'bloqueia'), 'na pré-visualização são só lembretes');
 });
 caso('todas as fotografias estão em uso', () => {
   const d = dados();

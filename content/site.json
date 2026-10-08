@@ -22,7 +22,7 @@
     "morada": "Rua dos Portais, n.º 940",
     "codigoPostal": "4770-465",
     "localidade": "Requião",
-    "iva": "",
+    "iva": "Incluem o IVA à taxa legal em vigor.",
     "concelho": "Vila Nova de Famalicão"
   },
   "aviso": {
@@ -57,7 +57,7 @@
         "morada": true
       }
     ],
-    "prazo": "",
+    "prazo": "Fazemos cada peça por encomenda: fica pronta em 2 a 3 semanas, a contar da confirmação da encomenda. Depois segue pela transportadora, ou combinamos consigo o levantamento na oficina.",
     "notaVariosArtigos": "Com vários artigos na mesma encomenda, confirmamos consigo o valor final dos portes pelo WhatsApp antes de avançarmos.",
     "pagamento": "MB WAY ou transferência bancária. Os dados para o pagamento seguem pelo WhatsApp, quando confirmarmos a encomenda.",
     "levantamento": "Na nossa oficina, em Vila Nova de Famalicão, sem custos. Combinamos o dia e a hora pelo WhatsApp."
