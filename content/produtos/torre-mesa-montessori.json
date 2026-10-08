@@ -3,10 +3,7 @@
   "nomeCurto": "Torre/Mesa",
   "fotos": [
     "torre-mesa-recorte",
-    "torre-mesa-crianca",
-    "torre-mesa-modo-mesa",
-    "torre-mesa-cozinha",
-    "torre-mesa-subir"
+    "torre-mesa-cozinha"
   ],
   "resumo": "Uma torre de aprendizagem que se transforma em mesa, para desenhar, ler e brincar.",
   "descricao": "Na torre, a criança chega à bancada e ajuda nas tarefas da casa, protegida à volta. Quando a cozinha fica arrumada, a mesma peça transforma-se numa mesa à medida dela, para desenhar, ler e brincar.\n\nPode levar o nome do seu filho, uma frase ou um desenho gravados na madeira — a personalização está incluída no preço.",
@@ -28,6 +25,7 @@
     }
   ],
   "montagem": "Vai totalmente montada e pronta a usar.",
+  "idade": 18,
   "personalizacao": {
     "disponivel": true,
     "obrigatoria": false

@@ -3,8 +3,6 @@
   "nomeCurto": "Torre/Cadeira",
   "fotos": [
     "torre-cadeira-recorte",
-    "torre-cadeira-cozinha",
-    "torre-cadeira-refeicao",
     "torre-cadeira-fechada"
   ],
   "resumo": "Uma torre para ajudar na cozinha que vira cadeira à hora de comer. Fecha para arrumar.",
@@ -31,6 +29,7 @@
     }
   ],
   "montagem": "Vai totalmente montada e pronta a usar.",
+  "idade": 18,
   "personalizacao": {
     "disponivel": true,
     "obrigatoria": false

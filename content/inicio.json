@@ -88,19 +88,19 @@
     "texto": "Fotografias que as famílias nos mandam.",
     "fotos": [
       {
-        "foto": "torre-cadeira-cozinha",
-        "produto": "torre-cadeira-montessori"
+        "foto": "torre-mesa-cozinha",
+        "produto": "torre-mesa-montessori"
       },
       {
-        "foto": "arco-descanso",
+        "foto": "arco-quarto",
         "produto": "arco-pikler"
       },
       {
-        "foto": "estante-leitura",
+        "foto": "estante-dinossauro",
         "produto": "estante-montessori"
       },
       {
-        "foto": "roupeiro-amelia",
+        "foto": "roupeiro-lateral",
         "produto": "roupeiro-montessori"
       }
     ]
@@ -140,12 +140,12 @@
     "titulo": "Para crianças livres, felizes e autónomas",
     "texto": "Segue-nos no Instagram",
     "fotos": [
-      "triangulo-benedita",
-      "torre-mesa-crianca",
-      "arco-sentado",
-      "estante-rafael",
-      "roupeiro-sofia",
-      "torre-cadeira-refeicao"
+      "triangulo-coelho",
+      "torre-cadeira-recorte",
+      "arco-prancha",
+      "regua-simao-carlota",
+      "torre-cadeira-fechada",
+      "arco-recorte"
     ]
   }
 }

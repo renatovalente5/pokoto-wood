@@ -1,7 +1,7 @@
 titulo: Personalização grátis
 tituloSeo: Personalização grátis — o nome, uma frase ou um desenho
 descricao: Grave o nome do seu filho, uma frase ou um desenho na torre, no triângulo, no arco ou na estante. A personalização está incluída no preço.
-foto: torre-cadeira-refeicao
+foto: triangulo-nomes
 ---
 Cada peça pode ser só de uma criança. Gravamos na madeira o nome, uma frase ou um desenho — e não cobramos nada por isso.
 

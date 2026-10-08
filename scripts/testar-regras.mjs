@@ -37,6 +37,21 @@ caso('números portugueses', () => {
   assert.equal(R.eTelemovel('252 000 000'), false);
   assert.equal(R.numeroPortugues('12345'), null);
 });
+caso('a idade recomendada, como o site a escreve', () => {
+  assert.equal(R.idadeTexto(18), 'A partir dos 18 meses');
+  assert.equal(R.idadeTexto(8), 'A partir dos 8 meses');
+  assert.equal(R.idadeTexto(12), 'A partir dos 12 meses');
+  assert.equal(R.idadeTexto(24), 'A partir dos 2 anos');
+  assert.equal(R.idadeTexto(30), 'A partir dos 30 meses');
+  assert.equal(R.idadeTexto(1), 'A partir de 1 mês');
+  assert.equal(R.idadeTexto(0), 'Desde o nascimento');
+  for (const mau of [8.5, -1, 217, '18', null, undefined, NaN]) assert.equal(R.idadeTexto(mau), null, String(mau));
+  assert.ok(R.CAMPOS_ARTIGO.indexOf('idade') === R.CAMPOS_ARTIGO.indexOf('montagem') + 1, 'no formulário, a seguir a «Como segue»');
+  const a = artigo('torre-mesa-montessori');
+  const p = R.problemasDoArtigo({ ...a, idade: '18 meses' }, {}).find((x) => x.campo === 'idade');
+  assert.ok(p && p.classe === 'avisa' && /o site não a mostra/.test(p.mensagem), 'uma idade escrita como texto: aviso, e o site não a mostra');
+  assert.ok(!R.problemasDoArtigo({ ...a, idade: 18 }, {}).some((x) => x.campo === 'idade') && !R.problemasDoArtigo({ ...a, idade: null }, {}).some((x) => x.campo === 'idade'), 'uma idade certa, ou nenhuma: sem problemas');
+});
 caso('gerarSlug', () => {
   assert.equal(R.gerarSlug('Torre/Mesa de Aprendizagem'), 'torre-mesa-de-aprendizagem');
   assert.equal(R.gerarSlug('Régua'), 'regua');

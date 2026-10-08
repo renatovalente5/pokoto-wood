@@ -2,7 +2,7 @@
 // build.mjs veste-a com a moldura (layout.mjs).
 import { esc, euros, precoDe, dataPorExtenso, markdown, numeroWhatsApp, moradaCompleta } from './util.mjs';
 import { icones, ilustracoes } from './icones.mjs';
-import { numeroPortugues } from '../lib/regras.mjs';
+import { numeroPortugues, idadeTexto, NOTA_IDADE } from '../lib/regras.mjs';
 import { imagem, preco, cartaoProduto, migalhas, botaoSeta, desconto, promocaoAte } from './componentes.mjs';
 
 const produtosDe = (ctx, cat) => ctx.produtos.filter((p) => p.categoria === cat);
@@ -264,7 +264,10 @@ export function produto(ctx, p) {
   const envio = p.envio;
   const linhaEnvio = (z) => (envio && Number.isFinite(envio[z.id]) ? euros(envio[z.id]) : 'a confirmar');
   const zonasEnvio = ctx.site.entrega.zonas.filter((z) => z.morada);
+  /* A idade recomendada, à vista antes de encomendar, com a nota de que é indicativa. */
+  const idade = idadeTexto(p.idade);
   const entrega = `<div class="entrega-caixa">
+    ${idade ? `<p class="entrega-caixa__linha" data-idade>${icones.crianca}<span><strong>${esc(idade)}.</strong> ${esc(NOTA_IDADE)}</span></p>` : ''}
     <p class="entrega-caixa__linha">${icones.local}<span><strong>Levantamento grátis</strong> na nossa oficina, em ${esc(ctx.site.local.localidade)}.</span></p>
     ${envio ? `<p class="entrega-caixa__linha">${icones.camiao}<span><strong>Envio:</strong> ${zonasEnvio.map((z) => `${esc(z.curto)} <span data-envio-zona="${z.id}">${linhaEnvio(z)}</span>`).join(' · ')}</span></p>` : ''}
     ${p.montagem ? `<p class="entrega-caixa__linha">${icones.caixa}<span>${esc(p.montagem)}</span></p>` : ''}
@@ -341,6 +344,7 @@ export function produto(ctx, p) {
     brand: { '@type': 'Brand', name: ctx.site.marca },
     category: c.nome,
     offers: offer,
+    ...(idade ? { audience: { '@type': 'PeopleAudience', suggestedMinAge: Math.round((p.idade / 12) * 100) / 100 } } : {}),
   };
   return {
     caminho,

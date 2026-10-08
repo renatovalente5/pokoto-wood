@@ -3,8 +3,6 @@
   "nomeCurto": "Triângulo Pikler",
   "fotos": [
     "triangulo-recorte",
-    "triangulo-benedita",
-    "triangulo-rampa-brincar",
     "triangulo-nomes",
     "triangulo-coelho",
     "trio-sala"
@@ -29,6 +27,7 @@
     }
   ],
   "montagem": "Vai montado e pronto a usar.",
+  "idade": 8,
   "personalizacao": {
     "disponivel": true,
     "obrigatoria": false

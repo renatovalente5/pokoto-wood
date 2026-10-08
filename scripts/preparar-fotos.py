@@ -38,44 +38,29 @@ SOMBRA = (92, 64, 38)
 # nome final -> (tipo, ficheiro de origem, extra)
 #   recorte: extra = {'encostar': 'direita'|'esquerda'|None, 'limpar_escuros': área mínima}
 #   corte:   extra = (x0, y0, x1, y1) em píxeis da colagem
+# SEM CRIANÇAS: os pais autorizaram as fotografias no Instagram, não no site (Célia, 8 out 2026).
+# Saíram daqui as 17 em que se vê uma criança; não voltar a pô-las.
 FOTOS = {
     # Torre / cadeira
     'torre-cadeira-recorte': ('recorte', '204137-53268.jpg', {}),
-    'torre-cadeira-cozinha': ('corte', '204138-53269.jpg', (10, 20, 515, 1030)),
-    'torre-cadeira-refeicao': ('corte', '204138-53269.jpg', (524, 20, 938, 498)),
     'torre-cadeira-fechada': ('corte', '204138-53269.jpg', (537, 527, 886, 1033)),
     # Torre / mesa
     'torre-mesa-recorte': ('recorte', '175629-53194.jpg', {'limpar_escuros': 15000}),
     'torre-mesa-cozinha': ('inteira', '204815-53277.jpg', None),
-    'torre-mesa-crianca': ('corte', '204815-53278.jpg', (20, 27, 476, 798)),
-    'torre-mesa-subir': ('corte', '204815-53278.jpg', (504, 215, 922, 915)),
-    'torre-mesa-modo-mesa': ('corte', '204815-53278.jpg', (40, 848, 498, 1312)),
     # Triângulo Pikler
     'triangulo-recorte': ('recorte', '175628-53192.jpg', {}),
     'triangulo-coelho': ('inteira', '205113-53291.jpg', None),
-    'triangulo-benedita': ('corte', '205113-53290.jpg', (17, 84, 531, 694)),
     'triangulo-nomes': ('corte', '205113-53290.jpg', (549, 74, 955, 690)),
-    'triangulo-rampa-brincar': ('corte', '205113-53290.jpg', (42, 744, 916, 1328)),
     # Arco de Pikler (+ prancha)
     'arco-recorte': ('recorte', '175628-53191.jpg', {'encostar': 'direita'}),
     'arco-prancha': ('inteira', '205525-53296.jpg', None),
-    'arco-mesa': ('corte', '205525-53297.jpg', (20, 24, 448, 450)),
-    'arco-sentado': ('corte', '205525-53297.jpg', (469, 39, 868, 448)),
     'arco-quarto': ('corte', '205525-53297.jpg', (35, 480, 378, 930)),
-    'arco-rampa': ('corte', '205525-53297.jpg', (438, 470, 856, 1314)),
-    'arco-descanso': ('corte', '205525-53297.jpg', (30, 950, 426, 1298)),
     'trio-sala': ('inteira', '205927-53301.jpg', None),
     # Estante
     'estante-recorte': ('recorte', '175627-53190.jpg', {}),
-    'estante-leitura': ('corte', '205953-53302.jpg', (14, 12, 436, 596)),
     'estante-dinossauro': ('corte', '205953-53302.jpg', (454, 4, 945, 594)),
-    'estante-tapete': ('corte', '205953-53302.jpg', (39, 670, 419, 1144)),
-    'estante-rafael': ('corte', '205953-53302.jpg', (449, 700, 958, 1156)),
     # Roupeiro
-    'roupeiro-crianca': ('corte', '210141-53305.jpg', (70, 40, 505, 665)),
     'roupeiro-lateral': ('corte', '210141-53305.jpg', (542, 32, 923, 576)),
-    'roupeiro-sofia': ('corte', '210141-53305.jpg', (26, 822, 416, 1268)),
-    'roupeiro-amelia': ('corte', '210141-53305.jpg', (454, 717, 903, 1308)),
     # Régua de crescimento
     'regua-recorte': ('recorte', '210516-53307.jpg', {}),
     'regua-simao-carlota': ('inteira', '210516-53307.jpg', None),

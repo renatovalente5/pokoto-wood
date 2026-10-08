@@ -3,10 +3,6 @@
   "nomeCurto": "Arco de Pikler",
   "fotos": [
     "arco-recorte",
-    "arco-sentado",
-    "arco-mesa",
-    "arco-rampa",
-    "arco-descanso",
     "arco-quarto",
     "arco-prancha"
   ],
@@ -30,6 +26,7 @@
     }
   ],
   "montagem": "Vai montado e pronto a usar.",
+  "idade": 8,
   "personalizacao": {
     "disponivel": true,
     "obrigatoria": false

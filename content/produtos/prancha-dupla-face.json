@@ -2,8 +2,6 @@
   "nome": "Prancha Dupla Face",
   "nomeCurto": "Prancha dupla face",
   "fotos": [
-    "arco-rampa",
-    "triangulo-rampa-brincar",
     "trio-sala",
     "arco-prancha"
   ],
@@ -23,6 +21,7 @@
     }
   ],
   "montagem": "Vai pronta a usar.",
+  "idade": 8,
   "personalizacao": {
     "disponivel": false,
     "obrigatoria": false

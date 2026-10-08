@@ -85,7 +85,7 @@ export const NOMES_ZONAS = Object.freeze({ continente: 'Portugal Continental', i
 export const CAMPOS_ARTIGO = Object.freeze([
   'nome', 'nomeCurto', 'fotos', 'resumo', 'descricao',
   'preco', 'precoAnterior', 'promocaoAte',
-  'medidas', 'montagem', 'personalizacao', 'complementos', 'envio', 'vendaIsolada', 'video',
+  'medidas', 'montagem', 'idade', 'personalizacao', 'complementos', 'envio', 'vendaIsolada', 'video',
   'categoria', 'maisVendido', 'novidade', 'publicado', 'ordem',
 ]);
 /* Sempre escritos pelo painel, com o valor explícito. Ausentes valem o valor por
@@ -96,7 +96,7 @@ export const POR_OMISSAO = Object.freeze({ publicado: true, maisVendido: false, 
 export const NOMES_CAMPOS = Object.freeze({
   nome: 'Nome do artigo', nomeCurto: 'Nome curto', fotos: 'Fotografias', resumo: 'Frase curta', descricao: 'Descrição',
   preco: 'Preço', precoAnterior: 'Preço anterior', promocaoAte: 'Fim da promoção',
-  medidas: 'Medidas', montagem: 'Como segue', personalizacao: 'Personalização', complementos: 'Complementos',
+  medidas: 'Medidas', montagem: 'Como segue', idade: 'Idade recomendada', personalizacao: 'Personalização', complementos: 'Complementos',
   envio: 'Portes de envio', vendaIsolada: 'Vende-se sozinho', video: 'Vídeo',
   categoria: 'Categoria', maisVendido: 'Mais vendido', novidade: 'Novidade', publicado: 'Publicado no site', ordem: 'Posição na lista',
 });
@@ -106,7 +106,7 @@ export const NOMES_CAMPOS = Object.freeze({
 /* ------------------------------------------------------------------ */
 
 /* Os números: [mínimo, máximo]. */
-export const LIMITES = Object.freeze({ preco: [0.01, 100000], portes: [0, 10000], ordem: [0, 9999] });
+export const LIMITES = Object.freeze({ preco: [0.01, 100000], portes: [0, 10000], ordem: [0, 9999], idade: [0, 216] });
 /* Tamanhos máximos dos textos, em caracteres. */
 export const TAMANHOS = Object.freeze({
   nome: 120, nomeCurto: 40, resumo: 300, descricao: 6000, montagem: 200,
@@ -207,6 +207,19 @@ export function numeroPortugues(v) {
   return /^[29]\d{8}$/.test(d) ? d : null;
 }
 export const eTelemovel = (v) => /^9[1236]\d{7}$/.test(numeroPortugues(v) ?? '');
+
+/* A IDADE RECOMENDADA de um artigo, em meses (a partir de quando), como o site a escreve:
+   18 → «A partir dos 18 meses», 24 → «A partir dos 2 anos», 0 → «Desde o nascimento».
+   → o texto, ou null se não é uma idade (o site não a mostra). */
+export function idadeTexto(meses) {
+  if (typeof meses !== 'number' || !Number.isInteger(meses) || meses < LIMITES.idade[0] || meses > LIMITES.idade[1]) return null;
+  if (meses === 0) return 'Desde o nascimento';
+  if (meses === 1) return 'A partir de 1 mês';
+  if (meses >= 24 && meses % 12 === 0) return `A partir dos ${meses / 12} anos`;
+  return `A partir dos ${meses} meses`;
+}
+/* A nota que vai sempre com a idade (pedida pela Célia, 8 out 2026). */
+export const NOTA_IDADE = 'A idade é indicativa: depende do desenvolvimento de cada criança.';
 
 /* O preço que vale num dia («AAAA-MM-DD», em Lisboa). «preco» é o preço de venda
    (o da promoção, quando há uma) e «precoAnterior» o normal. Acabada a promoção,
@@ -377,6 +390,9 @@ export function problemasDoArtigo(a, ctx = {}) {
   const o = a.ordem;
   if (!ausente(o) && o !== '' && (typeof o !== 'number' || !Number.isInteger(o) || o < LIMITES.ordem[0] || o > LIMITES.ordem[1])) {
     avisa('ordem', 'ordem', `A posição é um número inteiro de 0 a ${LIMITES.ordem[1]} (mais baixo aparece primeiro).`);
+  }
+  if (!ausente(a.idade) && a.idade !== '' && idadeTexto(a.idade) === null) {
+    avisa('idade', 'idade', `A idade recomendada é o número de meses, de 0 a ${LIMITES.idade[1]} (ex.: 18). Até estar certa, o site não a mostra.`);
   }
 
   // --- portes ----------------------------------------------------------------
