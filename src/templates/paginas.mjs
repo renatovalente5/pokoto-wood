@@ -2,6 +2,7 @@
 // build.mjs veste-a com a moldura (layout.mjs).
 import { esc, euros, precoDe, dataPorExtenso, markdown, numeroWhatsApp, moradaCompleta } from './util.mjs';
 import { icones, ilustracoes } from './icones.mjs';
+import { numeroPortugues } from '../lib/regras.mjs';
 import { imagem, preco, cartaoProduto, migalhas, botaoSeta, desconto, promocaoAte } from './componentes.mjs';
 
 const produtosDe = (ctx, cat) => ctx.produtos.filter((p) => p.categoria === cat);
@@ -419,6 +420,10 @@ export function contactos(ctx) {
   const cartoes = [];
   if (c.whatsapp) cartoes.push(`<li>${icones.whatsapp}<h2>WhatsApp</h2><p><a href="${ctx.whatsapp('Olá!')}">${esc(ctx.numeroLegivel(c.whatsapp))}</a></p><p class="nota">${esc(ctx.custoChamada(c.whatsapp))}</p></li>`);
   else cartoes.push(`<li>${icones.whatsapp}<h2>WhatsApp</h2><p>${ctx.marcador('o número de WhatsApp das encomendas')}</p></li>`);
+  /* O telefone, para ligar, com a nota que a lei pede junto de um número (DL 59/2021): o custo
+     depende da rede. Um que não seja português fica de fora (as regras avisam). */
+  const tel = numeroPortugues(c.telefone);
+  if (tel) cartoes.push(`<li>${icones.telefone}<h2>Telefone</h2><p><a href="tel:+351${tel}">${esc(ctx.numeroLegivel(tel))}</a></p><p class="nota">${esc(ctx.custoChamada(tel))}</p></li>`);
   if (c.email) cartoes.push(`<li>${icones.email}<h2>Email</h2><p><a href="mailto:${esc(c.email)}">${esc(c.email)}</a></p></li>`);
   if (c.instagram) cartoes.push(`<li>${icones.instagram}<h2>Instagram</h2><p><a href="https://www.instagram.com/${esc(c.instagram)}/" target="_blank" rel="noopener">@${esc(c.instagram)}</a></p></li>`);
   if (c.facebook) cartoes.push(`<li>${icones.facebook}<h2>Facebook</h2><p><a href="https://www.facebook.com/${esc(c.facebook)}" target="_blank" rel="noopener">Pokóto Wood</a></p></li>`);
@@ -429,7 +434,7 @@ export function contactos(ctx) {
   <p class="texto__intro">Encomendas, dúvidas sobre medidas ou uma ideia de personalização: fale connosco. Respondemos pelo WhatsApp, por email ou pelas redes sociais.</p>
   <ul class="contactos">${cartoes.join('')}</ul>
 </div>`;
-  return { caminho: '/contactos/', titulo: 'Contactos', descricao: `Fale com a ${ctx.site.marca}: WhatsApp, email, Instagram e Facebook. Oficina em ${ctx.site.local.localidade}.`, jsonld: [m.ld, organizacao(ctx)], conteudo };
+  return { caminho: '/contactos/', titulo: 'Contactos', descricao: `Fale com a ${ctx.site.marca}: WhatsApp, ${tel ? 'telefone, ' : ''}email, Instagram e Facebook. Oficina em ${ctx.site.local.localidade}.`, jsonld: [m.ld, organizacao(ctx)], conteudo };
 }
 
 export function erro404(ctx) {

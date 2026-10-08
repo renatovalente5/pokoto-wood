@@ -511,7 +511,7 @@ export function problemasDoSite(d, { producao = false } = {}) {
   if (vazio(c.email)) bloqueia('contactos.email:vazio', 'contactos', 'contactos.email', 'Falta o email: a lei pede um contacto por escrito no site.');
   if (!vazio(c.whatsapp) && !eTelemovel(c.whatsapp)) bloqueia('contactos.whatsapp', 'contactos', 'contactos.whatsapp', 'O WhatsApp tem de ser um telemóvel português de 9 algarismos (ex.: 916 949 456).');
   if (vazio(c.whatsapp)) legal('contactos.whatsapp:vazio', 'contactos', 'contactos.whatsapp', 'Falta o número de WhatsApp: é para lá que o carrinho manda as encomendas.');
-  if (!vazio(c.telefone) && !numeroPortugues(c.telefone)) avisa('contactos.telefone', 'contactos', 'contactos.telefone', 'O telefone tem de ser um número português de 9 algarismos.');
+  if (!vazio(c.telefone) && !numeroPortugues(c.telefone)) avisa('contactos.telefone', 'contactos', 'contactos.telefone', 'O telefone tem de ser um número português de 9 algarismos; até lá, a página de contactos não o mostra.');
   for (const [k, rotulo] of [['instagram', 'Instagram'], ['facebook', 'Facebook']]) {
     const v = c[k];
     if (!vazio(v) && (typeof v !== 'string' || !/^[A-Za-z0-9._-]{1,60}$/.test(v))) avisa(`contactos.${k}`, 'contactos', `contactos.${k}`, `${rotulo}: escreva só o nome da conta, sem @ nem endereço (ex.: pokotowood).`);
