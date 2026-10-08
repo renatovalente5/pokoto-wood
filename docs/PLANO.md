@@ -85,8 +85,8 @@ feito por encomenda; **sem stock** (o painel não o gere).)
    junho a dezembro já é comprida: se continuar em 2027, tirar o riscado.
 8. ~~**Régua**~~: 80 × 20 cm (Célia, 8 out).
 9. ~~**Autorização dos pais**~~: só para o Instagram, **não para o site** (Célia, 8 out). Saíram as 17
-   fotografias com crianças (commit f9e8c7c). Continuam no HISTÓRICO do repositório, que é
-   público: tirá-las de lá pede reescrever o histórico (decisão do Renato).
+   fotografias com crianças (commit 465f941). A 8 out o histórico do repositório foi reescrito sem elas (force push; o
+   Renato autorizou), e as publicações, caches e pacotes antigos do GitHub Actions apagados.
 10. **Fotografias e vídeos originais** (os do WhatsApp e do Instagram perdem qualidade): «vamos
     enviar» por email (Célia, 8 out) — sem crianças. O logótipo chegou por email a 7 out.
 11. **História do nome «Pokóto»**, ano em que começaram, e se se pode falar do Sandro ter saído da
