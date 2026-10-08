@@ -18,6 +18,32 @@
   addEventListener('pointerdown', () => { raiz.dataset.entrada = 'ponteiro'; }, { capture: true, passive: true });
   addEventListener('keydown', (e) => { if (!e.metaKey && !e.ctrlKey) delete raiz.dataset.entrada; }, { capture: true });
 
+  // ---------------------------------------------------------------- etiquetas em duas linhas
+  // Partido em duas linhas, o texto deixava a caixa com a largura toda e um vazio à direita. Mede-se
+  // a linha mais comprida e a caixa fica à medida dela (outra vez quando as letras chegam e quando
+  // a janela muda de largura).
+  const etiquetas = $$('.etiqueta');
+  function ajustarEtiquetas() {
+    for (const e of etiquetas) {
+      e.style.width = '';
+      e.classList.remove('etiqueta--linhas');
+      const r = document.createRange();
+      r.selectNodeContents(e);
+      const linhas = Array.from(r.getClientRects()).filter((l) => l.width > 0);
+      if (linhas.length < 2) continue;
+      const cs = getComputedStyle(e);
+      const lados = ['paddingLeft', 'paddingRight', 'borderLeftWidth', 'borderRightWidth'].reduce((t, k) => t + parseFloat(cs[k]), 0);
+      e.style.width = `${Math.ceil(Math.max(...linhas.map((l) => l.width)) + lados + 1)}px`;
+      e.classList.add('etiqueta--linhas');
+    }
+  }
+  if (etiquetas.length) {
+    ajustarEtiquetas();
+    if (document.fonts) document.fonts.ready.then(ajustarEtiquetas);
+    let pedido = 0;
+    addEventListener('resize', () => { cancelAnimationFrame(pedido); pedido = requestAnimationFrame(ajustarEtiquetas); });
+  }
+
   // ---------------------------------------------------------------- aviso do topo com data
   // O site só muda quando se publica; o aviso «até 15 de outubro» sai sozinho no dia 16.
   $$('.aviso[data-ate]').forEach((a) => { if (hojeLisboa() > a.dataset.ate) a.hidden = true; });
