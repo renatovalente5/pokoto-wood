@@ -62,5 +62,9 @@
   "regua-simao-carlota": {
     "alt": "Duas réguas de crescimento com os nomes Simão e Carlota, pousadas no chão",
     "foco": "50% 45%"
+  },
+  "oficina-pecas-personalizadas": {
+    "alt": "Torres de aprendizagem personalizadas com nomes e desenhos, alinhadas na oficina da Pokóto Wood, prontas a seguir para as famílias",
+    "foco": "50% 60%"
   }
 }

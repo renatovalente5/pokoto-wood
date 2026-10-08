@@ -1,5 +1,5 @@
 titulo: Como encomendar
-descricao: Escolha as peças, escreva a personalização e envie a encomenda pelo WhatsApp. Levantamento grátis em Famalicão ou envio para Portugal e Espanha.
+descricao: Escolha as peças, escreva a personalização e envie a encomenda pelo WhatsApp. Levantamento grátis em Vila Nova de Famalicão ou envio para Portugal e Espanha.
 ---
 Não há pagamentos no site: a encomenda segue para nós pelo WhatsApp e combinamos o resto consigo.
 
