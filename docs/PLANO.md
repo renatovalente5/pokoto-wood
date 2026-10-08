@@ -67,22 +67,26 @@ montado exceto o roupeiro; o colchão do arco não está incluído nem se vende.
 
 ## 3. Perguntas para a Pokóto (ou para o Renato)
 
-(Já respondidas pelo email: domínio, número de WhatsApp, identificação legal, NIF, morada, logótipo.)
+(Já respondidas pelo email: domínio, número de WhatsApp, identificação legal, NIF, morada, logótipo.
+No WhatsApp, a 8 out (`_cliente/whatsapp/2026-10-08/conversa.md`): o IVA está incluído; o domínio
+pokotowood.pt pode comprar-se (o Renato compra-o quando aprovarem o site); 2 a 3 semanas, tudo
+feito por encomenda; **sem stock** (o painel não o gere).)
 
-1. **Domínio**: `pokotowood.pt` e `pokotowood.com` estão livres (7 out). Compra-se o .pt?
-2. **Número de WhatsApp** das encomendas (o do Sandro, o da Célia, ou outro).
-3. **Identificação legal** (DL 7/2004, art. 10.º): é empresa (Lda/Unipessoal) ou empresário em nome
-   individual? Nome, **NIF** e **morada da sede** (a morada é obrigatória no site).
-4. **IVA**: os preços já têm IVA, ou estão isentos (art. 53.º do CIVA)?
-5. **Pagamento**: MB WAY, transferência, no levantamento? Pedem sinal nas peças personalizadas?
-6. **Prazos**: quanto tempo leva a fazer e a entregar? (O Instagram diz «Encomendas para Natal até
-   15 de outubro».)
+1. ~~**Domínio**~~: o .pt, sim (Célia, 8 out). Compra-se quando aprovarem o site.
+2. ~~**Número de WhatsApp**~~: 916 949 456, o da Célia (email de 7 out).
+3. ~~**Identificação legal**~~: empresário em nome individual, Sandro Filipe Cardoso Hora, NIF
+   226 971 740, Rua dos Portais, n.º 940, 4770-465 Requião (email de 7 out).
+4. ~~**IVA**~~: incluído (Célia, 8 out). Nos termos: «Incluem o IVA à taxa legal em vigor.»
+5. **Pagamento**: MB WAY e transferência (Renato, 7 out). Falta: paga-se tudo antes de começarem a
+   peça, ou um sinal?
+6. ~~**Prazos**~~: 2 a 3 semanas, tudo por encomenda (Célia, 8 out). (O Instagram diz «Encomendas
+   para Natal até 15 de outubro»: um aviso do topo, se quiserem.)
 7. **Promoções**: os preços anteriores (95/140/85/120/75 €) foram praticados nos 30 dias antes da
-   descida? (Regra Omnibus, DL 70/2007.) A promoção acaba a 31 de dezembro?
+   descida? (Regra Omnibus, DL 70/2007.) Acaba a 31 de dezembro («até ao final do ano», 7 out).
 8. **Régua**: «80 cm/s combinado, 20 cm/s» = 80 × 20 cm?
 9. **Autorização dos pais** para as fotografias das crianças no site.
-10. **Fotografias e vídeos originais** (o Sandro ia mandar por email; o acesso ao Gmail foi bloqueado
-    pelo classificador de segurança desta sessão) e o **logótipo** em ficheiro.
+10. **Fotografias e vídeos originais** (os do WhatsApp e do Instagram perdem qualidade). O
+    logótipo chegou por email a 7 out.
 11. **História do nome «Pokóto»**, ano em que começaram, e se se pode falar do Sandro ter saído da
     Bosch para se dedicar à Pokóto.
 12. **Idades recomendadas** por artigo. E a **marcação CE**: um triângulo/arco Pikler é, em regra,
