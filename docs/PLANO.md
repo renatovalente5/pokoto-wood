@@ -77,21 +77,25 @@ feito por encomenda; **sem stock** (o painel não o gere).)
 3. ~~**Identificação legal**~~: empresário em nome individual, Sandro Filipe Cardoso Hora, NIF
    226 971 740, Rua dos Portais, n.º 940, 4770-465 Requião (email de 7 out).
 4. ~~**IVA**~~: incluído (Célia, 8 out). Nos termos: «Incluem o IVA à taxa legal em vigor.»
-5. **Pagamento**: MB WAY e transferência (Renato, 7 out). Falta: paga-se tudo antes de começarem a
-   peça, ou um sinal?
+5. ~~**Pagamento**~~: MB WAY e transferência, **na totalidade no ato da encomenda** (Célia, 8 out).
 6. ~~**Prazos**~~: 2 a 3 semanas, tudo por encomenda (Célia, 8 out). (O Instagram diz «Encomendas
    para Natal até 15 de outubro»: um aviso do topo, se quiserem.)
-7. **Promoções**: os preços anteriores (95/140/85/120/75 €) foram praticados nos 30 dias antes da
-   descida? (Regra Omnibus, DL 70/2007.) Acaba a 31 de dezembro («até ao final do ano», 7 out).
-8. **Régua**: «80 cm/s combinado, 20 cm/s» = 80 × 20 cm?
-9. **Autorização dos pais** para as fotografias das crianças no site.
-10. **Fotografias e vídeos originais** (os do WhatsApp e do Instagram perdem qualidade). O
-    logótipo chegou por email a 7 out.
+7. ~~**Promoções**~~: os preços de agora são «desde junho» (Célia, 8 out): o riscado é o de antes
+   da descida, como a regra dos 30 dias pede (DL 70/2007). Acaba a 31 de dezembro. Uma promoção de
+   junho a dezembro já é comprida: se continuar em 2027, tirar o riscado.
+8. ~~**Régua**~~: 80 × 20 cm (Célia, 8 out).
+9. ~~**Autorização dos pais**~~: só para o Instagram, **não para o site** (Célia, 8 out). Saíram as 17
+   fotografias com crianças (commit f9e8c7c). Continuam no HISTÓRICO do repositório, que é
+   público: tirá-las de lá pede reescrever o histórico (decisão do Renato).
+10. **Fotografias e vídeos originais** (os do WhatsApp e do Instagram perdem qualidade): «vamos
+    enviar» por email (Célia, 8 out) — sem crianças. O logótipo chegou por email a 7 out.
 11. **História do nome «Pokóto»**, ano em que começaram, e se se pode falar do Sandro ter saído da
     Bosch para se dedicar à Pokóto.
-12. **Idades recomendadas** por artigo. E a **marcação CE**: um triângulo/arco Pikler é, em regra,
-    um brinquedo (Diretiva 2009/48/CE, EN 71) — é da Pokóto confirmar que cumpre.
-13. Emails que entram no **backoffice** (pokotowood@sapo.pt? os pessoais?).
+12. ~~**Idades recomendadas**~~ (Célia, 8 out): torres 18 meses; triângulo, prancha e arco 8;
+    estante 12; com a nota de que dependem do desenvolvimento de cada criança (campo `idade`, em
+    meses). Fica a **marcação CE**: um triângulo/arco Pikler é, em regra, um brinquedo (Diretiva
+    2009/48/CE, EN 71) — é da Pokóto confirmar que cumpre (nota para o Renato, não perguntado).
+13. ~~Emails do **backoffice**~~: pokotowood@sapo.pt («Sim», Célia, 8 out).
 14. Versão em **espanhol** (vendem para Espanha)?
 15. O destaque «Filhos 4 patas» do Instagram: há artigos para animais a pôr no site?
 
