@@ -9,6 +9,15 @@
   const ICONE_PAUSA = '<svg class="icone" viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true" focusable="false"><path d="M9 6.5v11M15 6.5v11"/></svg>';
   const ICONE_TOCAR = '<svg class="icone" viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M8 5.5v13l10.5-6.5L8 5.5Z"/></svg>';
 
+  // ---------------------------------------------------------------- o anel do foco
+  // Ao abrir o menu, o foco vai para o primeiro elemento (o logótipo), como deve, e o Safari do
+  // iPhone desenha-lhe o anel mesmo depois de um toque: uma moldura verde que só confunde. Guarda-se
+  // como foi a última interacção: um toque ou um clique escondem o anel (o CSS, em
+  // html[data-entrada="ponteiro"]); uma tecla volta a mostrá-lo, para quem navega pelo teclado.
+  const raiz = document.documentElement;
+  addEventListener('pointerdown', () => { raiz.dataset.entrada = 'ponteiro'; }, { capture: true, passive: true });
+  addEventListener('keydown', (e) => { if (!e.metaKey && !e.ctrlKey) delete raiz.dataset.entrada; }, { capture: true });
+
   // ---------------------------------------------------------------- aviso do topo com data
   // O site só muda quando se publica; o aviso «até 15 de outubro» sai sozinho no dia 16.
   $$('.aviso[data-ate]').forEach((a) => { if (hojeLisboa() > a.dataset.ate) a.hidden = true; });

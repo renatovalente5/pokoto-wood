@@ -53,6 +53,10 @@ a { color: var(--castanho); text-underline-offset: .18em; }
 a:hover { color: var(--tinta); }
 button { font: inherit; color: inherit; cursor: pointer; }
 :focus-visible { outline: 3px solid var(--salva-escura); outline-offset: 3px; border-radius: 6px; }
+/* Depois de um toque ou de um clique (site.js), o anel que o foco leva quando o menu ou o carrinho
+   abrem não se desenha; os campos de texto continuam a mostrá-lo, e uma tecla repõe-no. */
+html[data-entrada="ponteiro"] :focus-visible:not(input, textarea, select) { outline: none; }
+html[data-entrada="ponteiro"] .cartao__ligacao:focus-visible::after { outline: none; }
 ul, ol { margin: 0; padding: 0; }
 [hidden] { display: none !important; }
 .icone { width: 1.25em; height: 1.25em; flex: none; }
