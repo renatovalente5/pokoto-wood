@@ -49,7 +49,7 @@
   "vendaIsolada": true,
   "video": "trio-pikler",
   "categoria": "pikler",
-  "maisVendido": true,
+  "maisVendido": false,
   "novidade": false,
   "publicado": true,
   "ordem": 4

@@ -1,6 +1,5 @@
 {
-  "nome": "Torre/Mesa de Aprendizagem Montessori",
-  "nomeCurto": "Torre/Mesa",
+  "nome": "Torre/Mesa Aprendizagem Montessori",
   "fotos": [
     "torre-mesa-recorte",
     "torre-mesa-cozinha"
@@ -39,7 +38,7 @@
   "vendaIsolada": true,
   "video": "",
   "categoria": "torres-de-aprendizagem",
-  "maisVendido": false,
+  "maisVendido": true,
   "novidade": false,
   "publicado": true,
   "ordem": 2
