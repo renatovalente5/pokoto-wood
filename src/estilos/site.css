@@ -368,6 +368,13 @@ html:has(dialog[open]) { overflow: hidden; }
 .video video { width: 100%; height: auto; aspect-ratio: 9 / 16; object-fit: cover; }
 .video__botao { position: absolute; right: 14px; bottom: 14px; width: 52px; height: 52px; border-radius: 50%; border: 0; background: rgba(58, 42, 29, .62); color: var(--branco); display: grid; place-items: center; backdrop-filter: blur(6px); -webkit-backdrop-filter: blur(6px); }
 .video__botao:hover { background: rgba(58, 42, 29, .8); }
+/* Os botões de parar não se vêem (a Célia, 9 out 2026): parar é tocar na faixa ou no vídeo. Com o
+   teclado, o botão aparece quando se chega a ele; o de ver o vídeo aparece quando o vídeo está
+   parado sem ser por estar fora do ecrã (site.js: «reduzir movimento», «poupar dados», parado por
+   quem vê, ou recusado pelo telemóvel). */
+.faixa__pausa:not(:focus-visible), .video__botao:not(:focus-visible) { opacity: 0; pointer-events: none; }
+.video--parado .video__botao { opacity: 1; pointer-events: auto; }
+.faixa__pista, .video video { cursor: pointer; }
 
 /* ------------------------------------------------------------------ início: como encomendar */
 .passos { max-width: var(--largura); margin: clamp(64px, 9vw, 104px) auto 0; padding-inline: var(--margem); text-align: center; }

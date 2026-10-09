@@ -162,35 +162,45 @@
     };
     new IntersectionObserver((es) => { visivel = es[0].isIntersecting; }).observe(f);
     botao.addEventListener('click', () => { parada = !parada; desenharBotao(); });
+    // O botão não se vê (só com o teclado): tocar na faixa pára-a e põe-na a andar.
+    f.addEventListener('click', (e) => { if (e.target.closest('[data-faixa-pausa]')) return; parada = !parada; desenharBotao(); });
     desenharBotao();
     requestAnimationFrame(passo);
   });
 
   // ---------------------------------------------------------------- vídeos
   // Sem som e em ciclo. Começam sozinhos quando aparecem no ecrã — excepto com «reduzir
-  // movimento» ou «poupar dados»; aí ficam na imagem de capa à espera do botão.
+  // movimento» ou «poupar dados» (ou se o telemóvel recusar, como no modo de poupança de bateria do
+  // iPhone); aí ficam na imagem de capa, com o botão de ver à vista. A tocar, não há botão à vista
+  // (a Célia, 9 out 2026): tocar no vídeo pára-o, e aparece o de ver; com o teclado, o botão
+  // aparece quando se chega a ele.
   const poupar = navigator.connection && navigator.connection.saveData;
+  const automatico = !menosMovimento.matches && !poupar;
   $$('[data-video]').forEach((v) => {
     const video = $('video', v);
     const botao = $('[data-video-botao]', v);
     const rotulo = $('.visualmente-escondido', botao);
     let escolhaDaPessoa = false;
+    let recusado = false;
     const desenhar = () => {
       const tocar = video.paused;
       botao.setAttribute('aria-pressed', String(!tocar));
       botao.firstElementChild.outerHTML = tocar ? ICONE_TOCAR : ICONE_PAUSA;
       rotulo.textContent = tocar ? 'Ver o vídeo' : 'Parar o vídeo';
+      v.classList.toggle('video--parado', tocar && (!automatico || escolhaDaPessoa || recusado));
+    };
+    const alternar = () => {
+      escolhaDaPessoa = true;
+      if (video.paused) video.play().catch(() => {}); else video.pause();
     };
     video.addEventListener('play', desenhar);
     video.addEventListener('pause', desenhar);
-    botao.addEventListener('click', () => {
-      escolhaDaPessoa = true;
-      if (video.paused) video.play().catch(() => {}); else video.pause();
-    });
-    if (!menosMovimento.matches && !poupar) {
+    botao.addEventListener('click', alternar);
+    video.addEventListener('click', alternar);
+    if (automatico) {
       new IntersectionObserver((es) => {
         if (escolhaDaPessoa) return;
-        if (es[0].isIntersecting) video.play().catch(() => {}); else video.pause();
+        if (es[0].isIntersecting) video.play().catch(() => { recusado = true; desenhar(); }); else video.pause();
       }, { threshold: 0.4 }).observe(v);
     }
     desenhar();
