@@ -290,7 +290,7 @@ html:has(dialog[open]) { overflow: hidden; }
 .personaliza__lista { list-style: none; font-family: var(--letra-titulos); font-weight: 700; text-transform: uppercase; font-size: clamp(2rem, 5vw, 3.4rem); line-height: 1.12; margin-bottom: .6em; }
 .personaliza__lista li { color: rgba(255, 255, 255, .45); }
 .personaliza__lista li.ativo { color: var(--branco); text-decoration: underline; text-decoration-thickness: 3px; text-underline-offset: .18em; }
-.personaliza__titulo { color: var(--branco); font-size: 1.35rem; margin-top: .6em; }
+.personaliza__titulo { color: var(--branco); font-size: 1.35rem; margin-top: .6em; text-wrap: balance; }
 .personaliza__painel p { margin-inline: auto; max-width: 42ch; }
 .personaliza__foto { position: relative; border-radius: var(--raio-grande); overflow: hidden; background: var(--creme); min-height: 360px; }
 .personaliza__foto picture, .personaliza__foto img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
