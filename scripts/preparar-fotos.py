@@ -42,13 +42,15 @@ SOMBRA = (92, 64, 38)
 # Saíram daqui as 17 em que se vê uma criança; não voltar a pô-las.
 FOTOS = {
     # Torre / cadeira
-    'torre-cadeira-recorte': ('recorte', '204137-53268.jpg', {}),
+    # 10 out 2026: as fotografias de estúdio que a Célia mandou «para colocar como principais»
+    'torre-cadeira-recorte': ('recorte', '2026-10-10/media/50-201530-3A6BC6C42937EBF88F37.jpg', {}),
     'torre-cadeira-fechada': ('corte', '204138-53269.jpg', (537, 527, 886, 1033)),
     # Torre / mesa
-    'torre-mesa-recorte': ('recorte', '175629-53194.jpg', {'limpar_escuros': 15000}),
+    # (uma captura do Instagram: corta-se a barra de baixo antes de recortar)
+    'torre-mesa-recorte': ('recorte', '2026-10-10/media/51-201530-3A2F45A97BC554E75107.jpg', {'cortar_antes': (0, 0, 960, 1550)}),
     'torre-mesa-cozinha': ('inteira', '204815-53277.jpg', None),
     # Triângulo Pikler
-    'triangulo-recorte': ('recorte', '175628-53192.jpg', {}),
+    'triangulo-recorte': ('recorte', '2026-10-10/media/49-201529-3A655E8579DE69AE77C0.jpg', {}),
     'triangulo-coelho': ('inteira', '205113-53291.jpg', None),
     'triangulo-nomes': ('corte', '205113-53290.jpg', (549, 74, 955, 690)),
     # Arco de Pikler (+ prancha)
@@ -134,8 +136,14 @@ def main():
         destino = os.path.join(SAIDA, nome + '.jpg')
         if os.path.exists(destino) and not tudo:
             continue
-        origem = os.path.join(WA, ficheiro)
+        # «AAAA-MM-DD/media/x.jpg»: de outro dia do grupo; só o nome: do primeiro (7 out)
+        origem = os.path.join(CLIENTE, 'whatsapp', ficheiro) if '/' in ficheiro else os.path.join(WA, ficheiro)
         if tipo == 'recorte':
+            if extra.get('cortar_antes'):
+                os.makedirs(RECORTES, exist_ok=True)
+                cortada = os.path.join(RECORTES, os.path.splitext(os.path.basename(origem))[0] + '-cortada.jpg')
+                ImageOps.exif_transpose(Image.open(origem)).convert('RGB').crop(extra['cortar_antes']).save(cortada, 'JPEG', quality=95)
+                origem = cortada
             im = recortar(origem)
             if extra.get('limpar_escuros'):
                 im = limpar_escuros(im, extra['limpar_escuros'])

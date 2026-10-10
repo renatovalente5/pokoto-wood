@@ -85,7 +85,7 @@ export const NOMES_ZONAS = Object.freeze({ continente: 'Portugal Continental', i
 export const CAMPOS_ARTIGO = Object.freeze([
   'nome', 'nomeCurto', 'fotos', 'resumo', 'descricao',
   'preco', 'precoAnterior', 'promocaoAte',
-  'medidas', 'montagem', 'idade', 'personalizacao', 'complementos', 'envio', 'vendaIsolada', 'video',
+  'medidas', 'montagem', 'idade', 'idadeAte', 'personalizacao', 'complementos', 'envio', 'vendaIsolada', 'video',
   'categoria', 'maisVendido', 'novidade', 'publicado', 'ordem',
 ]);
 /* Sempre escritos pelo painel, com o valor explícito. Ausentes valem o valor por
@@ -96,7 +96,7 @@ export const POR_OMISSAO = Object.freeze({ publicado: true, maisVendido: false, 
 export const NOMES_CAMPOS = Object.freeze({
   nome: 'Nome do artigo', nomeCurto: 'Nome curto', fotos: 'Fotografias', resumo: 'Frase curta', descricao: 'Descrição',
   preco: 'Preço', precoAnterior: 'Preço anterior', promocaoAte: 'Fim da promoção',
-  medidas: 'Medidas', montagem: 'Como segue', idade: 'Idade recomendada', personalizacao: 'Personalização', complementos: 'Complementos',
+  medidas: 'Medidas', montagem: 'Como segue', idade: 'Idade recomendada', idadeAte: 'Idade recomendada (até)', personalizacao: 'Personalização', complementos: 'Complementos',
   envio: 'Portes de envio', vendaIsolada: 'Vende-se sozinho', video: 'Vídeo',
   categoria: 'Categoria', maisVendido: 'Mais vendido', novidade: 'Novidade', publicado: 'Publicado no site', ordem: 'Posição na lista',
 });
@@ -114,7 +114,7 @@ export const TAMANHOS = Object.freeze({
   marca: 60, descricaoSite: 300, assinatura: 80, fundadores: 80, email: 160, telefone: 20, rede: 60, horario: 120,
   empresaNome: 160, empresaTipo: 80, nif: 20, morada: 160, codigoPostal: 12, localidade: 60, concelho: 60, iva: 200,
   avisoTexto: 140, ligacao: 200, prazo: 400, pagamento: 400, levantamento: 300, notaVarios: 300,
-  catNome: 40, catTitulo: 80, catResumo: 300,
+  catNome: 40, catTitulo: 80, catResumo: 2000,
   inicioCurto: 60, inicioTitulo: 120, inicioTexto: 600, inicioLista: 8,
 });
 /* O que o Worker do painel aceita gravar (recusa acima); aqui só se lembra, a
@@ -210,9 +210,13 @@ export const eTelemovel = (v) => /^9[1236]\d{7}$/.test(numeroPortugues(v) ?? '')
 
 /* A IDADE RECOMENDADA de um artigo, em meses (a partir de quando), como o site a escreve:
    18 → «A partir dos 18 meses», 24 → «A partir dos 2 anos», 0 → «Desde o nascimento».
+   Com «ate» (meses, maior do que «meses»), um intervalo como a Célia o escreve
+   (10 out 2026, torres): 12 e 18 → «A partir dos 12/18 meses».
    → o texto, ou null se não é uma idade (o site não a mostra). */
-export function idadeTexto(meses) {
-  if (typeof meses !== 'number' || !Number.isInteger(meses) || meses < LIMITES.idade[0] || meses > LIMITES.idade[1]) return null;
+export const idadeValida = (m) => typeof m === 'number' && Number.isInteger(m) && m >= LIMITES.idade[0] && m <= LIMITES.idade[1];
+export function idadeTexto(meses, ate) {
+  if (!idadeValida(meses)) return null;
+  if (idadeValida(ate) && ate > meses) return `A partir dos ${meses}/${ate} meses`;
   if (meses === 0) return 'Desde o nascimento';
   if (meses === 1) return 'A partir de 1 mês';
   if (meses >= 24 && meses % 12 === 0) return `A partir dos ${meses / 12} anos`;
@@ -393,6 +397,9 @@ export function problemasDoArtigo(a, ctx = {}) {
   }
   if (!ausente(a.idade) && a.idade !== '' && idadeTexto(a.idade) === null) {
     avisa('idade', 'idade', `A idade recomendada é o número de meses, de 0 a ${LIMITES.idade[1]} (ex.: 18). Até estar certa, o site não a mostra.`);
+  }
+  if (!ausente(a.idadeAte) && a.idadeAte !== '' && (!idadeValida(a.idadeAte) || !idadeValida(a.idade) || a.idadeAte <= a.idade)) {
+    avisa('idadeAte', 'idadeAte', 'A idade «até» é o número de meses, maior do que o «a partir de» (ex.: 12 e 18 dá «A partir dos 12/18 meses»). Até estar certa, o site mostra só o «a partir de».');
   }
 
   // --- portes ----------------------------------------------------------------
@@ -640,7 +647,7 @@ export function problemasDoInicio(valor, { fotos = null, artigos = null, videos 
     ['capa.etiqueta', TAMANHOS.inicioCurto, true], ['capa.tituloLinha1', TAMANHOS.inicioCurto, true], ['capa.tituloLinha2', TAMANHOS.inicioCurto, true], ['capa.texto', TAMANHOS.inicioTexto, true], ['capa.botao', TAMANHOS.inicioCurto, true],
     ['vitrine.titulo', TAMANHOS.inicioTitulo, true],
     ['categorias.titulo', TAMANHOS.inicioTitulo, true], ['categorias.texto', TAMANHOS.inicioTexto, true],
-    ['personalizacao.etiqueta', TAMANHOS.inicioCurto, true], ['personalizacao.titulo', TAMANHOS.inicioTitulo, true], ['personalizacao.texto', TAMANHOS.inicioTexto, true], ['personalizacao.botao', TAMANHOS.inicioCurto, true], ['personalizacao.legenda', TAMANHOS.inicioCurto, true],
+    ['personalizacao.etiqueta', TAMANHOS.inicioCurto, true], ['personalizacao.titulo', TAMANHOS.inicioTitulo, true], ['personalizacao.texto', TAMANHOS.inicioTexto, true], ['personalizacao.botao', TAMANHOS.inicioCurto, true], ['personalizacao.legenda', TAMANHOS.inicioCurto, false],
     ['historia.etiqueta', TAMANHOS.inicioCurto, true], ['historia.titulo', TAMANHOS.inicioTitulo, true], ['historia.texto', TAMANHOS.inicioTexto, true], ['historia.botao', TAMANHOS.inicioCurto, true],
     ['emCasa.titulo', TAMANHOS.inicioTitulo, true], ['emCasa.texto', TAMANHOS.inicioTexto, true],
     ['oficina.etiqueta', TAMANHOS.inicioCurto, true], ['oficina.titulo', TAMANHOS.inicioTitulo, true], ['oficina.texto', TAMANHOS.inicioTexto, true], ['oficina.botao', TAMANHOS.inicioCurto, true],
@@ -666,7 +673,7 @@ export function problemasDoInicio(valor, { fotos = null, artigos = null, videos 
       bloqueia(`${caminho}:lista`, caminho, `Esta lista tem de ter de ${min} a ${max} textos curtos, nenhum vazio.`);
     }
   };
-  listaDeTextos('personalizacao.opcoes', 1, 4);
+  listaDeTextos('personalizacao.opcoes', 0, 4);
   listaDeTextos('historia.bolhas', 0, 3);
   listaDeTextos('faixa', 2, TAMANHOS.inicioLista);
   /* As listas de blocos (título + texto). */

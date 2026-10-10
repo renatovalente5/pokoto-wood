@@ -53,7 +53,7 @@ O risco de perda ou dano da peça passa para si quando a recebe.
 
 ## Personalização
 
-A personalização (o nome, uma frase ou um desenho) está incluída no preço. Gravamos o que nos indicar e, antes de começarmos, confirmamos consigo como fica. Verifique a ortografia com cuidado: depois de gravada, a madeira não se corrige.
+A personalização (o nome, uma frase ou um desenho) está incluída no preço. Gravamos o que nos indicar e, antes de gravar, enviamos a maquete para aprovação. Verifique a ortografia com cuidado: depois de gravada, a madeira não se corrige.
 
 ## Direito de livre resolução (desistir da compra)
 
@@ -71,7 +71,7 @@ As diferenças próprias da madeira e do trabalho à mão, descritas acima, não
 
 ## Segurança
 
-Use as peças sempre sob a supervisão de um adulto, numa superfície plana e estável, e verifique de vez em quando os parafusos e as uniões.
+Use as peças sempre sob a supervisão de um adulto, numa superfície plana e estável. As torres de aprendizagem usam-se sempre encostadas a uma bancada.
 
 ## Reclamações e litígios
 

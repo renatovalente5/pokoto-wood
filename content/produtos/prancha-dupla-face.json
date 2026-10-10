@@ -5,8 +5,8 @@
     "trio-sala",
     "arco-prancha"
   ],
-  "resumo": "De um lado escorrega, do outro rampa para trepar. Junta-se ao triângulo ou ao arco de Pikler.",
-  "descricao": "Encosta-se ao triângulo ou ao arco de Pikler e transforma-os: de um lado é um escorrega, do outro uma rampa com apoios para trepar.\n\nJuntamo-la ao Triângulo Pikler ou ao Arco de Pikler: escolha-a na página de um deles. Com os três, fica com o trio que mais vendemos.",
+  "resumo": "De um lado escorrega, do outro escalada. Uma peça para juntar ao triângulo, ao arco ou a ambos.",
+  "descricao": "De um lado escorrega, do outro escalada. Uma peça para juntar ao triângulo, ao arco ou a ambos.\n\nVende-se também sozinha, para quem já tem o triângulo ou o arco.",
   "preco": 70,
   "precoAnterior": 75,
   "promocaoAte": "2026-12-31",
@@ -23,12 +23,16 @@
   "montagem": "Vai pronta a usar.",
   "idade": 8,
   "personalizacao": {
-    "disponivel": false,
+    "disponivel": true,
     "obrigatoria": false
   },
   "complementos": [],
-  "envio": null,
-  "vendaIsolada": false,
+  "envio": {
+    "continente": null,
+    "ilhas": null,
+    "espanha": null
+  },
+  "vendaIsolada": true,
   "video": "trio-pikler",
   "categoria": "pikler",
   "maisVendido": false,

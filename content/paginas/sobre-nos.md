@@ -2,18 +2,31 @@ titulo: Sobre nós
 descricao: Somos o Sandro e a Célia. Na nossa oficina em Vila Nova de Famalicão fazemos à mão torres de aprendizagem, peças Pikler e mobiliário Montessori.
 foto: arco-prancha
 ---
-Somos o Sandro e a Célia, e a {{marca}} é a nossa oficina, em {{localidade}}.
+## A Nossa História
 
-Fabricamos artigos educativos em madeira para bebés e crianças: torres de aprendizagem, peças Pikler e mobiliário Montessori. Tudo é feito por nós, à mão, peça a peça.
+Somos o Sandro e a Célia, duas pessoas apaixonadas pela madeira, pelo desenho e pela criação de peças com propósito.
 
-## Porque fazemos o que fazemos
+A história da {{marca}} começou em 2021, com a chegada dos nossos sobrinhos e uma vontade muito especial de criar algo para eles. Foi assim que nasceu a ideia de desenhar uma torre de aprendizagem: simples, única, segura e prática, pensada para aproximar os mais pequenos do mundo dos crescidos.
 
-Acreditamos que as crianças aprendem a fazer. Uma torre que as põe à altura da bancada, um triângulo para trepar ao seu ritmo, uma estante onde escolhem o livro sozinhas: são peças simples que lhes dão autonomia e confiança — e que crescem com elas.
+Mas queríamos mais do que uma torre. Queríamos que fosse funcional, que pudesse fechar e transformar-se numa cadeira, porque, afinal, há sempre espaço para mais uma cadeira em casa!
 
-## Feitas para cada família
+Foi assim, de forma muito natural, que demos os primeiros passos neste projeto. Começámos devagarinho, em part-time, conciliando a {{marca}} com as nossas vidas profissionais durante mais de um ano.
 
-Cada peça pode levar o nome, uma frase ou um desenho, gravados na madeira, sem custos. Antes de começarmos, combinamos tudo consigo pelo WhatsApp. [Ver como funciona a personalização](/personalizacao/).
+O que começou como uma ideia criada para a nossa família foi crescendo com cada mensagem, cada encomenda e cada palavra de carinho que recebíamos. Os vossos feedbacks foram maravilhosos e deram-nos a confiança e a motivação necessárias para acreditar que estávamos no caminho certo.
 
-## Da nossa oficina para a sua casa
+Até que chegou o momento de dar o passo seguinte: abraçar este sonho por inteiro. Decidimos dedicar-nos à {{marca}} a tempo inteiro, os dois, com a mesma paixão que nos fez começar.
 
-As peças seguem montadas e prontas a usar (só o roupeiro vai desmontado). Pode levantá-las na oficina, sem custos, ou enviamos para Portugal Continental, Madeira, Açores e Espanha. [Ver como encomendar](/como-encomendar/).
+Hoje, continuamos a desenhar, criar e aperfeiçoar cada peça com o mesmo cuidado e entusiasmo de sempre. Acreditamos que os objetos que fazem parte da vida das crianças devem ser bonitos, funcionais e pensados para acompanhar o seu crescimento, incentivando a autonomia e a descoberta.
+
+A {{marca}} é muito mais do que um negócio. É um projeto de família, feito de ideias, dedicação, madeira e muito coração. Cada peça representa um bocadinho de nós, da nossa história e da vontade de criar algo especial para outras famílias.
+
+Obrigado por fazerem parte desta história e por nos ajudarem a transformar um pequeno sonho numa realidade.
+
+Com carinho,
+**Sandro & Célia**
+
+*{{marca}} — criado em família, feito com coração.*
+
+## Curiosidade sobre o nome Pokóto…
+
+Na altura de escolhermos o nome para este projeto, a Sofia (nossa filha e apaixonada por animais) passava a vida a correr de um lado para o outro a imitar um cavalinho e a dizer «pokóto, pokóto…». Daí surgiu a ideia e o nome Pokóto…

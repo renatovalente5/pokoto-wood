@@ -39,16 +39,12 @@
   },
   "personalizacao": {
     "etiqueta": "Personalização grátis",
-    "opcoes": [
-      "O nome",
-      "Uma frase",
-      "Um desenho"
-    ],
-    "titulo": "Feita para ser só dela",
-    "texto": "Cada peça pode levar o nome do seu filho, uma frase ou um desenho, gravados na madeira. Está incluído no preço.",
+    "opcoes": [],
+    "titulo": "As nossas peças são personalizadas ao seu gosto",
+    "texto": "Coloque o nome, uma frase ou um desenho e torne a sua peça única.",
     "botao": "Como funciona",
     "foto": "triangulo-nomes",
-    "legenda": "Cada nome, uma peça"
+    "legenda": ""
   },
   "historia": {
     "etiqueta": "Quem está por trás da Pokóto",

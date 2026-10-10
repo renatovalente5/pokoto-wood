@@ -81,6 +81,14 @@ export function markdown(src, url = (u) => u) {
   return out.join('\n');
 }
 
+/* O primeiro parágrafo de um markdown, em texto simples (para a descrição da página nos
+   motores de busca): sem títulos, sem marcas de lista, sem negrito nem ligações. */
+export function textoSimples(src) {
+  const blocos = String(src || '').replace(/\r/g, '').split(/\n\s*\n/).map((b) => b.trim()).filter(Boolean);
+  const b = blocos.find((x) => !/^#{1,4}\s/.test(x) && !/^(-|\d+\.)\s/.test(x)) || blocos[0] || '';
+  return b.replace(/\[([^\]]+)\]\([^)]*\)/g, '$1').replace(/\*\*?([^*]+)\*\*?/g, '$1').replace(/^#{1,4}\s+/gm, '').replace(/\s+/g, ' ').trim();
+}
+
 export function inline(s, url = (u) => u) {
   let r = esc(s);
   r = r.replace(/\[([^\]]+)\]\(([^)\s]+)\)/g, (_, texto, destino) => {

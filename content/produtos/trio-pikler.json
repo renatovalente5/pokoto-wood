@@ -1,0 +1,47 @@
+{
+  "nome": "Trio Pikler: Triângulo, Prancha e Arco",
+  "nomeCurto": "Trio Pikler",
+  "fotos": [
+    "trio-sala",
+    "triangulo-recorte",
+    "arco-recorte"
+  ],
+  "resumo": "As três peças juntas: o triângulo Pikler, a prancha dupla face e o arco de Pikler.",
+  "descricao": "As três peças juntas: o triângulo Pikler, a prancha dupla face (escorrega e escalada) e o arco de Pikler. É o conjunto que mais vendemos.",
+  "preco": 245,
+  "precoAnterior": 280,
+  "promocaoAte": "2026-12-31",
+  "medidas": [
+    {
+      "rotulo": "Triângulo",
+      "valor": "77 × 80 × 90 cm (alt. × larg. × prof.)"
+    },
+    {
+      "rotulo": "Prancha",
+      "valor": "120 × 50 cm (comp. × larg.)"
+    },
+    {
+      "rotulo": "Arco",
+      "valor": "100 × 50 × 55 cm (comp. × alt. × prof.)"
+    }
+  ],
+  "montagem": "Vão montados e prontos a usar.",
+  "idade": 8,
+  "personalizacao": {
+    "disponivel": true,
+    "obrigatoria": false
+  },
+  "complementos": [],
+  "envio": {
+    "continente": 40,
+    "ilhas": 210,
+    "espanha": 160
+  },
+  "vendaIsolada": true,
+  "video": "trio-pikler",
+  "categoria": "pikler",
+  "maisVendido": false,
+  "novidade": false,
+  "publicado": true,
+  "ordem": 8
+}

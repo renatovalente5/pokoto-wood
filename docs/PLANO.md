@@ -41,9 +41,11 @@ montado exceto o roupeiro; o colchão do arco não está incluído nem se vende.
   tem» no lugar do «shop the look», faixa em movimento, rodapé creme) e as **mesmas letras**
   (Grandstander + Ubuntu, gratuitas), mas com as **cores da Pokóto**: a madeira e o castanho do
   logótipo, sálvia, mel e terracota. Contraste medido.
-- **Portes de várias peças:** somam-se os de cada artigo (× quantidade), e o carrinho diz que, com
-  vários artigos, o valor final dos portes é confirmado pelo WhatsApp. Não inventei descontos.
-- **Prancha:** só se vende junto do triângulo ou do arco (tem página própria, que manda para eles).
+- **Portes de várias peças:** somam-se os de cada artigo (× quantidade). ~~O carrinho dizia que o
+  valor final era confirmado pelo WhatsApp~~ — a Célia (10 out): cada artigo vai sempre na sua caixa,
+  por isso a soma é o valor; a nota passou a dizê-lo.
+- ~~**Prancha:** só se vende junto do triângulo ou do arco~~ — desde 10 out vende-se também sozinha
+  (ver §6).
 - **Triângulo + prancha** para a Madeira/Açores e Espanha: os mesmos 110 € / 80 € do triângulo
   (a Célia escreveu um valor só; para o arco escreveu dois).
 - **Mais vendidos:** o triângulo, o arco e a prancha («vendemos muito o trio»).
@@ -137,3 +139,47 @@ Depende do domínio (o painel e o email dos códigos vivem nele).
   zona e mensagem para o WhatsApp, sobre nós, personalização, como encomendar, perguntas frequentes,
   contactos, termos, privacidade, cookies, resolução de litígios, garantia (aviso oficial da UE),
   desistir de uma compra, 404.
+
+## 6. Terceira ronda da Célia (10 out 2026, aplicada a 10–11 out)
+
+A Célia percorreu o site no portátil, página a página, com fotografias e 22 áudios (o registo e as
+transcrições em `_cliente/whatsapp/2026-10-10/`). Aplicado:
+
+- **Página inicial, bloco da personalização:** «Personalização grátis» em grande com um presente;
+  sem a lista animada nem a legenda «Cada nome, uma peça»; título «As nossas peças são
+  personalizadas ao seu gosto»; texto «Coloque o nome, uma frase ou um desenho e torne a sua peça
+  única.». A lista e a legenda ficaram **opcionais** no painel (vazias não aparecem).
+- **Página «Personalização»:** os textos dela (gravação a laser, a frase sem exemplos, o desenho «que
+  se identifique com o seu bebé», «todos os artigos», e «antes de gravar, enviamos sempre a maquete
+  para aprovação»).
+- **Loja:** o texto do topo ditado por ela («…é confirmada no mesmo dia, com o prazo de entrega e os
+  dados para o pagamento»).
+- **Torres e Pikler:** o texto longo dela por baixo do título da categoria (o campo «Texto da
+  página» aceita agora subtítulo, parágrafos e listas; o limite passou de 300 para 2000 caracteres).
+- **Fichas:** por baixo do preço, o texto do artigo (a «Descrição» deixou de ser um separador:
+  aparece em cima); a «Frase curta» fica só para o Google e a partilha. Idade das torres «A partir
+  dos 12/18 meses» (campo novo «idadeAte», também no painel). Personalização: «…A gravação está
+  incluída no preço. Antes de avançar, enviamos a maquete para aprovação.». Envio: sem a nota dos
+  vários artigos. Segurança: «Use…» (só o roupeiro diz «Monte e use»), as torres «sempre encostada
+  a uma bancada», e sem a linha dos parafusos (usam cola). Régua: sem «O nome está incluído no
+  preço». Roupeiro: «**Monta-se em 5 minutos.** É o único artigo que enviamos desmontado…».
+- **Pikler em seis artigos** (decisão do Sandro, áudio das 14:13): triângulo, arco e prancha
+  sozinhos, sem «Complete com»; **Triângulo Pikler com Prancha Dupla Face** (145 €, antes 160 €;
+  portes 20 / 110 / 80 €), **Arco de Pikler com Prancha Dupla Face** (170 €, antes 195 €; 30 / 130 /
+  90 €) e **Trio Pikler** (245 €, antes 280 €; 40 / 210 / 160 €). A prancha sozinha tem
+  personalização e portes «a confirmar».
+- **Fotografias principais novas** (as de estúdio que ela mandou à noite): torre/cadeira,
+  torre/mesa e triângulo, recortadas sobre o creme como as outras (`scripts/preparar-fotos.py`). As
+  galerias do triângulo e do arco sozinhos deixaram de mostrar os conjuntos.
+- **Sobre nós:** «A Nossa História» e, por baixo, «Curiosidade sobre o nome Pokóto…».
+
+**Por confirmar com a Pokóto:**
+1. Os preços dos três conjuntos (pus a soma dos preços de cada peça).
+2. Os portes do trio (pus os do triângulo com a prancha mais os do arco, como o carrinho antigo somava)
+   e os da prancha sozinha (hoje «a confirmar»).
+3. A fotografia da prancha sozinha (a Célia vai tirar) e uma do triângulo com a prancha (hoje esse
+   conjunto mostra o trio, com a nota de que o arco não está incluído).
+4. Fotografias reais deles e do espaço para «Sobre nós» (a Célia vai ver com o Sandro).
+5. Nomes: os textos dela abrem com «Estante de Livros Montessori» e «Roupeiro Montessori Infantil»;
+   os artigos continuam «Estante Montessori» e «Roupeiro Montessori». Mudar o nome é um minuto.
+

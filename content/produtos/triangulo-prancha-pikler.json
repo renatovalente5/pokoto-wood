@@ -1,0 +1,42 @@
+{
+  "nome": "Triângulo Pikler com Prancha Dupla Face",
+  "nomeCurto": "Triângulo com prancha",
+  "fotos": [
+    "trio-sala",
+    "triangulo-recorte"
+  ],
+  "resumo": "O triângulo Pikler com a prancha dupla face: de um lado escorrega, do outro escalada.",
+  "descricao": "O triângulo Pikler com a prancha dupla face: de um lado escorrega, do outro escalada. Para subir e descer, uma cabana, uma baliza: mil formas de diversão.\n\nNa primeira fotografia aparece também o arco de Pikler, que não está incluído: os três juntos são o [trio Pikler](/produtos/trio-pikler/).",
+  "preco": 145,
+  "precoAnterior": 160,
+  "promocaoAte": "2026-12-31",
+  "medidas": [
+    {
+      "rotulo": "Triângulo",
+      "valor": "77 × 80 × 90 cm (alt. × larg. × prof.)"
+    },
+    {
+      "rotulo": "Prancha",
+      "valor": "120 × 50 cm (comp. × larg.)"
+    }
+  ],
+  "montagem": "Vão montados e prontos a usar.",
+  "idade": 8,
+  "personalizacao": {
+    "disponivel": true,
+    "obrigatoria": false
+  },
+  "complementos": [],
+  "envio": {
+    "continente": 20,
+    "ilhas": 110,
+    "espanha": 80
+  },
+  "vendaIsolada": true,
+  "video": "trio-pikler",
+  "categoria": "pikler",
+  "maisVendido": false,
+  "novidade": false,
+  "publicado": true,
+  "ordem": 6
+}

@@ -1,6 +1,6 @@
 // As páginas do site. Cada função devolve { caminho, titulo, descricao, conteudo, ... } e o
 // build.mjs veste-a com a moldura (layout.mjs).
-import { esc, euros, precoDe, dataPorExtenso, markdown, numeroWhatsApp, moradaCompleta } from './util.mjs';
+import { esc, euros, precoDe, dataPorExtenso, markdown, inline, textoSimples, numeroWhatsApp, moradaCompleta } from './util.mjs';
 import { icones, ilustracoes } from './icones.mjs';
 import { numeroPortugues, idadeTexto, NOTA_IDADE } from '../lib/regras.mjs';
 import { imagem, preco, cartaoProduto, migalhas, botaoSeta, desconto, promocaoAte } from './componentes.mjs';
@@ -56,14 +56,14 @@ export function inicio(ctx) {
   const pz = h.personalizacao;
   const personalizacao = `<section class="personaliza" aria-labelledby="pz-titulo">
   <div class="personaliza__painel">
-    <p class="personaliza__etiqueta">${esc(pz.etiqueta)}</p>
-    <ul class="personaliza__lista" aria-hidden="true">${pz.opcoes.map((o, i) => `<li${i === 0 ? ' class="ativo"' : ''}>${esc(o)}</li>`).join('')}</ul>
+    <p class="personaliza__etiqueta">${icones.presente}<span>${esc(pz.etiqueta)}</span></p>
+    ${pz.opcoes?.length ? `<ul class="personaliza__lista" aria-hidden="true">${pz.opcoes.map((o, i) => `<li${i === 0 ? ' class="ativo"' : ''}>${esc(o)}</li>`).join('')}</ul>` : ''}
     <h2 id="pz-titulo" class="personaliza__titulo">${esc(pz.titulo)}</h2>
     <p>${esc(pz.texto)}</p>
   </div>
-  <div class="personaliza__foto">
+  <div class="personaliza__foto${pz.legenda ? ' personaliza__foto--legenda' : ''}">
     ${imagem(ctx, pz.foto, { tamanhos: '(min-width: 900px) 46vw, 100vw' })}
-    <p class="personaliza__legenda">${esc(pz.legenda)}</p>
+    ${pz.legenda ? `<p class="personaliza__legenda">${esc(pz.legenda)}</p>` : ''}
     ${botaoSeta(ctx.url('/personalizacao/'), pz.botao, { classe: 'botao botao--mel personaliza__botao' })}
   </div>
 </section>`;
@@ -171,6 +171,8 @@ export function organizacao(ctx) {
 }
 
 // ---------------------------------------------------------------- loja e categorias
+/* O texto do topo da loja, como a Célia o ditou (10 out 2026). */
+const TEXTO_LOJA = 'Fazemos tudo na nossa oficina, à mão. Escolha a peça, personalize e envie-nos a encomenda pelo WhatsApp. É confirmada no mesmo dia, com o prazo de entrega e os dados para o pagamento.';
 export function loja(ctx, cat = null) {
   const c = cat && categoriaDe(ctx, cat);
   const lista = c ? produtosDe(ctx, cat) : ctx.produtos;
@@ -186,7 +188,7 @@ export function loja(ctx, cat = null) {
   ${m.html}
   <header class="loja__topo">
     <h1 class="titulo-pagina">${esc(c ? c.titulo : 'Loja')}</h1>
-    <p>${esc(c ? c.resumo : 'Tudo o que fazemos na nossa oficina, em madeira e à mão. Escolha a peça, escreva a personalização e envie-nos a encomenda pelo WhatsApp.')}</p>
+    ${c ? `<div class="loja__texto">${markdown(c.resumo, ctx.url)}</div>` : `<p>${esc(TEXTO_LOJA)}</p>`}
   </header>
   <nav class="chips" aria-label="Categorias"><ul>${chips}</ul></nav>
   <p class="loja__conta">${lista.length} ${lista.length === 1 ? 'artigo' : 'artigos'}</p>
@@ -197,7 +199,7 @@ export function loja(ctx, cat = null) {
   return {
     caminho,
     titulo: c ? `${c.titulo}` : 'Loja — torres de aprendizagem, Pikler e mobiliário Montessori',
-    descricao: c ? `${c.resumo}`.slice(0, 158) : 'Torres de aprendizagem, triângulo e arco Pikler, estantes e roupeiros Montessori em madeira, feitos à mão e personalizados sem custos.',
+    descricao: c ? textoSimples(c.resumo).slice(0, 158) : 'Torres de aprendizagem, triângulo e arco Pikler, estantes e roupeiros Montessori em madeira, feitos à mão e personalizados sem custos.',
     jsonld: [m.ld, {
       '@context': 'https://schema.org', '@type': 'ItemList',
       itemListElement: lista.map((p, i) => ({ '@type': 'ListItem', position: i + 1, url: ctx.absoluto(`/produtos/${p.slug}/`), name: p.nome })),
@@ -240,8 +242,8 @@ export function produto(ctx, p) {
     : `<form class="comprar" data-comprar="${esc(p.slug)}" novalidate>
       ${pers.disponivel ? `<div class="campo">
         <label for="pers-${p.slug}">Personalização${pers.obrigatoria ? '' : ' <span class="campo__opcional">(grátis, opcional)</span>'}</label>
-        <input id="pers-${p.slug}" name="personalizacao" type="text" maxlength="80" autocomplete="off"${pers.obrigatoria ? ' required' : ''} placeholder="${pers.obrigatoria ? 'O nome a gravar' : 'Ex.: o nome, uma frase ou a ideia de um desenho'}" aria-describedby="pers-ajuda-${p.slug}">
-        <p class="campo__ajuda" id="pers-ajuda-${p.slug}">${pers.obrigatoria ? 'O nome está incluído no preço.' : 'Para um desenho, descreva a ideia: combinamos os pormenores consigo pelo WhatsApp.'}</p>
+        <input id="pers-${p.slug}" name="personalizacao" type="text" maxlength="80" autocomplete="off"${pers.obrigatoria ? ' required' : ''} placeholder="${pers.obrigatoria ? 'O nome a gravar' : 'Ex.: o nome, uma frase ou a ideia de um desenho'}"${pers.obrigatoria ? '' : ` aria-describedby="pers-ajuda-${p.slug}"`}>
+        ${pers.obrigatoria ? '' : `<p class="campo__ajuda" id="pers-ajuda-${p.slug}">Para um desenho, descreva a ideia: combinamos os pormenores consigo pelo WhatsApp.</p>`}
       </div>` : ''}
       ${complementos.length ? `<fieldset class="complementos"><legend>Complete com</legend>${complementos.map((k) => {
         const kv = precoDe(k.p, ctx.hoje);
@@ -265,12 +267,12 @@ export function produto(ctx, p) {
   const linhaEnvio = (z) => (envio && Number.isFinite(envio[z.id]) ? euros(envio[z.id]) : 'a confirmar');
   const zonasEnvio = ctx.site.entrega.zonas.filter((z) => z.morada);
   /* A idade recomendada, à vista antes de encomendar, com a nota de que é indicativa. */
-  const idade = idadeTexto(p.idade);
+  const idade = idadeTexto(p.idade, p.idadeAte);
   const entrega = `<div class="entrega-caixa">
     ${idade ? `<p class="entrega-caixa__linha" data-idade>${icones.crianca}<span><strong>${esc(idade)}.</strong> ${esc(NOTA_IDADE)}</span></p>` : ''}
     <p class="entrega-caixa__linha">${icones.local}<span><strong>Levantamento grátis</strong> na nossa oficina, em ${esc(ctx.site.local.localidade)}.</span></p>
     ${envio ? `<p class="entrega-caixa__linha">${icones.camiao}<span><strong>Envio:</strong> ${zonasEnvio.map((z) => `${esc(z.curto)} <span data-envio-zona="${z.id}">${linhaEnvio(z)}</span>`).join(' · ')}</span></p>` : ''}
-    ${p.montagem ? `<p class="entrega-caixa__linha">${icones.caixa}<span>${esc(p.montagem)}</span></p>` : ''}
+    ${p.montagem ? `<p class="entrega-caixa__linha">${icones.caixa}<span>${inline(p.montagem, ctx.url)}</span></p>` : ''}
   </div>`;
 
   const medidas = p.medidas?.length ? `<table class="medidas"><tbody>${p.medidas.map((l) => `<tr><th scope="row">${esc(l.rotulo)}</th><td>${esc(l.valor)}</td></tr>`).join('')}</tbody></table>` : '';
@@ -282,11 +284,10 @@ export function produto(ctx, p) {
   const fabricante = [e.nome ? `${e.nome} (${ctx.site.marca})` : ctx.site.marca, e.morada ? moradaCompleta(e) : '', ctx.site.contactos.email].filter(Boolean).map(esc).join(' · ');
 
   const acordeoes = `<div class="acordeoes">
-    <details open><summary>${icones.info}Descrição</summary><div class="acordeoes__corpo">${markdown(p.descricao, ctx.url)}</div></details>
     ${medidas ? `<details><summary>${icones.regua}Medidas</summary><div class="acordeoes__corpo">${medidas}<p class="nota">Medidas aproximadas. Cada peça é feita à mão: pode haver pequenas diferenças de uma para outra.</p></div></details>` : ''}
-    ${pers.disponivel ? `<details><summary>${icones.gravar}Personalização</summary><div class="acordeoes__corpo"><p>${pers.obrigatoria ? 'O nome vai gravado na régua e está incluído no preço.' : 'Pode gravar o nome do seu filho, uma frase ou um desenho. Está incluído no preço.'} Antes de começarmos, confirmamos consigo pelo WhatsApp como fica.</p><p><a href="${ctx.url('/personalizacao/')}">Como funciona a personalização</a></p></div></details>` : ''}
-    ${envio ? `<details><summary>${icones.camiao}Envio e entrega</summary><div class="acordeoes__corpo">${quadroEnvio}<p class="nota">${esc(ctx.site.entrega.notaVariosArtigos)}</p><p><a href="${ctx.url('/como-encomendar/')}">Como encomendar e prazos</a></p></div></details>` : ''}
-    <details><summary>${icones.escudo}Segurança e fabricante</summary><div class="acordeoes__corpo"><ul><li>Use sempre sob a supervisão de um adulto.</li><li>Monte e use a peça numa superfície plana e estável.</li><li>Verifique de vez em quando os parafusos e as uniões, e aperte-os se for preciso.</li></ul><p class="nota">Fabricante: ${fabricante}.</p></div></details>
+    ${pers.disponivel ? `<details><summary>${icones.gravar}Personalização</summary><div class="acordeoes__corpo"><p>${pers.obrigatoria ? 'O nome vai gravado na régua.' : 'Pode gravar o nome do seu filho, uma frase ou um desenho. A gravação está incluída no preço.'} Antes de avançar, enviamos a maquete para aprovação.</p><p><a href="${ctx.url('/personalizacao/')}">Como funciona a personalização</a></p></div></details>` : ''}
+    ${envio ? `<details><summary>${icones.camiao}Envio e entrega</summary><div class="acordeoes__corpo">${quadroEnvio}<p><a href="${ctx.url('/como-encomendar/')}">Como encomendar e prazos</a></p></div></details>` : ''}
+    <details><summary>${icones.escudo}Segurança e fabricante</summary><div class="acordeoes__corpo"><ul><li>Use sempre sob a supervisão de um adulto.</li><li>${/desmontad/i.test(p.montagem || '') ? 'Monte e use' : 'Use'} a peça numa superfície plana e estável${p.categoria === 'torres-de-aprendizagem' ? ', sempre encostada a uma bancada' : ''}.</li></ul><p class="nota">Fabricante: ${fabricante}.</p></div></details>
   </div>`;
 
   const relacionados = ctx.produtos.filter((x) => x.slug !== p.slug && x.vendaIsolada !== false)
@@ -300,7 +301,7 @@ export function produto(ctx, p) {
       ${selos ? `<div class="produto__selos">${selos}</div>` : ''}
       <h1 class="produto__nome">${esc(p.nome)}</h1>
       ${preco(ctx, p, { grande: true })}
-      <p class="produto__resumo">${esc(p.resumo)}</p>
+      <div class="produto__resumo">${markdown(p.descricao, ctx.url)}</div>
       ${form}
       ${entrega}
       ${acordeoes}

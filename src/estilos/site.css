@@ -285,7 +285,8 @@ html:has(dialog[open]) { overflow: hidden; }
 /* ------------------------------------------------------------------ início: personalização */
 .personaliza { max-width: var(--largura); margin: clamp(56px, 8vw, 96px) auto 0; padding-inline: var(--margem); display: grid; gap: 14px; }
 .personaliza__painel { background: var(--terracota); color: var(--branco); border-radius: var(--raio-grande); padding: clamp(28px, 5vw, 56px); display: flex; flex-direction: column; justify-content: center; text-align: center; }
-.personaliza__etiqueta { font-family: var(--letra-titulos); font-size: 1.1rem; margin-bottom: 1.2em; }
+.personaliza__etiqueta { font-family: var(--letra-titulos); font-weight: 700; text-transform: uppercase; font-size: clamp(2rem, 5vw, 3.2rem); line-height: 1.1; margin-bottom: .35em; display: flex; flex-direction: column; align-items: center; gap: .2em; text-wrap: balance; }
+.personaliza__etiqueta .icone { width: 1.15em; height: 1.15em; stroke-width: 1.6; }
 .personaliza__lista { list-style: none; font-family: var(--letra-titulos); font-weight: 700; text-transform: uppercase; font-size: clamp(2rem, 5vw, 3.4rem); line-height: 1.12; margin-bottom: .6em; }
 .personaliza__lista li { color: rgba(255, 255, 255, .45); }
 .personaliza__lista li.ativo { color: var(--branco); text-decoration: underline; text-decoration-thickness: 3px; text-underline-offset: .18em; }
@@ -293,7 +294,7 @@ html:has(dialog[open]) { overflow: hidden; }
 .personaliza__painel p { margin-inline: auto; max-width: 42ch; }
 .personaliza__foto { position: relative; border-radius: var(--raio-grande); overflow: hidden; background: var(--creme); min-height: 360px; }
 .personaliza__foto picture, .personaliza__foto img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
-.personaliza__foto::before { content: ''; position: absolute; inset: 0 0 auto 0; height: 45%; z-index: 1; background: linear-gradient(rgba(40, 28, 18, .62), rgba(40, 28, 18, 0)); pointer-events: none; }
+.personaliza__foto--legenda::before { content: ''; position: absolute; inset: 0 0 auto 0; height: 45%; z-index: 1; background: linear-gradient(rgba(40, 28, 18, .62), rgba(40, 28, 18, 0)); pointer-events: none; }
 .personaliza__legenda { z-index: 2; position: absolute; top: 24px; left: 0; right: 0; text-align: center; font-family: var(--letra-titulos); font-size: clamp(1.4rem, 3vw, 1.9rem); color: var(--branco); text-shadow: 0 2px 14px rgba(0, 0, 0, .55), 0 1px 3px rgba(0, 0, 0, .5); margin: 0; }
 .personaliza__botao { z-index: 2; white-space: nowrap; width: max-content; position: absolute; bottom: 24px; left: 50%; transform: translateX(-50%); }
 .personaliza__botao:hover { transform: translateX(-50%) translateY(-1px); }
@@ -421,6 +422,14 @@ html:has(dialog[open]) { overflow: hidden; }
 .loja__topo { margin: 16px 0 26px; max-width: 70ch; }
 .loja__topo h1 { text-transform: uppercase; }
 .loja__topo p { color: var(--tinta-2); }
+/* O texto longo de uma categoria (torres, Pikler): parágrafos, um subtítulo e uma lista. */
+.loja__texto { color: var(--tinta-2); }
+.loja__texto h2 { font-size: clamp(1.25rem, 2.4vw, 1.55rem); color: var(--tinta); margin: .2em 0 .55em; }
+.loja__texto p { margin: 0 0 .8em; }
+.loja__texto p:last-child { margin-bottom: 0; }
+.loja__texto ul { padding-left: 1.2em; margin: 0 0 .9em; }
+.loja__texto li { margin-bottom: .2em; }
+.loja__texto strong { color: var(--tinta); }
 .chips ul { list-style: none; display: flex; gap: 10px; overflow-x: auto; padding: 4px 2px 12px; scrollbar-width: none; }
 .chips ul::-webkit-scrollbar { display: none; }
 .chip { display: inline-flex; align-items: center; gap: 10px; white-space: nowrap; padding: 10px 16px 10px 12px; border-radius: 16px; border: 1px solid var(--linha); background: var(--papel); text-decoration: none; color: var(--tinta); font-size: .92rem; text-transform: uppercase; letter-spacing: .03em; min-height: 52px; }
@@ -454,6 +463,10 @@ html:has(dialog[open]) { overflow: hidden; }
 .produto__selos { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 14px; }
 .produto__nome { font-size: clamp(2rem, 4vw, 2.8rem); margin-bottom: .25em; }
 .produto__resumo { color: var(--tinta-2); font-size: 1.05rem; }
+.produto__resumo p { margin: 0 0 .7em; }
+.produto__resumo p:last-child { margin-bottom: 0; }
+.produto__resumo h2, .produto__resumo h3 { font-size: 1.15rem; color: var(--tinta); margin: .9em 0 .4em; }
+.produto__resumo ul { padding-left: 1.2em; margin: 0 0 .7em; }
 .comprar { display: grid; grid-template-columns: minmax(0, 1fr); gap: 16px; margin: 22px 0 18px; }
 .comprar > *, .campo, .encomenda > *, .encomenda fieldset > * { min-width: 0; }
 .campo { display: grid; gap: 6px; }

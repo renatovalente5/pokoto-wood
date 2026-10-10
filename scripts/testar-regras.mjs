@@ -46,6 +46,10 @@ caso('a idade recomendada, como o site a escreve', () => {
   assert.equal(R.idadeTexto(1), 'A partir de 1 mês');
   assert.equal(R.idadeTexto(0), 'Desde o nascimento');
   for (const mau of [8.5, -1, 217, '18', null, undefined, NaN]) assert.equal(R.idadeTexto(mau), null, String(mau));
+  // o intervalo das torres (Célia, 10 out 2026): «A partir dos 12/18 meses»
+  assert.equal(R.idadeTexto(12, 18), 'A partir dos 12/18 meses');
+  for (const semIntervalo of [12, 8, '18', 18.5, 300, null, undefined]) assert.equal(R.idadeTexto(12, semIntervalo), 'A partir dos 12 meses', String(semIntervalo));
+  assert.equal(R.idadeTexto(null, 18), null);
   assert.ok(R.CAMPOS_ARTIGO.indexOf('idade') === R.CAMPOS_ARTIGO.indexOf('montagem') + 1, 'no formulário, a seguir a «Como segue»');
   const a = artigo('torre-mesa-montessori');
   const p = R.problemasDoArtigo({ ...a, idade: '18 meses' }, {}).find((x) => x.campo === 'idade');
@@ -156,8 +160,19 @@ caso('complemento que não existe, e de si próprio', () => {
   assert.ok(l.some((p) => p.chave === 'artigo:arco-pikler:complementos.0:nao-existe'));
   assert.ok(l.some((p) => p.chave === 'artigo:arco-pikler:complementos.1:proprio'));
 });
+caso('idade «até» menor do que o «a partir de» avisa, e a ficha mostra só o «a partir de»', () => {
+  const a = JSON.parse(dados().artigos['torre-cadeira-montessori']);
+  a.idadeAte = 10;
+  const l = R.problemasDoArtigo(a, ctx());
+  assert.ok(l.some((p) => p.chave.endsWith(':idadeAte') && p.classe === 'avisa'), JSON.stringify(l.map((p) => p.chave)));
+  a.idadeAte = 18;
+  assert.ok(!R.problemasDoArtigo(a, ctx()).some((p) => p.chave.endsWith(':idadeAte')));
+});
 caso('prancha sem quem a ofereça é lembrete', () => {
   const d = dados();
+  // A prancha passou a vender-se também sozinha (Célia, 10 out 2026): o caso volta a pô-la só
+  // como complemento, para a regra continuar provada.
+  { const a = JSON.parse(d.artigos['prancha-dupla-face']); a.vendaIsolada = false; d.artigos['prancha-dupla-face'] = JSON.stringify(a); }
   for (const k of ['triangulo-pikler', 'arco-pikler']) { const a = JSON.parse(d.artigos[k]); a.complementos = []; d.artigos[k] = JSON.stringify(a); }
   const l = R.problemas(d, { hoje: '2026-10-07' });
   assert.ok(l.some((p) => p.chave === 'artigo:prancha-dupla-face:complemento-sem-artigo' && p.lembrete));
