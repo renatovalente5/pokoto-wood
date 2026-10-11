@@ -200,4 +200,9 @@ O Renato comprou pokotowood.pt na Hostinger (10 out) e pediu o site e o painel n
   repositório dele). O email dos códigos sai pelo Email Routing da zona para os destinos verificados:
   o Gmail do Renato e pokotowood@sapo.pt (a Célia tem de carregar no link de verificação da
   Cloudflare).
-- **A pré-visualização no GitHub Pages** acabou: o workflow deixou de a publicar.
+- **A pré-visualização no GitHub Pages** acabou: o workflow deixou de a publicar, e o
+  `reencaminhar-pre-visualizacao.yml` (corrido uma vez, à mão, a 11 out) deixou lá uma página que
+  manda cada morada antiga para a mesma no domínio (os links que a Pokóto tem no WhatsApp).
+- **Falta (do Renato):** o token do CI (`CLOUDFLARE_API_TOKEN`; até lá o job «publicar» falha em
+  «Publicar na Cloudflare» e as gravações do painel não chegam ao site — o site no ar é o do deploy
+  à mão de 11 out) e a GitHub App do painel (o GitHub pede o modo sudo, com o 2FA dele).
