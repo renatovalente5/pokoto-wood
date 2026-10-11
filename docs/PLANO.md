@@ -207,3 +207,28 @@ O Renato comprou pokotowood.pt na Hostinger (10 out) e pediu o site e o painel n
   Scripts: Edit + Account Settings: Read) e a primeira corrida verde publicou na Cloudflare sem
   tocar nos Custom Domains («No targets deployed»). A GitHub App do painel ficou instalada só neste
   repositório na mesma manhã.
+
+## 8. O que faltava da ronda de 10 out (a Célia, 11 out)
+
+A 11 out de manhã a Célia citou no grupo os áudios que ainda não estavam feitos. Três deles (13:34,
+13:36 e 13:37 de 10 out) não tinham sido apanhados: o WhatsApp Web não os carregou (um buraco no
+histórico, antes do áudio 01 das 13:40). Vieram da própria citação (a chave do ficheiro, conferido
+pelo MAC e pelo resumo) e estão em `_cliente/whatsapp/2026-10-10/media/a1…a3`. Feito:
+
+- **Capa:** «Torres de aprendizagem Montessori e Pikler, personalizados ao seu gosto e sem custos.»
+  (sem «mobiliário», e sem o nome/frase/desenho nesta parte).
+- **A vitrine chama-se «Artigos»** e mostra todos, sem os separadores Todos / Mais vendidos /
+  Promoções / Novidades («está muito parecido com a atoca.pt»); e **sem «Mais vendido»** em lado
+  nenhum. As regras deixaram de exigir os separadores (um ficheiro antigo confere-se como antes);
+  o painel já não os mostra.
+- **Sem «Para cada fase, uma peça»** (os círculos das categorias): repetia o menu no telemóvel. O
+  bloco saiu do conteúdo, das regras, do gerador, do CSS e do painel.
+- **Sem a nota dos portes de vários artigos** (como encomendar, termos e carrinho).
+- **Triângulo com Prancha: 165 €** (sem promoção; antes estava 145 € com «antes 160 €»).
+- **Personalização:** sem «Cada peça pode ser só de uma criança» (o áudio 02: «…não, tiramos isso»,
+  como no áudio das 13:36), e «Descreva a ideia que tem e nós propomos e enviamos a maquete para
+  aprovação.» em baixo, depois da lista.
+
+Por confirmar com a Célia: se 165 € é o preço final do Triângulo com Prancha ou o «antes» de uma
+promoção; e os preços do Arco com Prancha (170 €, antes 195 €) e do Trio (245 €, antes 280 €).
+

@@ -23,16 +23,14 @@ export function inicio(ctx) {
   </div>
 </section>`;
 
-  // Vitrine: os separadores filtram a mesma lista; um separador sem artigos não aparece.
-  const conta = (f) => ctx.produtos.filter((p) => f === 'todos' || (f === 'promocao' ? Boolean(precoDe(p, ctx.hoje).anterior) : p[f])).length;
-  const seps = h.vitrine.separadores.filter((s) => conta(s.filtro) > 0);
+  // Vitrine: todos os artigos, pela ordem da loja. Sem separadores (Todos, Mais vendidos, Promoções,
+  // Novidades): a Célia pediu «fica só Artigos» a 10 out 2026 — eram parecidos de mais com os da atoca.pt.
   const vitrine = `<section class="vitrine" aria-labelledby="vitrine-titulo">
   <div class="vitrine__topo">
     <h2 class="titulo-seccao titulo-seccao--salva" id="vitrine-titulo">${esc(h.vitrine.titulo)}</h2>
-    ${seps.length > 1 ? `<div class="separadores" role="group" aria-label="Mostrar">${seps.map((s, i) => `<button type="button" data-filtro="${esc(s.filtro)}" aria-pressed="${i === 0}">${esc(s.nome)}</button>`).join('')}</div>` : ''}
   </div>
   <div class="carrossel" data-carrossel>
-    <div class="carrossel__pista" tabindex="0" role="region" aria-label="${esc(h.vitrine.titulo)}" data-filtro-ativo="${esc(seps[0]?.filtro || 'todos')}">
+    <div class="carrossel__pista" tabindex="0" role="region" aria-label="${esc(h.vitrine.titulo)}">
       ${ctx.produtos.map((p) => cartaoProduto(ctx, p)).join('\n')}
     </div>
     <div class="carrossel__controlos">
@@ -41,16 +39,6 @@ export function inicio(ctx) {
       <button class="carrossel__botao" type="button" data-seguinte>${icones.direita}<span class="visualmente-escondido">Seguintes</span></button>
     </div>
   </div>
-</section>`;
-
-  const categorias = `<section class="faixa-cats" aria-labelledby="cats-titulo">
-  <div class="faixa-cats__texto">
-    <h2 id="cats-titulo">${esc(h.categorias.titulo)}</h2>
-    <p>${esc(h.categorias.texto)}</p>
-  </div>
-  <ul class="circulos">
-    ${ctx.categorias.map((c) => `<li><a href="${ctx.url(`/loja/${c.slug}/`)}"><span class="circulo">${imagem(ctx, c.foto, { tamanhos: '(min-width: 900px) 180px, 140px' })}</span><span class="circulo__nome">${esc(c.nome)}</span></a></li>`).join('\n')}
-  </ul>
 </section>`;
 
   const pz = h.personalizacao;
@@ -138,7 +126,7 @@ export function inicio(ctx) {
     descricao: h.seo.descricao,
     classe: 'pagina-inicio',
     jsonld: [org, { '@context': 'https://schema.org', '@type': 'WebSite', name: ctx.site.marca, url: ctx.absoluto('/'), inLanguage: 'pt-PT' }],
-    conteudo: [capa, vitrine, categorias, personalizacao, historia, vantagens, emCasa, faixa, oficina, comoEncomendar, instagram].join('\n\n'),
+    conteudo: [capa, vitrine, personalizacao, historia, vantagens, emCasa, faixa, oficina, comoEncomendar, instagram].join('\n\n'),
   };
 }
 

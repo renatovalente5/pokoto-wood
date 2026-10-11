@@ -197,11 +197,13 @@ caso('quem faz: texto como os outros (tamanho, sem «</script»)', () => {
   assert.ok(R.problemasDoSite(s).some((p) => p.chave === 'site:fundadores:parte' && p.classe === 'bloqueia'));
 });
 
-caso('página inicial: o nome de um separador é um texto curto; um desenho que não existe só avisa', () => {
+caso('página inicial: sem separadores nem o bloco das categorias não há problema (a Célia tirou-os a 10 out); um ficheiro antigo com separadores confere-se como antes; um desenho que não existe só avisa', () => {
   const h = JSON.parse(ler('content/inicio.json'));
-  h.vitrine.separadores[1].nome = 'x'.repeat(61);
+  assert.ok(!('separadores' in h.vitrine) && !('categorias' in h), 'o conteúdo já não os tem');
+  assert.ok(!R.problemasDoInicio(h).some((p) => /separadores|categorias/.test(p.chave)));
+  h.vitrine.separadores = [{ nome: 'Todos', filtro: 'todos' }, { nome: 'x'.repeat(61), filtro: 'promocao' }];
   assert.ok(R.problemasDoInicio(h).some((p) => p.chave === 'inicio:vitrine.separadores.1.nome:tamanho'));
-  h.vitrine.separadores[1].nome = 'Mais vendidos'; h.vantagens[0].icone = 'estrela';
+  h.vitrine.separadores[1].nome = 'Promoções'; h.vantagens[0].icone = 'estrela';
   const p = R.problemasDoInicio(h).find((x) => x.chave === 'inicio:vantagens.0.icone');
   assert.ok(p && p.classe === 'avisa' && !p.lembrete && /Só o Renato/.test(p.mensagem));
 });

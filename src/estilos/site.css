@@ -1,7 +1,7 @@
 /* Pokóto Wood — estilos do site.
    A composição segue o atoca.pt (a referência que a Pokóto escolheu): cabeçalho creme com
    navegação em maiúsculas e uma pílula, capa arredondada com a fotografia em arco, carrossel de
-   artigos com separadores, faixa de círculos, painel de colecção, bolhas soltas na história,
+   artigos, painel de colecção, bolhas soltas na história,
    faixa de vantagens, rodapé creme. As cores são da Pokóto: a madeira e o castanho do
    logótipo, com sálvia, mel e terracota. Letras: Grandstander (títulos) e Ubuntu (texto),
    alojadas no próprio site.
@@ -242,10 +242,6 @@ html:has(dialog[open]) { overflow: hidden; }
 .vitrine { max-width: var(--largura); margin: clamp(48px, 7vw, 88px) auto 0; padding-inline: var(--margem); }
 .vitrine__topo { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 12px 24px; margin-bottom: 22px; }
 .vitrine__topo h2 { margin: 0; }
-.separadores { display: flex; flex-wrap: wrap; gap: 6px; }
-.separadores button { border: 0; background: none; padding: .55em 1.1em; border-radius: 999px; font-size: .95rem; color: var(--tinta); min-height: 44px; }
-.separadores button:hover { background: var(--creme); }
-.separadores button[aria-pressed="true"] { background: var(--mel); color: var(--tinta); font-weight: 500; }
 .carrossel__pista { display: grid; grid-auto-flow: column; grid-auto-columns: calc((100% - 14px) / 2.15); gap: 14px; overflow-x: auto; scroll-snap-type: x mandatory; scroll-padding-inline: 0; padding-block: 4px 12px; scrollbar-width: none; overscroll-behavior-x: contain; }
 .carrossel__pista::-webkit-scrollbar { display: none; }
 .carrossel__pista > .cartao { scroll-snap-align: start; }
@@ -257,30 +253,6 @@ html:has(dialog[open]) { overflow: hidden; }
 .carrossel__botao { width: 44px; height: 44px; border-radius: 50%; border: 1px solid var(--linha); background: var(--papel); display: grid; place-items: center; color: var(--tinta); }
 .carrossel__botao:hover:not(:disabled) { background: var(--creme); }
 .carrossel__botao:disabled { opacity: .35; cursor: default; }
-.carrossel__pista .cartao[hidden] { display: none !important; }
-
-/* ------------------------------------------------------------------ início: faixa das categorias */
-.faixa-cats { margin-top: clamp(56px, 8vw, 96px); background: var(--salva-clara); padding: clamp(36px, 5vw, 56px) var(--margem); }
-.faixa-cats > * { max-width: var(--largura); margin-inline: auto; }
-.faixa-cats { display: grid; gap: 28px; }
-.faixa-cats__texto { text-align: center; }
-.faixa-cats__texto h2 { font-size: clamp(1.8rem, 3.6vw, 2.6rem); color: var(--salva-escura); margin-bottom: .2em; }
-.faixa-cats__texto p { margin: 0; color: var(--tinta); }
-.circulos { list-style: none; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 24px 16px; width: 100%; }
-.circulos a { display: flex; flex-direction: column; align-items: center; gap: 12px; text-decoration: none; color: var(--tinta); font-family: var(--letra-titulos); font-size: 1.1rem; text-align: center; line-height: 1.2; }
-.circulo { width: min(150px, 38vw); aspect-ratio: 1; border-radius: 50%; overflow: hidden; background: var(--creme); box-shadow: 0 0 0 6px rgba(255, 255, 255, .55); transition: transform .3s ease; }
-.circulo picture { display: block; width: 100%; height: 100%; }
-.circulo img { width: 100%; height: 100%; object-fit: cover; }
-.circulos a:hover .circulo { transform: scale(1.04); }
-.circulos a:hover .circulo__nome { text-decoration: underline; text-decoration-color: var(--mel); text-decoration-thickness: 2px; }
-@media (min-width: 900px) {
-  .faixa-cats { grid-template-columns: minmax(220px, 1fr) 3fr; align-items: center; }
-  .faixa-cats > * { max-width: none; margin: 0; }
-  .faixa-cats__texto { text-align: left; }
-  .circulos { grid-template-columns: repeat(4, minmax(0, 1fr)); }
-  .circulo { width: min(180px, 15vw); }
-  .faixa-cats { padding-inline: max(var(--margem), calc((100% - var(--largura)) / 2 + var(--margem))); }
-}
 
 /* ------------------------------------------------------------------ início: personalização */
 .personaliza { max-width: var(--largura); margin: clamp(56px, 8vw, 96px) auto 0; padding-inline: var(--margem); display: grid; gap: 14px; }
@@ -601,5 +573,5 @@ html:has(dialog[open]) { overflow: hidden; }
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after { transition-duration: .01ms !important; scroll-behavior: auto !important; }
   .gaveta[open], .menu[open] { animation: none; }
-  .cartao:hover .cartao__img img, .circulos a:hover .circulo { transform: none; }
+  .cartao:hover .cartao__img img { transform: none; }
 }

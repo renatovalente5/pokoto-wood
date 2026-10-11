@@ -637,7 +637,9 @@ export function problemasDoInicio(valor, { fotos = null, artigos = null, videos 
   if (l.ilegivel || !eObjecto(l.obj)) { bloqueia('forma', undefined, 'A página inicial não se consegue ler. Só o Renato a pode corrigir.'); return out; }
   const h = l.obj;
   const seccao = (k) => (eObjecto(h[k]) ? h[k] : null);
-  for (const k of ['seo', 'capa', 'vitrine', 'categorias', 'personalizacao', 'historia', 'emCasa', 'oficina', 'comoEncomendar', 'instagram']) {
+  /* Sem o bloco «categorias» (os círculos «Para cada fase, uma peça»), que a Célia tirou a 10 out 2026: um
+     ficheiro antigo que ainda o tenha não pára nada (o gerador já não o escreve). */
+  for (const k of ['seo', 'capa', 'vitrine', 'personalizacao', 'historia', 'emCasa', 'oficina', 'comoEncomendar', 'instagram']) {
     if (!seccao(k)) bloqueia(`${k}:forma`, k, `A secção «${k}» da página inicial não está gravada. Só o Renato a pode repor.`);
   }
   if (out.length) return out;
@@ -646,7 +648,6 @@ export function problemasDoInicio(valor, { fotos = null, artigos = null, videos 
     ['seo.titulo', TAMANHOS.inicioTitulo, true], ['seo.descricao', TAMANHOS.inicioTexto, true],
     ['capa.etiqueta', TAMANHOS.inicioCurto, true], ['capa.tituloLinha1', TAMANHOS.inicioCurto, true], ['capa.tituloLinha2', TAMANHOS.inicioCurto, true], ['capa.texto', TAMANHOS.inicioTexto, true], ['capa.botao', TAMANHOS.inicioCurto, true],
     ['vitrine.titulo', TAMANHOS.inicioTitulo, true],
-    ['categorias.titulo', TAMANHOS.inicioTitulo, true], ['categorias.texto', TAMANHOS.inicioTexto, true],
     ['personalizacao.etiqueta', TAMANHOS.inicioCurto, true], ['personalizacao.titulo', TAMANHOS.inicioTitulo, true], ['personalizacao.texto', TAMANHOS.inicioTexto, true], ['personalizacao.botao', TAMANHOS.inicioCurto, true], ['personalizacao.legenda', TAMANHOS.inicioCurto, false],
     ['historia.etiqueta', TAMANHOS.inicioCurto, true], ['historia.titulo', TAMANHOS.inicioTitulo, true], ['historia.texto', TAMANHOS.inicioTexto, true], ['historia.botao', TAMANHOS.inicioCurto, true],
     ['emCasa.titulo', TAMANHOS.inicioTitulo, true], ['emCasa.texto', TAMANHOS.inicioTexto, true],
@@ -688,10 +689,13 @@ export function problemasDoInicio(valor, { fotos = null, artigos = null, videos 
   };
   blocos('vantagens', 2, 6);
   blocos('comoEncomendar.passos', 2, 6);
-  /* Os separadores da vitrine: os filtros são do gerador; os nomes, textos curtos. */
+  /* Os separadores da vitrine (Todos, Mais vendidos, Promoções, Novidades) saíram a 10 out 2026 (a Célia: «fica só
+     Artigos»): a vitrine mostra todos os artigos. Um ficheiro que ainda os tenha confere-se como antes — os filtros
+     são do gerador; os nomes, textos curtos. */
   const sep = h.vitrine.separadores;
   const FILTROS = ['todos', 'maisVendido', 'promocao', 'novidade'];
-  if (!Array.isArray(sep) || !sep.length || sep.some((s) => !eObjecto(s) || !temTexto(s.nome) || !FILTROS.includes(s.filtro))) bloqueia('vitrine.separadores', 'vitrine.separadores', 'Os separadores da vitrine não estão como deviam. Só o Renato os pode corrigir.');
+  if (sep === undefined) { /* sem separadores: é o normal */ }
+  else if (!Array.isArray(sep) || !sep.length || sep.some((s) => !eObjecto(s) || !temTexto(s.nome) || !FILTROS.includes(s.filtro))) bloqueia('vitrine.separadores', 'vitrine.separadores', 'Os separadores da vitrine não estão como deviam. Só o Renato os pode corrigir.');
   else sep.forEach((s, i) => umTexto(`vitrine.separadores.${i}.nome`, TAMANHOS.inicioCurto, true));
   /* Os desenhos das vantagens são os do site (o painel não os muda). */
   const DESENHOS = ['mao', 'gravar', 'pronto', 'local'];

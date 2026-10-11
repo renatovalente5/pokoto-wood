@@ -7,35 +7,13 @@
     "etiqueta": "Feito à mão em Vila Nova de Famalicão",
     "tituloLinha1": "Pequenos passos,",
     "tituloLinha2": "grandes conquistas",
-    "texto": "Torres de aprendizagem, Pikler e mobiliário Montessori, personalizados com o nome, uma frase ou um desenho — sem custos.",
+    "texto": "Torres de aprendizagem Montessori e Pikler, personalizados ao seu gosto e sem custos.",
     "botao": "Ver a loja",
     "ligacao": "/loja/",
     "foto": "oficina-pecas-personalizadas"
   },
   "vitrine": {
-    "titulo": "Feitos à medida da infância",
-    "separadores": [
-      {
-        "nome": "Todos",
-        "filtro": "todos"
-      },
-      {
-        "nome": "Mais vendidos",
-        "filtro": "maisVendido"
-      },
-      {
-        "nome": "Promoções",
-        "filtro": "promocao"
-      },
-      {
-        "nome": "Novidades",
-        "filtro": "novidade"
-      }
-    ]
-  },
-  "categorias": {
-    "titulo": "Para cada fase, uma peça",
-    "texto": "Do primeiro passo às grandes aventuras"
+    "titulo": "Artigos"
   },
   "personalizacao": {
     "etiqueta": "Personalização grátis",

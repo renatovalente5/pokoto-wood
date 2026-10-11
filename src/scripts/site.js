@@ -93,7 +93,7 @@
     if (aberto) { aberto.setAttribute('aria-expanded', 'false'); aberto.focus(); }
   });
 
-  // ---------------------------------------------------------------- carrossel e separadores
+  // ---------------------------------------------------------------- carrossel
   $$('[data-carrossel]').forEach((c) => {
     const pista = $('.carrossel__pista', c);
     const barra = $('.carrossel__progresso span', c);
@@ -109,7 +109,7 @@
       c.classList.toggle('carrossel--parado', max <= 2);
     };
     const passo = () => {
-      const cartao = $('.cartao:not([hidden])', pista);
+      const cartao = $('.cartao', pista);
       const largura = cartao ? cartao.getBoundingClientRect().width + parseFloat(getComputedStyle(pista).columnGap || 0) : pista.clientWidth;
       return Math.max(largura, Math.floor(pista.clientWidth / largura) * largura);
     };
@@ -118,18 +118,6 @@
     seg.addEventListener('click', () => mover(1));
     pista.addEventListener('scroll', actualizar, { passive: true });
     window.addEventListener('resize', actualizar);
-    const seccao = c.closest('section');
-    const botoes = seccao ? $$('.separadores button', seccao) : [];
-    const filtrar = (f) => {
-      $$('.cartao', pista).forEach((k) => { k.hidden = !k.dataset.filtros.split(' ').includes(f); });
-      pista.scrollLeft = 0;
-      actualizar();
-    };
-    botoes.forEach((b) => b.addEventListener('click', () => {
-      botoes.forEach((x) => x.setAttribute('aria-pressed', String(x === b)));
-      filtrar(b.dataset.filtro);
-    }));
-    if (botoes.length) filtrar(pista.dataset.filtroAtivo || 'todos');
     actualizar();
   });
 

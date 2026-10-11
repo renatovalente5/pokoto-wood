@@ -43,7 +43,7 @@
   "vendaIsolada": true,
   "video": "",
   "categoria": "torres-de-aprendizagem",
-  "maisVendido": true,
+  "maisVendido": false,
   "novidade": false,
   "publicado": true,
   "ordem": 1

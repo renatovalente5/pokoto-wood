@@ -42,8 +42,7 @@ export function promocaoAte(ctx, p) {
 export function cartaoProduto(ctx, p, { tamanhos = '(min-width: 1100px) 23vw, (min-width: 700px) 31vw, 46vw', titulo = 'h3' } = {}) {
   const v = precoDe(p, ctx.hoje);
   const pct = desconto(ctx, p);
-  const marcas = [p.maisVendido ? 'maisVendido' : '', v.anterior ? 'promocao' : '', p.novidade ? 'novidade' : ''].filter(Boolean).join(' ');
-  return `<article class="cartao" data-filtros="todos ${marcas}">
+  return `<article class="cartao">
   <div class="cartao__foto">${imagem(ctx, p.fotos[0], { tamanhos, classe: 'cartao__img' })}${pct ? `<span class="selo selo--promocao">−${pct}%</span>` : ''}${p.maisVendido ? '<span class="selo selo--vendido">Mais vendido</span>' : ''}</div>
   <${titulo} class="cartao__nome"><a class="cartao__ligacao" href="${ctx.url(`/produtos/${p.slug}/`)}">${esc(p.nome)}</a></${titulo}>
   ${preco(ctx, p)}
