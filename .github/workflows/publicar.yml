@@ -1,14 +1,26 @@
-# Constrói o site da Pokóto Wood e publica-o no GitHub Pages.
+# Constrói o site da Pokóto Wood e publica-o na Cloudflare, em https://pokotowood.pt.
 #
-# FASE DE PRÉ-VISUALIZAÇÃO (desde 7 out 2026): https://renatovalente5.github.io/pokoto-wood/,
-# fechada aos motores de busca (noindex + robots.txt), aberta aos robôs do WhatsApp e do
-# Facebook para as ligações partilhadas mostrarem a imagem.
+# O site é o Worker «pokoto-wood-site» (wrangler.jsonc): os ficheiros que o
+# `node scripts/build.mjs --producao` escreve em _site/, nos Custom Domains pokotowood.pt e
+# www.pokotowood.pt (o www vai para o domínio sem www: worker/www.js). A construção de produção
+# abre aos motores de busca e RECUSA publicar enquanto faltar um dado legal (NIF, morada,
+# WhatsApp, prazos, pagamento, IVA).
 #
-# Para o domínio final: trocar a linha «Construir» por «node scripts/build.mjs --producao».
-# Essa construção escreve o CNAME, abre aos motores de busca e RECUSA publicar enquanto faltar
-# um dado legal (NIF, morada, WhatsApp, prazos, pagamento, IVA).
+# Até 11 out 2026 publicava a pré-visualização no GitHub Pages (renatovalente5.github.io/pokoto-wood,
+# construída com --base=/pokoto-wood, fechada aos motores de busca). Os termos do Pages não deixam
+# lá uma loja, e a pré-visualização acabou com o domínio.
 #
-# Settings → Pages → Source tem de ser «GitHub Actions».
+# O PAINEL (renatovalente5/pokoto-painel) acompanha este workflow: o job «publicar» acabado bem
+# quer dizer «publicado»; o nome do passo que falha aparece à dona (por isso os nomes são em
+# português); as razões de uma publicação parada são as anotações ::error do build. O ensaio do
+# painel corre ESTE ficheiro (scripts/lib/ci-de-ensaio.mjs) e as baterias dele conferem os nomes
+# dos passos (scripts/lib/github-de-ensaio.mjs): mudar um nome aqui é mudá-lo lá.
+#
+# Precisa do segredo CLOUDFLARE_API_TOKEN e da variável CLOUDFLARE_ACCOUNT_ID. O token é do
+# Renato, com Account › Workers Scripts: Edit e Account › Account Settings: Read, e NADA das
+# zonas: os Custom Domains ligaram-se uma vez, à mão (11 out 2026), e este workflow publica sem
+# rotas (ver o passo «Preparar o site»). Sem o token a publicação FALHA, de propósito: melhor um
+# CI vermelho do que edições que nunca chegam ao site.
 name: Publicar o site
 
 on:
@@ -22,8 +34,9 @@ on:
 
 permissions: {}
 
+# Uma publicação nova cancela a que está a correr: publica-se sempre o commit mais recente.
 concurrency:
-  group: pages
+  group: publicar
   cancel-in-progress: true
 
 jobs:
@@ -52,21 +65,72 @@ jobs:
           restore-keys: imagens-
       - name: Conferir as fotografias
         run: python scripts/imagens.py --verificar
-      - name: Construir (pré-visualização)
-        run: node scripts/build.mjs --base=/pokoto-wood
-      - uses: actions/upload-pages-artifact@56afc609e74202658d3ffba0e8f6dda462b719fa # v3.0.1
+      - name: Construir
+        run: node scripts/build.mjs --producao
+      # O que o job «publicar» precisa, num ficheiro só: o site, o script do www e a
+      # configuração do Worker. O job «publicar» não faz checkout: nenhum código do
+      # repositório corre ao lado do token.
+      - name: Embrulhar o site
+        run: tar -czf site.tgz _site worker/www.js wrangler.jsonc
+      - name: Guardar o site construído
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
         with:
-          path: _site
+          name: site
+          path: site.tgz
+          if-no-files-found: error
+          retention-days: 7
 
   publicar:
     needs: construir
     runs-on: ubuntu-latest
-    permissions:
-      pages: write
-      id-token: write
-    environment:
-      name: github-pages
-      url: ${{ steps.publicacao.outputs.page_url }}
+    permissions: {}
     steps:
-      - id: publicacao
-        uses: actions/deploy-pages@d6db90164ac5ed86f2b6aed7e0febac5b3c0c03e # v4.0.5
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4.4.0
+        with:
+          node-version: 22
+      - name: Buscar o site construído
+        uses: actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093 # v4
+        with:
+          name: site
+      - name: Preparar o site
+        run: |
+          set -euo pipefail
+          # O artefacto: só o site.tgz.
+          test "$(ls -A)" = "site.tgz" || { echo "o artefacto traz mais do que o site.tgz: $(ls -A | tr '\n' ' ')"; exit 1; }
+          # O embrulho, antes de o abrir: nada de caminhos absolutos nem «..», só ficheiros e
+          # pastas (nada de ligações nem ficheiros especiais), e só o site, o script do www e a
+          # configuração. Para ficheiros e só depois o grep: um grep -q a meio de um pipe deixava
+          # o tar a morrer de SIGPIPE, e o if lia isso como «limpo».
+          tar -tzf site.tgz > nomes.txt
+          tar -tvzf site.tgz > tipos.txt
+          if grep -Eq '(^/|(^|/)\.\.(/|$))' nomes.txt; then echo "caminhos proibidos no embrulho"; exit 1; fi
+          if grep -Evq '^[-d]' tipos.txt; then echo "ligações ou ficheiros especiais no embrulho"; grep -Ev '^[-d]' tipos.txt; exit 1; fi
+          outros="$(grep -Ev '^(\./)?(_site(/.*)?|worker/?|worker/www\.js|wrangler\.jsonc)$' nomes.txt || true)"
+          if [ -n "$outros" ]; then echo "o embrulho traz mais do que _site/, worker/www.js e wrangler.jsonc:"; echo "$outros" | head -20; exit 1; fi
+          rm nomes.txt tipos.txt
+          tar -xzf site.tgz && rm site.tgz
+          test -f _site/index.html || { echo "FALTA _site/index.html"; exit 1; }
+          test -f _site/404.html   || { echo "FALTA _site/404.html"; exit 1; }
+          test -z "$(find _site -name '*.md')" || { echo ".md NÃO devia ser publicado"; exit 1; }
+          # A configuração do Worker SEM as rotas: os Custom Domains (pokotowood.pt e o www)
+          # ficam ligados ao Worker, e um deploy sem rotas não lhes toca (provado a 11 out 2026:
+          # «No targets deployed», e os dois continuaram lá). Assim o token só publica Workers.
+          # Os comentários do wrangler.jsonc são linhas inteiras (é o que isto tira).
+          node -e '
+            const fs = require("fs");
+            const c = JSON.parse(fs.readFileSync("wrangler.jsonc", "utf8").replace(/^\s*\/\/.*$/gm, ""));
+            if (c.name !== "pokoto-wood-site" || c.assets?.directory !== "./_site") throw new Error("o wrangler.jsonc não é o do site");
+            delete c.routes;
+            fs.writeFileSync("wrangler.json", JSON.stringify(c, null, 2) + "\n");
+          '
+          cat wrangler.json
+          echo "ok: $(find _site -type f | wc -l | tr -d ' ') ficheiros"
+      # A acção vai fixada pelo commit (o comentário diz a etiqueta): uma etiqueta pode mudar de
+      # sítio, e esta corre com o token.
+      - name: Publicar na Cloudflare
+        uses: cloudflare/wrangler-action@9acf94ace14e7dc412b076f2c5c20b8ce93c79cd # v3
+        with:
+          apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          accountId: ${{ vars.CLOUDFLARE_ACCOUNT_ID }}
+          wranglerVersion: '4.145.0'
+          command: deploy --config wrangler.json

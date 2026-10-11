@@ -1,0 +1,40 @@
+// O SITE EM PRODUÇÃO, NA CLOUDFLARE: um Worker com os ficheiros que o
+// `node scripts/build.mjs --producao` escreve em _site/, em pokotowood.pt.
+//
+// PORQUÊ: os termos do GitHub Pages proíbem usá-lo para uma loja online («not
+// intended for or allowed to be used … to run your online business, e-commerce
+// site»), como na ithos. A pré-visualização no GitHub Pages acabou com o domínio.
+//
+// PUBLICA-SE PELO CI (.github/workflows/publicar.yml, o job «publicar»), que é o que o
+// painel acompanha, e SEM AS ROTAS: o CI tira-as antes de publicar, e o token dele só
+// publica Workers. Os dois Custom Domains ligaram-se UMA vez, com um `wrangler deploy`
+// à mão a 11 out 2026 (o _site/ de produção acabado de construir), e ficam ligados ao
+// Worker (um deploy sem rotas não lhes toca). Mudar um domínio aqui é, por isso, um
+// deploy à mão, da pasta do site: `node scripts/build.mjs --producao` e depois o
+// wrangler com --config ./wrangler.jsonc (nunca com o _site/ da pré-visualização, nem a
+// partir da pasta-mãe: a autoconfiguração do wrangler inventa um Worker com o conteúdo de
+// outro projecto). Os comentários são linhas inteiras: o CI tira-os assim.
+{
+  "name": "pokoto-wood-site",
+  "compatibility_date": "2026-09-01",
+  "main": "worker/www.js",
+  "assets": {
+    "directory": "./_site",
+    "binding": "ASSETS",
+    // O script corre primeiro em todos os pedidos, só para mandar o www para o
+    // domínio sem www; o resto passa logo para os ficheiros.
+    "run_worker_first": true,
+    // Uma morada que não existe mostra a 404.html do site.
+    "not_found_handling": "404-page",
+    "html_handling": "auto-trailing-slash"
+  },
+  // O domínio é novo (10 out 2026) e a zona não tinha registos: os Custom Domains
+  // criam eles os registos e os certificados (o caso que obrigava a uma Route,
+  // registos A antigos a apontar para outro lado, não existe aqui).
+  "routes": [
+    { "pattern": "pokotowood.pt", "custom_domain": true },
+    { "pattern": "www.pokotowood.pt", "custom_domain": true }
+  ],
+  "workers_dev": false,
+  "preview_urls": false
+}

@@ -54,7 +54,7 @@ montado exceto o roupeiro; o colchão do arco não está incluído nem se vende.
   confirmar que tem autorização dos pais.
 - **Logótipo provisório:** o do perfil do Instagram (344 px), recortado. Falta o ficheiro original.
 - **Alojamento de produção:** Cloudflare (Worker só de ficheiros, grátis), como a ithos: os termos
-  do GitHub Pages proíbem lojas. A pré-visualização fica no GitHub Pages.
+  do GitHub Pages proíbem lojas. No ar em pokotowood.pt desde 11 out 2026 (§7).
 
 ## 2-A. Respondido no email «Pokóto Wood - Logo» (pokotowood@sapo.pt → Renato, 7 out 2026, 20:38)
 
@@ -104,7 +104,7 @@ feito por encomenda; **sem stock** (o painel não o gere).)
 
 ## 4. O backoffice (em `~/Websites/pokoto-painel`; o plano dele em docs/PLANO.md de lá)
 
-Feito a 7–8 out 2026 e a correr no ensaio local; vai para o ar com o domínio. O que ficou
+Feito a 7–8 out 2026; no ar em https://backoffice.pokotowood.pt desde 11 out 2026 (§7). O que ficou
 diferente do que estava previsto: as páginas de texto ficam para uma fase 2 (o painel só as lê,
 para não apagar as fotografias que usam); as zonas de entrega são fixas (os portes mudam-se por
 artigo); há um ecrã «Fotografias» com a descrição de cada uma (content/fotos.json).
@@ -127,7 +127,7 @@ código de 8 algarismos por email, gravação no repositório do site por uma Gi
 - **Publicação** — «A publicar…» até «Publicado ✓».
 - **Ajuda** — curta, com o contacto do Renato para avarias.
 
-Depende do domínio (o painel e o email dos códigos vivem nele).
+Vive no domínio: o painel em backoffice.pokotowood.pt e o email dos códigos sai de painel@pokotowood.pt.
 
 ## 5. Feito a 7 out 2026
 
@@ -183,3 +183,21 @@ transcrições em `_cliente/whatsapp/2026-10-10/`). Aplicado:
 5. Nomes: os textos dela abrem com «Estante de Livros Montessori» e «Roupeiro Montessori Infantil»;
    os artigos continuam «Estante Montessori» e «Roupeiro Montessori». Mudar o nome é um minuto.
 
+## 7. No domínio (11 out 2026)
+
+O Renato comprou pokotowood.pt na Hostinger (10 out) e pediu o site e o painel no ar.
+
+- **Zona na Cloudflare** (conta do Renato, plano Free, id `9fd776a13e07b0360b35d8c77869daff`),
+  criada sem registos (o domínio não tinha email nem site: só a página de estacionamento da
+  Hostinger). Servidores de nomes trocados na Hostinger para `kelly`/`toby.ns.cloudflare.com` à
+  01:08; o .pt delegou 13 minutos depois e a zona ficou activa às 01:23. Ligados: «Always Use
+  HTTPS»; desligados: a ofuscação de emails, a troca de bibliotecas JS, o Bot Fight Mode e o AI
+  Labyrinth.
+- **O site:** Worker `pokoto-wood-site` com os Custom Domains pokotowood.pt e www.pokotowood.pt
+  (ligados uma vez, à mão; o CI publica sem rotas e não lhes toca). O www vai para o domínio sem
+  www (301, com o caminho e a pesquisa); a cache de um ano vai pelo `_headers` que o build escreve.
+- **O painel:** https://backoffice.pokotowood.pt (o Worker `pokoto-painel`; o plano dele, no
+  repositório dele). O email dos códigos sai pelo Email Routing da zona para os destinos verificados:
+  o Gmail do Renato e pokotowood@sapo.pt (a Célia tem de carregar no link de verificação da
+  Cloudflare).
+- **A pré-visualização no GitHub Pages** acabou: o workflow deixou de a publicar.

@@ -3,9 +3,10 @@
 //
 //   node scripts/build.mjs                       local, em http://localhost:4810/
 //   node scripts/build.mjs --base=/pokoto-wood   pré-visualização no GitHub Pages
-//   node scripts/build.mjs --producao            o domínio final: abre aos motores de busca,
-//                                                escreve o CNAME e RECUSA publicar com dados
-//                                                legais por preencher
+//   node scripts/build.mjs --producao            o domínio (pokotowood.pt, na Cloudflare): abre
+//                                                aos motores de busca, escreve o _headers (a
+//                                                cache) e RECUSA publicar com dados legais por
+//                                                preencher
 //   node scripts/build.mjs --sem-imagens         não corre o scripts/imagens.py (usa a cache)
 //
 // Os textos que a lei manda ter certos (identificação, NIF, morada, contactos, prazos) vêm todos
@@ -31,8 +32,8 @@ const producao = args.includes('--producao');
 const base = producao ? '' : (args.find((a) => a.startsWith('--base='))?.slice(7) || '').replace(/\/$/, '');
 const semImagens = args.includes('--sem-imagens');
 
-// O domínio final ainda não está comprado (7 out 2026): pokotowood.pt está livre. Mudar aqui
-// quando estiver, e o CNAME, o canonical e o sitemap seguem.
+// O domínio (comprado a 10 out 2026; o site está nele, na Cloudflare, desde 11 out): o
+// canonical, o sitemap e os cartões de partilha seguem-no.
 const DOMINIO = 'pokotowood.pt';
 const ORIGEM = producao ? `https://${DOMINIO}` : (base ? 'https://renatovalente5.github.io' : 'http://localhost:4810');
 
@@ -283,7 +284,7 @@ for (const s of saidas) {
   fs.writeFileSync(destino, html);
 }
 
-// ---------------------------------------------------------------- robots, sitemap, CNAME
+// ---------------------------------------------------------------- robots, sitemap, _headers
 const indexaveis = saidas.filter((s) => !['/404.html', '/carrinho/'].includes(s.caminho));
 let lastmod = {};
 try {
@@ -308,7 +309,15 @@ ${indexaveis.map((s) => `  <url><loc>${ctx.absoluto(s.caminho)}</loc><lastmod>${
 fs.writeFileSync(path.join(SAIDA, 'robots.txt'), producao
   ? `User-agent: *\nAllow: /\n\nSitemap: ${ctx.absoluto('/sitemap.xml')}\n`
   : 'User-agent: facebookexternalhit\nAllow: /\n\nUser-agent: WhatsApp\nAllow: /\n\nUser-agent: *\nDisallow: /\n');
-if (producao) fs.writeFileSync(path.join(SAIDA, 'CNAME'), `${DOMINIO}\n`);
+// Em produção (Cloudflare): a cache dos ficheiros com o resumo no nome. Os ficheiros do
+// Worker saem todos com max-age=0 (cada visita pergunta outra vez); estes nunca mudam de
+// conteúdo, porque o nome muda com ele. Só grupos que não se tocam: duas regras para o
+// mesmo ficheiro JUNTAM os valores (as miniaturas do painel, assets/img/miniatura-*.webp,
+// não têm resumo e ficam fora — por isso as imagens não levam regra).
+if (producao) {
+  const umAno = '  Cache-Control: public, max-age=31536000, immutable\n';
+  fs.writeFileSync(path.join(SAIDA, '_headers'), ['/assets/site-*', '/assets/catalogo-*', '/assets/video/*'].map((r) => `${r}\n${umAno}`).join(''));
+}
 fs.writeFileSync(path.join(SAIDA, '.nojekyll'), '');
 
 // ---------------------------------------------------------------- verificação do que saiu

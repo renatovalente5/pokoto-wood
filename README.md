@@ -7,7 +7,8 @@ aprendizagem, peças Pikler e mobiliário Montessori em madeira, feitos à mão 
 (levantamento grátis, Portugal Continental, Madeira e Açores, Espanha) e acaba no WhatsApp, com a
 encomenda escrita numa mensagem. A encomenda fica feita quando a Pokóto a confirma por lá.
 
-- Pré-visualização: https://renatovalente5.github.io/pokoto-wood/ (fechada aos motores de busca)
+- No ar: **https://pokotowood.pt** (desde 11 out 2026; o www vai para o domínio sem www). Até aí, a
+  pré-visualização no GitHub Pages (renatovalente5.github.io/pokoto-wood).
 - Referência de desenho escolhida pela cliente: https://atoca.pt/
 - Plano, decisões e perguntas em aberto: [`docs/PLANO.md`](docs/PLANO.md)
 - O painel (backoffice) da loja vive noutro repositório, `pokoto-painel`: grava aqui, um commit por
@@ -21,12 +22,16 @@ Node 22 e Python 3 com Pillow. Sem dependências npm.
 ```bash
 node scripts/build.mjs                        # local → _site/ (servir em http://localhost:4810)
 python3 -m http.server 4810 --directory _site
-node scripts/build.mjs --base=/pokoto-wood     # a pré-visualização do GitHub Pages
-node scripts/build.mjs --producao              # o domínio final (recusa dados legais por preencher)
+node scripts/build.mjs --producao              # pokotowood.pt (recusa dados legais por preencher)
+node scripts/build.mjs --base=/pokoto-wood     # a pré-visualização antiga, numa base
 ```
 
-O GitHub Actions (`.github/workflows/publicar.yml`) constrói e publica a cada push e todos os
-dias à meia-noite de Lisboa (as promoções e o aviso do topo têm data de fim).
+O GitHub Actions (`.github/workflows/publicar.yml`) constrói com `--producao` e publica na
+Cloudflare a cada push e todos os dias à meia-noite de Lisboa (as promoções e o aviso do topo têm
+data de fim). O site é o Worker `pokoto-wood-site` (`wrangler.jsonc` e `worker/www.js`, que manda
+o www para o domínio sem www), na conta Cloudflare do Renato; os termos do GitHub Pages não deixam
+lá uma loja. O workflow precisa do segredo `CLOUDFLARE_API_TOKEN` (Account › Workers Scripts:
+Edit e Account › Account Settings: Read) e da variável `CLOUDFLARE_ACCOUNT_ID`.
 
 ## Onde está cada coisa
 
