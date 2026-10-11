@@ -54,9 +54,15 @@ export function inicio(ctx) {
 </section>`;
 
   const pz = h.personalizacao;
+  /* O presente À FRENTE do texto (pedido da Célia, 10 out 2026), preso à primeira palavra: sozinho,
+     podia ficar numa linha por cima de «Personalização» (a 800–1024 px ficava). */
+  const etiquetaComPresente = (t) => {
+    const [primeira = '', ...resto] = String(t ?? '').trim().split(/\s+/);
+    return `<span class="personaliza__presente">${icones.presente}${esc(primeira)}</span>${resto.length ? ` ${esc(resto.join(' '))}` : ''}`;
+  };
   const personalizacao = `<section class="personaliza" aria-labelledby="pz-titulo">
   <div class="personaliza__painel">
-    <p class="personaliza__etiqueta">${icones.presente}<span>${esc(pz.etiqueta)}</span></p>
+    <p class="personaliza__etiqueta">${etiquetaComPresente(pz.etiqueta)}</p>
     ${pz.opcoes?.length ? `<ul class="personaliza__lista" aria-hidden="true">${pz.opcoes.map((o, i) => `<li${i === 0 ? ' class="ativo"' : ''}>${esc(o)}</li>`).join('')}</ul>` : ''}
     <h2 id="pz-titulo" class="personaliza__titulo">${esc(pz.titulo)}</h2>
     <p>${esc(pz.texto)}</p>

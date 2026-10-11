@@ -284,10 +284,14 @@ html:has(dialog[open]) { overflow: hidden; }
 
 /* ------------------------------------------------------------------ início: personalização */
 .personaliza { max-width: var(--largura); margin: clamp(56px, 8vw, 96px) auto 0; padding-inline: var(--margem); display: grid; gap: 14px; }
-.personaliza__painel { background: var(--terracota); color: var(--branco); border-radius: var(--raio-grande); padding: clamp(28px, 5vw, 56px); display: flex; flex-direction: column; justify-content: center; text-align: center; }
+.personaliza__painel { background: var(--terracota); color: var(--branco); border-radius: var(--raio-grande); padding: clamp(28px, 5vw, 56px); display: flex; flex-direction: column; justify-content: center; text-align: center; container-type: inline-size; }
 /* O presente À FRENTE de «Personalização grátis» (Célia, 10 out 2026), em letras grandes. */
 .personaliza__etiqueta { font-family: var(--letra-titulos); font-weight: 700; text-transform: uppercase; font-size: clamp(1.9rem, 4.6vw, 3rem); line-height: 1.1; margin-bottom: .35em; text-wrap: balance; }
 .personaliza__etiqueta .icone { display: inline-block; width: 1em; height: 1em; vertical-align: -.1em; margin-right: .22em; stroke-width: 1.7; }
+/* O presente e a primeira palavra não se separam; a letra segue a largura do PAINEL (e não a do
+   ecrã), para os dois caberem sempre lá dentro (medido de 320 a 1280 px). */
+.personaliza__presente { white-space: nowrap; }
+@supports (font-size: 1cqi) { .personaliza__etiqueta { font-size: min(3rem, 10.5cqi); } }
 .personaliza__lista { list-style: none; font-family: var(--letra-titulos); font-weight: 700; text-transform: uppercase; font-size: clamp(2rem, 5vw, 3.4rem); line-height: 1.12; margin-bottom: .6em; }
 .personaliza__lista li { color: rgba(255, 255, 255, .45); }
 .personaliza__lista li.ativo { color: var(--branco); text-decoration: underline; text-decoration-thickness: 3px; text-underline-offset: .18em; }
