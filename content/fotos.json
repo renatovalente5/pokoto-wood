@@ -78,5 +78,9 @@
   "prancha-dupla-face-585b6a06": {
     "alt": "Prancha Dupla Face",
     "foco": "50% 50%"
+  },
+  "triangulo-prancha-pikler-97478a28": {
+    "alt": "Triângulo Pikler com Prancha Dupla Face",
+    "foco": "50% 50%"
   }
 }
