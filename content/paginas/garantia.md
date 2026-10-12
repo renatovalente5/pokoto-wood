@@ -11,4 +11,4 @@ Tudo o que compra na {{marca}} como consumidor tem garantia legal. Este é o avi
 
 Em Portugal, a garantia legal é de **3 anos a contar da entrega** (artigo 12.º do Decreto-Lei n.º 84/2021).
 
-Se uma peça não estiver conforme, contacte-nos o mais depressa possível, com uma fotografia e a referência da encomenda: {{email}} · {{whatsapp}}. O que pode escolher — a reparação, a substituição, a redução do preço ou o reembolso — está nos [termos e condições](/termos-e-condicoes/).
+Se uma peça não estiver conforme, contacte-nos o mais depressa possível, com uma fotografia da peça e o nome em que fez a encomenda: {{email}} · {{whatsapp}}. O que pode escolher — a reparação, a substituição, a redução do preço ou o reembolso — está nos [termos e condições](/termos-e-condicoes/).

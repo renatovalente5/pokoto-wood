@@ -569,7 +569,16 @@ html:has(dialog[open]) { overflow: hidden; }
 .campos-lado { display: grid; grid-template-columns: 1fr 1.4fr; gap: 10px; }
 .encomenda__aviso { display: flex; gap: 10px; font-size: .9rem; color: var(--tinta-2); margin: 0; }
 .encomenda__aviso .icone { color: var(--castanho); margin-top: 2px; }
-.encomenda__enviada { background: var(--papel); border-radius: var(--raio); padding: 16px; display: grid; gap: 10px; }
+/* Já abriu o WhatsApp com esta encomenda (carrinho.js): fica o título e o painel. */
+.encomenda[data-estado="enviada"] > :not(.encomenda__titulo, .encomenda__enviada) { display: none; }
+.encomenda__enviada { background: var(--papel); border-radius: var(--raio); padding: 16px; display: grid; gap: 12px; }
+.encomenda__enviada p { margin: 0; }
+.encomenda__enviada-cabeca { display: flex; align-items: flex-start; gap: 10px; font-weight: 500; color: var(--tinta); }
+.encomenda__enviada-cabeca .icone { flex: none; width: 24px; height: 24px; color: #1E8E50; }
+.encomenda__enviada-mais { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 0 16px; }
+.encomenda__enviada-mais .botao { padding-inline: 0; }
+.gaveta__enviada { display: flex; align-items: center; gap: 8px; margin: 0; font-size: .9rem; color: var(--salva-escura); }
+.gaveta__enviada .icone { flex: none; width: 20px; height: 20px; }
 .encomenda .nota { margin: 0; }
 
 /* ------------------------------------------------------------------ páginas de texto */

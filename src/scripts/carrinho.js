@@ -2,7 +2,9 @@
    Não há pagamentos no site: o carrinho junta os artigos, calcula os portes da zona escolhida
    e, no fim, abre o WhatsApp com a encomenda escrita. Nada sai do aparelho da pessoa até ela
    enviar a mensagem; no armazenamento local fica só o carrinho (artigos, personalização,
-   zona) — nunca o nome, a morada ou o NIF (a política de privacidade promete isto).
+   zona) e, depois de abrir o WhatsApp, a hora a que o abriu, para a página dizer «Encomenda
+   enviada» quando a pessoa volta — nunca o nome, a morada ou o NIF (a política de privacidade
+   promete isto).
    Os preços nunca se guardam: lêem-se sempre do catálogo publicado (assets/catalogo-*.json),
    para um preço mudado no backoffice valer logo. */
 (function () {
@@ -17,6 +19,7 @@
     return `${v.toLocaleString('pt-PT', { minimumFractionDigits: redondo ? 0 : 2, maximumFractionDigits: 2 })} €`;
   };
   const ICONES = {
+    certo: '<svg class="icone" viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="m5 12.5 4.5 4.5L19 7.5"/></svg>',
     mais: '<svg class="icone" viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true" focusable="false"><path d="M12 5v14M5 12h14"/></svg>',
     menos: '<svg class="icone" viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true" focusable="false"><path d="M5 12h14"/></svg>',
     lixo: '<svg class="icone" viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M4 7h16M10 11v6M14 11v6M5.5 7l1 12.2a1 1 0 0 0 1 .8h9a1 1 0 0 0 1-.8l1-12.2M9 7V4.5h6V7"/></svg>',
@@ -26,25 +29,43 @@
   function ler() {
     try {
       const e = JSON.parse(localStorage.getItem(CHAVE) || 'null');
-      if (e && e.v === 1 && Array.isArray(e.linhas)) return e;
+      if (e && e.v === 1 && Array.isArray(e.linhas)) {
+        if (!(e.enviada && typeof e.enviada.em === 'string' && typeof e.enviada.carrinho === 'string')) delete e.enviada;
+        return e;
+      }
     } catch (_) { /* armazenamento bloqueado ou estragado: começa vazio */ }
     return { v: 1, linhas: [], zona: 'levantamento' };
   }
   let estado = ler();
   let anuncio = ''; // o que o leitor de ecrã diz depois de uma acção; nunca vai para o armazenamento
+  // «Encomenda enviada» vale para ESTE carrinho: mudar um artigo, a quantidade, a personalização
+  // ou a entrega apaga a marca (a encomenda que seguiu já não é esta), e ao fim de 14 dias também.
+  const assinatura = () => JSON.stringify([estado.linhas.map((l) => [l.produto, [...(l.complementos || [])].sort(), (l.personalizacao || '').trim(), l.qtd]), estado.zona]);
+  function enviada() {
+    const env = estado.enviada;
+    if (!env) return null;
+    const idade = Date.now() - Date.parse(env.em);
+    if (!estado.linhas.length || env.carrinho !== assinatura() || !(idade >= 0 && idade < 14 * 864e5)) { delete estado.enviada; return null; }
+    return env;
+  }
   function guardar() {
+    enviada();
     try { localStorage.setItem(CHAVE, JSON.stringify(estado)); } catch (_) { /* modo privado sem armazenamento: o carrinho vive só nesta página */ }
     return desenharTudo();
   }
   window.addEventListener('storage', (e) => { if (e.key === CHAVE) { estado = ler(); desenharTudo(); } });
+  // A página volta da memória do browser (o «voltar» depois do WhatsApp): lê-se outra vez o
+  // carrinho, que pode ter mudado noutro separador entretanto.
+  window.addEventListener('pageshow', (e) => { if (e.persisted) { estado = ler(); desenharTudo(); } });
 
   let catalogoP = null;
+  let catalogoPronto = null; // o catálogo já carregado: o envio usa-o sem esperar (ver abrirWhatsApp)
   function catalogo() {
     if (!catalogoP) {
       catalogoP = fetch(document.body.dataset.catalogo).then((r) => {
         if (!r.ok) throw new Error(`catálogo ${r.status}`);
         return r.json();
-      });
+      }).then((cat) => { catalogoPronto = cat; return cat; });
       catalogoP.catch(() => { catalogoP = null; });
     }
     return catalogoP;
@@ -164,8 +185,9 @@
         <select id="gaveta-zona" data-zona>${cat.zonas.map((z) => `<option value="${esc(z.id)}"${z.id === zona ? ' selected' : ''}>${esc(z.nome)}</option>`).join('')}</select>
       </div>
       <div class="totais" aria-live="polite">${totaisHtml(c, cat, zona)}</div>
+      ${enviada() ? `<p class="gaveta__enviada">${ICONES.certo}<span>Já abriu o WhatsApp com esta encomenda.</span></p>` : ''}
       <div class="gaveta__acoes">
-        <a class="botao botao--mel" href="${esc(cat.carrinho)}">Finalizar a encomenda</a>
+        <a class="botao botao--mel" href="${esc(cat.carrinho)}">${enviada() ? 'Ver a encomenda' : 'Finalizar a encomenda'}</a>
         <button class="botao botao--contorno" type="button" data-fechar>Continuar a ver</button>
       </div>`;
   }
@@ -202,6 +224,24 @@
     const comMorada = (cat.zonas.find((z) => z.id === estado.zona) || {}).morada;
     $$('[data-so-envio]', form).forEach((e) => { e.hidden = !comMorada; });
     $$('[data-obrigatorio-envio]', form).forEach((i) => { i.required = Boolean(comMorada); });
+    // Já abriu o WhatsApp com esta encomenda: a página diz isso (também quando a pessoa volta
+    // mais tarde, ou recarrega), em vez de pedir os dados outra vez.
+    const env = enviada();
+    form.dataset.estado = env ? 'enviada' : '';
+    $('[data-enviada]', form).hidden = !env;
+    $('#encomenda-titulo').textContent = env ? 'Encomenda enviada' : 'Finalizar a encomenda';
+    if (env) {
+      $('[data-enviada-quando]', form).textContent = quando(env.em);
+      $('[data-copiar]', form).hidden = !ultimaMensagem; // o texto só vive nesta página: não se guarda
+    }
+  }
+  // « hoje, às 21:34» ou « a 12 de outubro, às 21:34» (em Lisboa)
+  function quando(iso) {
+    const d = new Date(iso);
+    const dia = new Intl.DateTimeFormat('en-CA', { timeZone: 'Europe/Lisbon', year: 'numeric', month: '2-digit', day: '2-digit' }).format(d);
+    const hora = new Intl.DateTimeFormat('pt-PT', { timeZone: 'Europe/Lisbon', hour: '2-digit', minute: '2-digit' }).format(d);
+    if (dia === hojeLisboa()) return ` hoje, às ${hora}`;
+    return ` a ${new Intl.DateTimeFormat('pt-PT', { timeZone: 'Europe/Lisbon', day: 'numeric', month: 'long' }).format(d)}, às ${hora}`;
   }
 
   function desenharConta() {
@@ -254,13 +294,9 @@
   });
 
   // ---------------------------------------------------------------- a mensagem e o envio
-  function referencia() {
-    const letras = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
-    const n = crypto.getRandomValues(new Uint8Array(5));
-    return `PW-${Array.from(n, (x) => letras[x % letras.length]).join('')}`;
-  }
-
-  function mensagem(cat, c, dados, ref) {
+  // (Até 12 out 2026 a mensagem acabava com uma referência ao acaso, «Ref.ª PW-H5292»: não
+  // ficava registada em lado nenhum e mudava a cada envio. Saiu, a pedido do Renato.)
+  function mensagem(cat, c, dados) {
     const z = cat.zonas.find((x) => x.id === estado.zona);
     const linhas = [`Olá ${cat.marca}! Gostava de fazer esta encomenda:`, ''];
     for (const d of c.validas) {
@@ -278,20 +314,34 @@
     if (z.morada) linhas.push(`Morada: ${dados.morada}, ${dados.codigoPostal} ${dados.localidade}`);
     if (dados.nif) linhas.push(`NIF: ${dados.nif}`);
     if (dados.notas) linhas.push(`Observações: ${dados.notas}`);
-    linhas.push('');
-    linhas.push(`Ref.ª ${ref} · encomenda feita no site`);
     return linhas.join('\n');
   }
 
+  /* ABRIR O WHATSAPP. No telemóvel, a própria página segue para o wa.me, que é uma ligação
+     universal: abre logo a aplicação, e o separador fica no carrinho. No computador, um separador
+     novo (o WhatsApp Web ou a aplicação), e o site fica onde estava; se o browser recusar o
+     separador, abre-se aqui mesmo. (Até 12 out 2026 ia «noopener» nas opções do window.open: com
+     ele o browser devolve SEMPRE null, e o «recusado» fazia também o site sair da página.) O
+     window.open tem de ser chamado dentro do toque, sem esperas antes: por isso o envio usa o
+     catálogo já carregado. */
+  const telemovel = window.matchMedia('(hover: none) and (pointer: coarse)');
+  function abrirWhatsApp(url) {
+    if (telemovel.matches) { location.href = url; return; }
+    const janela = window.open(url, '_blank');
+    if (janela) { try { janela.opener = null; } catch (_) { /* já é de outra origem */ } } else location.href = url;
+  }
+  const focarTitulo = () => { const t = $('#encomenda-titulo'); if (t) { t.tabIndex = -1; t.focus(); } };
+
   if (form) {
     const erro = $('[data-erro-encomenda]', form);
-    const enviada = $('[data-enviada]', form);
     form.addEventListener('submit', async (e) => {
       e.preventDefault();
       erro.hidden = true;
       $$('[aria-invalid]', form).forEach((i) => i.removeAttribute('aria-invalid'));
-      let cat;
-      try { cat = await catalogo(); } catch (_) { erro.textContent = 'Não conseguimos carregar o catálogo. Verifique a ligação e tente outra vez.'; erro.hidden = false; return; }
+      let cat = catalogoPronto;
+      if (!cat) {
+        try { cat = await catalogo(); } catch (_) { erro.textContent = 'Não conseguimos carregar o catálogo. Verifique a ligação e tente outra vez.'; erro.hidden = false; return; }
+      }
       const c = contas(cat, estado.linhas, estado.zona);
       if (!c.validas.length) { erro.textContent = 'O carrinho está vazio.'; erro.hidden = false; return; }
       const campos = ['nome', 'morada', 'codigoPostal', 'localidade'].map((n) => form.elements[n]).filter((i) => i.required && !i.value.trim());
@@ -303,11 +353,20 @@
         return;
       }
       const dados = Object.fromEntries(['nome', 'morada', 'codigoPostal', 'localidade', 'nif', 'notas'].map((n) => [n, form.elements[n].value.trim().replace(/\s+/g, ' ')]));
-      ultimaMensagem = mensagem(cat, c, dados, referencia());
-      const url = `https://wa.me/${cat.whatsapp || ''}?text=${encodeURIComponent(ultimaMensagem)}`;
-      const janela = window.open(url, '_blank', 'noopener');
-      if (!janela) location.href = url;
-      enviada.hidden = false;
+      ultimaMensagem = mensagem(cat, c, dados);
+      // A marca «enviada» grava-se antes de abrir: no telemóvel a página pode sair logo a seguir.
+      estado.enviada = { em: new Date().toISOString(), carrinho: assinatura() };
+      const desenho = guardar();
+      abrirWhatsApp(`https://wa.me/${cat.whatsapp || ''}?text=${encodeURIComponent(ultimaMensagem)}`);
+      await desenho;
+      focarTitulo();
+    });
+    // «Continuar no WhatsApp»: a mesma mensagem, se a página ainda a tem; depois de recarregar já
+    // não a tem (os dados da pessoa não se guardam), e abre-se só a conversa — uma mensagem que
+    // ficou por enviar continua lá escrita.
+    $('[data-continuar]', form).addEventListener('click', () => {
+      const numero = (catalogoPronto && catalogoPronto.whatsapp) || '';
+      abrirWhatsApp(`https://wa.me/${numero}${ultimaMensagem ? `?text=${encodeURIComponent(ultimaMensagem)}` : ''}`);
     });
     $('[data-copiar]', form).addEventListener('click', async (e) => {
       const b = e.currentTarget; // guardado antes do await: depois dele vale null
@@ -318,9 +377,16 @@
         b.lastElementChild.textContent = 'Não foi possível copiar';
       }
     });
+    // «Alterar a encomenda»: o formulário outra vez, com o carrinho como está.
+    $('[data-alterar]', form).addEventListener('click', async () => {
+      delete estado.enviada;
+      await guardar();
+      focarTitulo();
+    });
+    // «Fazer outra encomenda»: o carrinho fica vazio.
     $('[data-esvaziar]', form).addEventListener('click', async () => {
       estado = { v: 1, linhas: [], zona: estado.zona };
-      enviada.hidden = true;
+      ultimaMensagem = '';
       form.reset();
       await guardar();
       const h1 = document.querySelector('.carrinho-pagina h1');

@@ -367,9 +367,11 @@ export function carrinho(ctx) {
         <p class="comprar__erro" data-erro-encomenda role="alert" hidden></p>
         <button class="botao botao--whatsapp botao--largo" type="submit">${icones.whatsapp}<span>Enviar encomenda pelo WhatsApp</span></button>
         <div class="encomenda__enviada" data-enviada hidden>
-          <p><strong>Abrimos o WhatsApp com a sua encomenda.</strong> Se não abriu, copie a mensagem e envie-a para nós pelo WhatsApp.</p>
-          <button class="botao botao--contorno" type="button" data-copiar>${icones.copiar}<span>Copiar a mensagem</span></button>
-          <button class="botao botao--texto" type="button" data-esvaziar>Esvaziar o carrinho</button>
+          <p class="encomenda__enviada-cabeca">${icones.certo}<span>Abrimos o WhatsApp com a sua encomenda escrita<span data-enviada-quando></span>.</span></p>
+          <p>Se ainda não carregou em enviar na conversa, faça-o lá. A encomenda fica feita quando a confirmarmos consigo pelo WhatsApp, com o total, o pagamento e o prazo.</p>
+          <button class="botao botao--whatsapp botao--largo" type="button" data-continuar>${icones.whatsapp}<span>Continuar no WhatsApp</span></button>
+          <button class="botao botao--contorno botao--largo" type="button" data-copiar>${icones.copiar}<span>Copiar a mensagem</span></button>
+          <p class="encomenda__enviada-mais"><button class="botao botao--texto" type="button" data-alterar>Alterar a encomenda</button><button class="botao botao--texto" type="button" data-esvaziar>Fazer outra encomenda</button></p>
         </div>
       </form>
     </aside>

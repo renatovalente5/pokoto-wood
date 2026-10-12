@@ -6,7 +6,7 @@ atualizado: 2026-10-07
 
 ## O que fica guardado no seu browser
 
-Só uma coisa: **o carrinho** (os artigos que escolheu, a personalização e a entrega), no armazenamento local do browser, com o nome «pokoto:carrinho». Serve para o carrinho não se perder se fechar a página. É estritamente necessário para o serviço que pediu, não sai do seu aparelho e não nos é enviado.
+Só uma coisa: **o carrinho** (os artigos que escolheu, a personalização e a entrega e, depois de abrir o WhatsApp com a encomenda, o dia e a hora em que o abriu), no armazenamento local do browser, com o nome «pokoto:carrinho». Serve para o carrinho não se perder se fechar a página, e para a página lhe mostrar que a encomenda já seguiu quando volta. É estritamente necessário para o serviço que pediu, não sai do seu aparelho e não nos é enviado.
 
 Apaga-se ao esvaziar o carrinho, ou a qualquer momento nas definições do browser (limpar os dados deste site).
 
