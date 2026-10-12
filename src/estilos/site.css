@@ -172,21 +172,59 @@ html:has(dialog[open]) { overflow: hidden; }
 .gaveta__vazio { margin: 40px 0; text-align: center; color: var(--tinta-2); }
 
 .menu { position: fixed; inset: 0 auto 0 0; margin: 0; width: min(420px, 100vw); height: 100dvh; background: var(--papel); overscroll-behavior: contain; }
-.menu__corpo { --margem: 20px; min-height: 100%; display: flex; flex-direction: column; padding: 8px var(--margem) 24px; }
-.menu__topo { display: flex; align-items: center; justify-content: space-between; padding-block: 6px 12px; }
-.menu__nav { margin-block: auto; }
-.menu__loja { display: flex; align-items: center; justify-content: space-between; padding: 14px 18px; border-radius: var(--raio); background: var(--mel); color: var(--tinta); text-decoration: none; font-family: var(--letra-titulos); font-size: 1.25rem; margin-bottom: 14px; }
-.menu__cats { list-style: none; display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 18px; }
-.menu__cat { display: block; text-decoration: none; color: var(--tinta); font-family: var(--letra-titulos); font-size: 1.05rem; line-height: 1.2; }
-.menu__cat-foto img { width: 100%; aspect-ratio: 3 / 2; object-fit: cover; border-radius: 14px; margin-bottom: 6px; }
-.menu__ligacoes { list-style: none; border-top: 1px solid var(--linha); }
-.menu__ligacoes a { display: block; padding: 13px 4px; border-bottom: 1px solid var(--linha); text-decoration: none; color: var(--tinta); font-family: var(--letra-titulos); font-size: 1.2rem; }
+/* TUDO NUM ECRÃ, SEM ROLAR (pedido do Renato, 12 out 2026). As medidas seguem a altura que o
+   telemóvel dá ao menu: no iPhone, o Safari tira-lhe as barras (~660 px num ecrã de 844, ~550
+   num SE). Abaixo de 620 px de altura saem a frase da personalização e a linha de baixo (o
+   levantamento, o Instagram e o Facebook, que estão também no rodapé de todas as páginas). Se
+   mesmo assim não couber (um ecrã ainda mais baixo), o menu rola: nunca corta. */
+.menu__corpo { --margem: 20px; --mini: clamp(34px, 6dvh, 52px); --fresta: clamp(2px, .7dvh, 7px); min-height: 100%; display: flex; flex-direction: column; padding: clamp(2px, .6dvh, 8px) var(--margem) max(clamp(10px, 1.8dvh, 18px), env(safe-area-inset-bottom)); }
+.menu__topo { display: flex; align-items: center; justify-content: space-between; padding-block: 0 clamp(2px, .8dvh, 8px); }
+.menu__topo img { width: auto; height: clamp(38px, 6.2dvh, 52px); }
+.menu__titulo { margin: 0 2px clamp(0px, .4dvh, 4px); font-family: var(--letra-titulos); font-size: 1.05rem; font-weight: 700; color: var(--castanho); }
+.menu__lista { list-style: none; margin: 0; padding: 0; }
+.menu__linha { display: flex; align-items: center; gap: 14px; min-height: 44px; padding: var(--fresta) 2px; border-bottom: 1px solid var(--linha); color: var(--tinta); text-decoration: none; }
+.menu__lista li:last-child .menu__linha { border-bottom: 0; }
+.menu__mini { flex: none; width: var(--mini); height: var(--mini); border-radius: 14px; overflow: hidden; background: var(--creme); }
+.menu__mini picture, .menu__mini img { display: block; width: 100%; height: 100%; object-fit: cover; }
+.menu__texto { flex: 1; display: grid; }
+.menu__nome { flex: 1; font-family: var(--letra-titulos); font-size: 1.08rem; line-height: 1.2; }
+.menu__conta { font-size: .84rem; line-height: 1.3; color: var(--tinta-2); }
+.menu__linha > .icone { flex: none; width: 18px; height: 18px; color: var(--castanho); opacity: .7; }
+.menu__tudo { display: flex; align-items: center; justify-content: space-between; min-height: 40px; padding: clamp(2px, .7dvh, 8px) 2px clamp(4px, 1.1dvh, 12px); color: var(--terracota); font-weight: 500; text-decoration: none; }
+.menu__tudo .icone { width: 20px; height: 20px; }
+.menu__pz { display: flex; align-items: center; gap: 14px; padding: clamp(8px, 1.4dvh, 14px) 16px; border-radius: 18px; background: var(--terracota); color: var(--branco); text-decoration: none; margin-bottom: clamp(0px, .6dvh, 8px); }
+.menu__pz > .icone:first-child { flex: none; width: 30px; height: 30px; stroke-width: 1.7; }
+.menu__pz-textos { flex: 1; display: grid; }
+.menu__pz-titulo { font-family: var(--letra-titulos); font-size: 1.12rem; font-weight: 700; line-height: 1.15; text-transform: uppercase; }
+.menu__pz-texto { font-size: .88rem; line-height: 1.35; }
+.menu__pz > .icone:last-child { flex: none; width: 18px; height: 18px; }
+.menu__lista--info .menu__linha { padding-block: clamp(2px, .9dvh, 10px); }
+.menu__pe { margin-top: auto; padding-top: clamp(6px, 1.4dvh, 14px); display: grid; gap: clamp(6px, 1.1dvh, 10px); }
+.menu__whatsapp { display: flex; align-items: center; justify-content: center; gap: 10px; min-height: 48px; padding: clamp(8px, 1.4dvh, 14px) 18px; border-radius: 999px; background: var(--mel); color: var(--tinta); text-decoration: none; font-family: var(--letra-titulos); font-size: 1.08rem; }
+.menu__whatsapp .icone { width: 22px; height: 22px; }
+.menu__info { display: flex; align-items: center; justify-content: space-between; gap: 12px; }
+.menu__info p { margin: 0; max-width: 26ch; font-size: .82rem; line-height: 1.35; color: var(--tinta-2); }
+@media (max-height: 619px) {
+  .menu__pz-texto, .menu__info { display: none; }
+}
+/* Ecrãs altos (o Safari sem barras, telemóveis grandes): as linhas crescem, para o WhatsApp não
+   ficar longe do resto com um vão no meio. */
+@media (min-height: 830px) {
+  .menu__corpo { --mini: 60px; --fresta: 10px; }
+  .menu__nome { font-size: 1.15rem; }
+  .menu__tudo { padding-block: 12px 16px; }
+  .menu__pz { padding-block: 18px; }
+  .menu__lista--info .menu__linha { padding-block: 14px; }
+}
 
 /* redes sociais (rodapé e menu) */
 .redes { list-style: none; display: flex; gap: 10px; }
 .redes a { width: 46px; height: 46px; display: grid; place-items: center; border-radius: 14px; background: var(--mel); color: var(--tinta); }
 .redes a:hover { background: #F5C15F; color: var(--tinta); }
-.redes--menu { margin-top: 20px; }
+.redes--menu { gap: 8px; }
+.redes--menu a { width: 40px; height: 40px; border-radius: 50%; background: var(--creme); color: var(--castanho); }
+.redes--menu a:hover { background: var(--mel); color: var(--tinta); }
+.redes--menu .icone { width: 19px; height: 19px; }
 
 /* ------------------------------------------------------------------ preços e selos */
 .preco { margin: 0; display: flex; align-items: baseline; flex-wrap: wrap; gap: .1em .5em; font-weight: 700; font-size: .95rem; }

@@ -50,12 +50,12 @@ function cabecalho(ctx, caminho) {
 </header>`;
 }
 
-function redes(ctx, classe = 'redes') {
+function redes(ctx, classe = 'redes', { whatsapp = true } = {}) {
   const c = ctx.site.contactos;
   const r = [];
   if (c.instagram) r.push(`<a href="https://www.instagram.com/${esc(c.instagram)}/" target="_blank" rel="noopener">${icones.instagram}<span class="visualmente-escondido">Instagram</span></a>`);
   if (c.facebook) r.push(`<a href="https://www.facebook.com/${esc(c.facebook)}" target="_blank" rel="noopener">${icones.facebook}<span class="visualmente-escondido">Facebook</span></a>`);
-  if (c.whatsapp) r.push(`<a href="https://wa.me/${numeroWhatsApp(c.whatsapp)}" target="_blank" rel="noopener">${icones.whatsapp}<span class="visualmente-escondido">WhatsApp</span></a>`);
+  if (c.whatsapp && whatsapp) r.push(`<a href="https://wa.me/${numeroWhatsApp(c.whatsapp)}" target="_blank" rel="noopener">${icones.whatsapp}<span class="visualmente-escondido">WhatsApp</span></a>`);
   return `<ul class="${classe}">${r.map((x) => `<li>${x}</li>`).join('')}</ul>`;
 }
 
@@ -118,25 +118,42 @@ function gavetaCarrinho(ctx) {
 </dialog>`;
 }
 
+/* O MENU DO TELEMÓVEL (a opção B, escolhida pelo Renato a 12 out 2026): uma coisa por linha.
+   As categorias com a miniatura e quantos artigos têm; a personalização grátis num cartão (é o
+   que distingue a Pokóto); as páginas de informação; e em baixo a acção principal, o WhatsApp,
+   por onde chegam as encomendas. Tem de caber no ecrã sem rolar: as medidas seguem a altura que
+   o telemóvel dá ao menu (site.css). */
 function menuMovel(ctx) {
-  const cats = ctx.categorias.map((c) => `<li><a class="menu__cat" href="${ctx.url(`/loja/${c.slug}/`)}">${imagem(ctx, c.foto, { tamanhos: '45vw', classe: 'menu__cat-foto' })}<span>${esc(c.nome)}</span></a></li>`).join('');
+  const artigos = (n) => (n === 1 ? '1 artigo' : `${n} artigos`);
+  const linha = (href, conteudo) => `<li><a class="menu__linha" href="${href}">${conteudo}${icones.direita}</a></li>`;
+  const cats = ctx.categorias.map((c) => linha(ctx.url(`/loja/${c.slug}/`),
+    `<span class="menu__mini">${imagem(ctx, c.foto, { tamanhos: '56px' })}</span><span class="menu__texto"><span class="menu__nome">${esc(c.nome)}</span><span class="menu__conta">${artigos(ctx.produtos.filter((p) => p.categoria === c.slug).length)}</span></span>`)).join('');
+  const c = ctx.site.contactos;
+  const levantamento = (ctx.site.entrega?.zonas || []).some((z) => z.id === 'levantamento');
   return `<dialog class="menu" id="menu" aria-label="Menu">
   <div class="menu__corpo">
     <div class="menu__topo">
-      <a href="${ctx.url('/')}">${logotipo(ctx, { alto: 56 })}</a>
+      <a href="${ctx.url('/')}">${logotipo(ctx, { alto: 52 })}</a>
       <button class="menu__fechar" type="button" data-fechar>${icones.fechar}<span class="visualmente-escondido">Fechar o menu</span></button>
     </div>
     <nav class="menu__nav" aria-label="Menu">
-      <a class="menu__loja" href="${ctx.url('/loja/')}">Ver toda a loja ${icones.seta}</a>
-      <ul class="menu__cats">${cats}</ul>
-      <ul class="menu__ligacoes">
-        <li><a href="${ctx.url('/personalizacao/')}">Personalização grátis</a></li>
-        <li><a href="${ctx.url('/sobre-nos/')}">Sobre nós</a></li>
-        <li><a href="${ctx.url('/como-encomendar/')}">Como encomendar</a></li>
-        <li><a href="${ctx.url('/contactos/')}">Contactos</a></li>
+      <h2 class="menu__titulo" id="menu-loja">Loja</h2>
+      <ul class="menu__lista" aria-labelledby="menu-loja">${cats}</ul>
+      <a class="menu__tudo" href="${ctx.url('/loja/')}">Ver toda a loja · ${artigos(ctx.produtos.length)} ${icones.seta}</a>
+      <a class="menu__pz" href="${ctx.url('/personalizacao/')}">${icones.presente}<span class="menu__pz-textos"><span class="menu__pz-titulo">Personalização grátis</span><span class="menu__pz-texto">O nome, uma frase ou um desenho</span></span>${icones.direita}</a>
+      <ul class="menu__lista menu__lista--info">
+        ${linha(ctx.url('/sobre-nos/'), '<span class="menu__nome">Sobre nós</span>')}
+        ${linha(ctx.url('/como-encomendar/'), '<span class="menu__nome">Como encomendar</span>')}
+        ${linha(ctx.url('/contactos/'), '<span class="menu__nome">Contactos</span>')}
       </ul>
     </nav>
-    ${redes(ctx, 'redes redes--menu')}
+    <div class="menu__pe">
+      ${c.whatsapp ? `<a class="menu__whatsapp" href="https://wa.me/${numeroWhatsApp(c.whatsapp)}" target="_blank" rel="noopener">${icones.whatsapp}<span>Falar connosco no WhatsApp</span></a>` : ''}
+      <div class="menu__info">
+        ${levantamento ? `<p>Levantamento grátis na oficina, em ${esc(ctx.site.local.localidade)}</p>` : ''}
+        ${redes(ctx, 'redes redes--menu', { whatsapp: false })}
+      </div>
+    </div>
   </div>
 </dialog>`;
 }
