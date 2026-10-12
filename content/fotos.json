@@ -67,10 +67,6 @@
     "alt": "Torres de aprendizagem personalizadas com nomes e desenhos, alinhadas na oficina da Pokóto Wood, prontas a seguir para as famílias",
     "foco": "50% 60%"
   },
-  "inicio-62ab24a4": {
-    "alt": "Uma peça com um nome gravado",
-    "foco": "50% 50%"
-  },
   "arco-pikler-bbc0cfd2": {
     "alt": "Arco de Pikler",
     "foco": "50% 50%"
@@ -93,6 +89,10 @@
   },
   "estante-montessori-461cd959": {
     "alt": "Estante Montessori",
+    "foco": "50% 50%"
+  },
+  "inicio-da93f578": {
+    "alt": "Uma peça com um nome gravado",
     "foco": "50% 50%"
   }
 }
