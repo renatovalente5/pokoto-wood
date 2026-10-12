@@ -77,21 +77,48 @@
   }));
   window.PokotoAbrir = abrir;
 
-  // ---------------------------------------------------------------- navegação com painéis
-  const abridores = $$('.nav__abrir');
-  const fecharPaineis = (excepto) => abridores.forEach((b) => { if (b !== excepto) b.setAttribute('aria-expanded', 'false'); });
-  abridores.forEach((b) => b.addEventListener('click', (e) => {
-    e.stopPropagation();
-    const aberto = b.getAttribute('aria-expanded') === 'true';
-    fecharPaineis(b);
-    b.setAttribute('aria-expanded', String(!aberto));
-  }));
-  document.addEventListener('click', (e) => { if (!e.target.closest('.nav__item--painel')) fecharPaineis(); });
-  document.addEventListener('keydown', (e) => {
-    if (e.key !== 'Escape') return;
-    const aberto = abridores.find((b) => b.getAttribute('aria-expanded') === 'true');
-    if (aberto) { aberto.setAttribute('aria-expanded', 'false'); aberto.focus(); }
-  });
+  // ---------------------------------------------------------------- a loja no menu do computador
+  // «Loja» abre o painel com as categorias e os artigos todos: com um clique (ou Enter e Espaço) e,
+  // com o rato, também ao parar em cima dele. Passar por cima a caminho de «Sobre nós» não abre
+  // nada; o que o rato abriu, o rato fecha ao sair. Fecha com Escape, com um clique fora e quando
+  // o foco sai dele.
+  const loja = $('.nav__loja');
+  if (loja) {
+    const item = loja.parentElement;
+    let peloRato = 0; // quando o rato o abriu; 0 se foi um clique (fica aberto) ou está fechado
+    let espera = 0;
+    const aberto = () => loja.getAttribute('aria-expanded') === 'true';
+    const definir = (abrir, rato = false) => {
+      clearTimeout(espera);
+      loja.setAttribute('aria-expanded', String(abrir));
+      peloRato = abrir && rato ? Date.now() : 0;
+    };
+    loja.addEventListener('click', () => {
+      // O rato abriu-o há um instante: o clique que vinha a caminho segura-o aberto.
+      if (peloRato && Date.now() - peloRato < 600) { peloRato = 0; return; }
+      definir(!aberto());
+    });
+    item.addEventListener('pointerenter', (e) => {
+      if (e.pointerType !== 'mouse') return;
+      clearTimeout(espera);
+      if (!aberto()) espera = setTimeout(() => definir(true, true), 150);
+    });
+    item.addEventListener('pointerleave', (e) => {
+      if (e.pointerType !== 'mouse') return;
+      clearTimeout(espera);
+      if (peloRato) espera = setTimeout(() => definir(false), 300);
+    });
+    item.addEventListener('focusout', (e) => { if (aberto() && e.relatedTarget && !item.contains(e.relatedTarget)) definir(false); });
+    document.addEventListener('click', (e) => { if (aberto() && !item.contains(e.target)) definir(false); });
+    document.addEventListener('keydown', (e) => {
+      if (e.key !== 'Escape' || !aberto()) return;
+      const dentro = item.contains(document.activeElement);
+      definir(false);
+      if (dentro) loja.focus();
+    });
+    window.matchMedia('(min-width: 1180px)').addEventListener('change', () => definir(false));
+    loja.closest('.nav').dataset.pronta = '';
+  }
 
   // ---------------------------------------------------------------- carrossel
   $$('[data-carrossel]').forEach((c) => {

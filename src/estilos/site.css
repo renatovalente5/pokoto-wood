@@ -1,6 +1,6 @@
 /* Pokóto Wood — estilos do site.
-   A composição segue o atoca.pt (a referência que a Pokóto escolheu): cabeçalho creme com
-   navegação em maiúsculas e uma pílula, capa arredondada com a fotografia em arco, carrossel de
+   A composição segue o atoca.pt (a referência que a Pokóto escolheu): cabeçalho creme (os menus
+   são de 12 out 2026: docs/PLANO.md §9), capa arredondada com a fotografia em arco, carrossel de
    artigos, painel de colecção, bolhas soltas na história,
    faixa de vantagens, rodapé creme. As cores são da Pokóto: a madeira e o castanho do
    logótipo, com sálvia, mel e terracota. Letras: Grandstander (títulos) e Ubuntu (texto),
@@ -125,33 +125,65 @@ main:focus { outline: none; }
 .topo__marca { justify-self: center; display: block; }
 .logo { height: 56px; width: auto; }
 .topo__conta { position: absolute; top: 4px; right: 2px; min-width: 20px; height: 20px; padding: 0 5px; border-radius: 999px; background: var(--terracota); color: var(--branco); font-size: .72rem; font-weight: 700; line-height: 20px; text-align: center; }
-.nav { display: none; }
+.nav, .topo__whatsapp { display: none; }
 
+/* O menu do computador (layout.mjs, navegacao): a barra com «Loja», a personalização e as páginas,
+   o WhatsApp e o carrinho; «Loja» abre o painel a toda a largura, logo abaixo da barra. */
 @media (min-width: 1180px) {
   :root { --topo-h: 84px; }
-  .topo__barra { grid-template-columns: auto 1fr auto; gap: 28px; }
+  .topo__barra { grid-template-columns: auto minmax(0, 1fr) auto auto; gap: 10px; }
   .topo__menu { display: none; }
-  .topo__marca { justify-self: start; grid-column: 1; grid-row: 1; }
+  .topo__marca { justify-self: start; }
   .logo { height: 64px; }
-  .nav { display: block; grid-column: 2; grid-row: 1; }
-  .topo__carrinho { grid-column: 3; grid-row: 1; }
-  .nav__lista { list-style: none; display: flex; align-items: center; justify-content: center; gap: 2px; flex-wrap: nowrap; }
-  .nav__item { position: relative; display: flex; align-items: center; }
-  .nav__ligacao { display: block; padding: 10px 7px; font-size: .78rem; font-weight: 700; letter-spacing: .045em; white-space: nowrap; text-transform: uppercase; color: var(--castanho); text-decoration: none; border-radius: 8px; }
-  .nav__ligacao:hover, .nav__ligacao[aria-current] { color: var(--tinta); text-decoration: underline; text-decoration-thickness: 2px; text-decoration-color: var(--mel); text-underline-offset: 6px; }
-  .nav__abrir { width: 28px; height: 36px; margin-left: -6px; display: grid; place-items: center; border: 0; background: none; color: var(--castanho); border-radius: 8px; }
-  .nav__abrir .icone { width: 16px; height: 16px; transition: transform .2s; }
-  .nav__abrir[aria-expanded="true"] .icone { transform: rotate(180deg); }
-  .nav__painel { position: absolute; top: calc(100% + 6px); left: -8px; min-width: 260px; background: var(--papel); border-radius: var(--raio); box-shadow: var(--sombra); border: 1px solid var(--linha); padding: 10px; display: none; }
-  .nav__painel::before { content: ''; position: absolute; inset: -12px 0 auto 0; height: 12px; }
-  .nav__item--painel:hover .nav__painel, .nav__item--painel:focus-within .nav__painel, .nav__abrir[aria-expanded="true"] + .nav__painel { display: block; }
-  .nav__painel ul { list-style: none; }
-  .nav__painel a { display: flex; align-items: center; justify-content: space-between; gap: 8px; padding: 10px 12px; border-radius: 10px; text-decoration: none; color: var(--tinta); }
-  .nav__painel a:hover { background: var(--creme); }
-  .nav__todos a { font-weight: 500; color: var(--castanho); }
-  .nav__todos .icone { width: 18px; height: 18px; }
-  .nav__pilula { display: block; margin-left: 8px; padding: 9px 16px; border-radius: 999px; background: var(--mel); color: var(--tinta); font-size: .78rem; font-weight: 700; letter-spacing: .045em; text-transform: uppercase; text-decoration: none; white-space: nowrap; }
-  .nav__pilula:hover, .nav__pilula[aria-current] { background: #F5C15F; color: var(--tinta); }
+  /* A barra inteira na altura: o rato desce de «Loja» para o painel sem sair de cima dela. */
+  .nav { display: block; align-self: stretch; margin-inline: 18px; }
+  .nav__lista { list-style: none; height: 100%; display: flex; justify-content: center; gap: 4px; }
+  .nav__item { display: flex; align-items: center; }
+  .nav__ligacao, .nav__loja { display: flex; align-items: center; gap: 7px; min-height: 44px; padding: 10px 12px; border: 0; border-radius: 10px; background: none; font-size: .98rem; font-weight: 500; line-height: 1.2; white-space: nowrap; color: var(--tinta); text-decoration: none; }
+  .nav__ligacao:hover, .nav__loja:hover, .nav__loja[aria-expanded="true"] { background: var(--creme-2); color: var(--tinta); }
+  .nav__ligacao[aria-current], .nav__loja[data-atual] { text-decoration: underline 2px var(--mel); text-underline-offset: 7px; }
+  .nav__loja .icone { width: 16px; height: 16px; color: var(--castanho); transition: transform .2s; }
+  .nav__loja[aria-expanded="true"] .icone { transform: rotate(180deg); }
+  .nav__ligacao--pz, .nav__ligacao--pz:hover { color: var(--terracota); font-weight: 700; }
+  .nav__ligacao--pz .icone { width: 20px; height: 20px; }
+  .topo__whatsapp { display: flex; align-items: center; gap: 8px; min-height: 44px; padding: 8px 18px; border-radius: 999px; background: var(--mel); color: var(--tinta); text-decoration: none; font-family: var(--letra-titulos); font-size: 1rem; white-space: nowrap; }
+  .topo__whatsapp:hover { background: #F5C15F; color: var(--tinta); }
+  .topo__whatsapp .icone { width: 20px; height: 20px; }
+  /* A Grandstander tem o meio das maiúsculas 0,09em acima do meio da linha (subida 1465, descida
+     530, maiúsculas 1291, em 2000): sem isto, o texto fica acima do ícone. */
+  .topo__whatsapp > span { position: relative; top: .09em; }
+
+  .nav__painel { display: none; position: absolute; inset: calc(100% + 1px) 0 auto; background: var(--papel); border-bottom: 1px solid var(--linha); box-shadow: 0 30px 60px -40px rgba(58, 42, 29, .45); }
+  .nav__loja[aria-expanded="true"] + .nav__painel { display: block; animation: painel-abre .18s ease-out; }
+  /* Sem o site.js (que põe o data-pronta), abre ao passar e com o foco. */
+  .nav:not([data-pronta]) .nav__item--loja:is(:hover, :focus-within) .nav__painel { display: block; }
+  @keyframes painel-abre { from { opacity: 0; transform: translateY(-6px); } }
+  /* As categorias numa linha e as listas na seguinte (subgrid): um nome em duas linhas não desce
+     a lista da coluna dele. */
+  .nav__colunas { list-style: none; max-width: var(--largura); margin: 0 auto; padding: 22px var(--margem) 6px; display: grid; grid-template-rows: auto 1fr; grid-auto-flow: column; grid-auto-columns: minmax(0, 1fr); gap: 0 24px; }
+  .nav__coluna { display: grid; grid-row: 1 / span 2; grid-template-rows: subgrid; }
+  .nav__coluna ul { list-style: none; padding-top: 6px; }
+  .nav__categoria { display: flex; align-items: center; gap: 12px; min-height: 78px; padding: 8px 10px 10px; border-bottom: 1px solid var(--linha); border-radius: 14px 14px 0 0; color: var(--tinta); text-decoration: none; }
+  .nav__categoria:hover, .nav__categoria[aria-current] { background: var(--creme); color: var(--tinta); }
+  .nav__mini { flex: none; width: 56px; height: 56px; border-radius: 14px; overflow: hidden; background: var(--creme); }
+  .nav__mini picture, .nav__mini img { display: block; width: 100%; height: 100%; object-fit: cover; }
+  .nav__cat { display: grid; }
+  .nav__cat-nome { font-family: var(--letra-titulos); font-size: 1.15rem; line-height: 1.2; }
+  .nav__conta { font-size: .84rem; line-height: 1.4; color: var(--tinta-2); }
+  .nav__artigo { display: flex; align-items: baseline; justify-content: space-between; gap: 12px; padding: 8px 10px; border-radius: 10px; font-size: .93rem; line-height: 1.3; color: var(--tinta); text-decoration: none; }
+  .nav__artigo:hover, .nav__artigo[aria-current] { background: var(--creme); color: var(--tinta); }
+  .nav__preco { flex: none; font-size: .88rem; white-space: nowrap; }
+  .nav__preco--promocao b { color: var(--terracota); }
+  .nav__preco s { margin-left: 3px; font-size: .8rem; color: var(--tinta-2); }
+  .nav__pe { max-width: var(--largura); margin: 0 auto; padding: 6px var(--margem) 22px; display: flex; align-items: center; justify-content: space-between; gap: 24px; }
+  .nav__tudo { display: inline-flex; align-items: center; gap: 8px; padding: 10px; border-radius: 10px; font-weight: 500; color: var(--terracota); text-decoration: none; }
+  .nav__tudo:hover { background: var(--creme); color: var(--terracota); }
+  .nav__tudo .icone { width: 18px; height: 18px; }
+  .nav__pz { display: flex; align-items: center; gap: 12px; padding: 10px 16px; border-radius: 14px; background: var(--terracota); color: var(--branco); font-size: .92rem; text-decoration: none; }
+  .nav__pz:hover { background: #963D27; color: var(--branco); }
+  .nav__pz b { font-family: var(--letra-titulos); font-size: 1rem; text-transform: uppercase; }
+  .nav__pz .icone:first-child { width: 24px; height: 24px; }
+  .nav__pz .icone:last-child { width: 16px; height: 16px; }
 }
 
 /* ------------------------------------------------------------------ gaveta (carrinho) e menu */
@@ -202,6 +234,7 @@ html:has(dialog[open]) { overflow: hidden; }
 .menu__pe { margin-top: auto; padding-top: clamp(6px, 1.4dvh, 14px); display: grid; gap: clamp(6px, 1.1dvh, 10px); }
 .menu__whatsapp { display: flex; align-items: center; justify-content: center; gap: 10px; min-height: 48px; padding: clamp(8px, 1.4dvh, 14px) 18px; border-radius: 999px; background: var(--mel); color: var(--tinta); text-decoration: none; font-family: var(--letra-titulos); font-size: 1.08rem; }
 .menu__whatsapp .icone { width: 22px; height: 22px; }
+.menu__whatsapp > span { position: relative; top: .09em; } /* o texto ao meio do ícone (ver .topo__whatsapp) */
 .menu__info { display: flex; align-items: center; justify-content: space-between; gap: 12px; }
 .menu__info p { margin: 0; max-width: 26ch; font-size: .82rem; line-height: 1.35; color: var(--tinta-2); }
 @media (max-height: 619px) {
@@ -610,6 +643,6 @@ html:has(dialog[open]) { overflow: hidden; }
 /* ------------------------------------------------------------------ movimento */
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after { transition-duration: .01ms !important; scroll-behavior: auto !important; }
-  .gaveta[open], .menu[open] { animation: none; }
+  .gaveta[open], .menu[open], .nav__loja[aria-expanded="true"] + .nav__painel { animation: none; }
   .cartao:hover .cartao__img img { transform: none; }
 }

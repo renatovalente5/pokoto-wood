@@ -40,7 +40,8 @@ montado exceto o roupeiro; o colchão do arco não está incluído nem se vende.
   painel da personalização no lugar das «coleções», bolhas soltas, vantagens, «em casa de quem já
   tem» no lugar do «shop the look», faixa em movimento, rodapé creme) e as **mesmas letras**
   (Grandstander + Ubuntu, gratuitas), mas com as **cores da Pokóto**: a madeira e o castanho do
-  logótipo, sálvia, mel e terracota. Contraste medido.
+  logótipo, sálvia, mel e terracota. Contraste medido. ~~Navegação em maiúsculas e pílula~~: os
+  menus mudaram a 12 out (§9).
 - **Portes de várias peças:** somam-se os de cada artigo (× quantidade). ~~O carrinho dizia que o
   valor final era confirmado pelo WhatsApp~~ — a Célia (10 out): cada artigo vai sempre na sua caixa,
   por isso a soma é o valor; a nota passou a dizê-lo.
@@ -232,3 +233,20 @@ pelo MAC e pelo resumo) e estão em `_cliente/whatsapp/2026-10-10/media/a1…a3`
 Por confirmar com a Célia: se 165 € é o preço final do Triângulo com Prancha ou o «antes» de uma
 promoção; e os preços do Arco com Prancha (170 €, antes 195 €) e do Trio (245 €, antes 280 €).
 
+## 9. Os menus (12 out 2026)
+
+O Renato escolheu entre três propostas desenhadas em cada caso (as capturas em `_cliente/`).
+
+- **Telemóvel e tablet (até 1179 px): a opção B.** Uma coisa por linha: as categorias com a
+  miniatura e quantos artigos têm, «Ver toda a loja», o cartão terracota da personalização grátis,
+  Sobre nós / Como encomendar / Contactos, e em baixo «Falar connosco no WhatsApp», o levantamento e
+  as redes. Tudo num ecrã, sem rolar (medidas em `dvh`; abaixo de 620 px de altura saem a frase da
+  personalização e a linha de baixo).
+- **Computador (a partir de 1180 px): a opção 2, «Loja num painel».** A mesma arrumação: na barra,
+  «Loja», «Personalização grátis», Sobre nós, Como encomendar e Contactos, e à direita «Falar
+  connosco» (WhatsApp) e o carrinho. «Loja» abre, a toda a largura, as quatro categorias (com o
+  «Nome no menu» do painel) e os onze artigos com o preço (a promoção riscada, como nos cartões),
+  «Ver toda a loja» e a personalização. Abre com um clique, com Enter ou Espaço, e com o rato ao
+  parar em cima (150 ms: passar a caminho de «Sobre nós» não abre); o que o rato abriu fecha ao
+  sair; Escape, um clique fora ou o foco a sair fecham. Sem JavaScript abre ao passar e com o foco.
+- As miniaturas dos dois menus não têm texto alternativo: o nome da categoria está ao lado.
