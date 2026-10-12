@@ -371,7 +371,6 @@ export function carrinho(ctx) {
           <button class="botao botao--contorno" type="button" data-copiar>${icones.copiar}<span>Copiar a mensagem</span></button>
           <button class="botao botao--texto" type="button" data-esvaziar>Esvaziar o carrinho</button>
         </div>
-        <p class="nota">Peças personalizadas não têm direito de livre resolução (art. 17.º do DL 24/2014). <a href="${ctx.url('/termos-e-condicoes/')}">Termos e condições</a></p>
       </form>
     </aside>
   </div>
