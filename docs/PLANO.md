@@ -268,7 +268,8 @@ partes do site». Feito:
 - **As fotografias de duas páginas de texto** (o painel não edita as páginas, por isso a Célia não
   as conseguia trocar; 21:02–21:16): no **«Sobre nós»**, a Célia e o Sandro («Para os clientes nos
   conhecer», `sobre-nos-celia-sandro`, cortada sem as faixas pretas e sem as pessoas da festa nos
-  lados); na **«Personalização grátis»**, a colagem das gravações que ela já tinha posto na página
+  lados, e com um filtro suave pedido pelo Renato: mais quente, pretos levantados, um pouco menos de
+  saturação e uma vinheta leve); na **«Personalização grátis»**, a colagem das gravações que ela já tinha posto na página
   inicial (`inicio-c531317c`, com uma descrição a sério). O original está em
   `_cliente/whatsapp/2026-10-12/media/`.
 - **No Google (pedido da Célia às 21:21, «Sim por favor»):** a propriedade de domínio
