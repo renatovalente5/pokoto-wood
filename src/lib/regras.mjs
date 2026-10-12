@@ -622,12 +622,10 @@ export function fotosDoInicio(h) {
   const out = [];
   if (eObjecto(h.capa)) out.push(h.capa.foto);
   if (eObjecto(h.personalizacao)) out.push(h.personalizacao.foto);
-  if (eObjecto(h.emCasa) && Array.isArray(h.emCasa.fotos)) for (const f of h.emCasa.fotos) if (eObjecto(f)) out.push(f.foto);
-  if (eObjecto(h.instagram) && Array.isArray(h.instagram.fotos)) out.push(...h.instagram.fotos);
   return out.filter((x) => typeof x === 'string');
 }
 
-export function problemasDoInicio(valor, { fotos = null, artigos = null, videos = null } = {}) {
+export function problemasDoInicio(valor, { fotos = null, videos = null } = {}) {
   const ficheiro = FICHEIROS.inicio;
   const out = [];
   const ecra = 'Página inicial';
@@ -637,9 +635,10 @@ export function problemasDoInicio(valor, { fotos = null, artigos = null, videos 
   if (l.ilegivel || !eObjecto(l.obj)) { bloqueia('forma', undefined, 'A página inicial não se consegue ler. Só o Renato a pode corrigir.'); return out; }
   const h = l.obj;
   const seccao = (k) => (eObjecto(h[k]) ? h[k] : null);
-  /* Sem o bloco «categorias» (os círculos «Para cada fase, uma peça»), que a Célia tirou a 10 out 2026: um
-     ficheiro antigo que ainda o tenha não pára nada (o gerador já não o escreve). */
-  for (const k of ['seo', 'capa', 'vitrine', 'personalizacao', 'historia', 'emCasa', 'oficina', 'comoEncomendar', 'instagram']) {
+  /* Sem o bloco «categorias» (os círculos «Para cada fase, uma peça»), que a Célia tirou a 10 out 2026, e sem
+     «emCasa» («Em casa de quem já tem») nem «instagram» («Para crianças livres, felizes e autónomas»), que tirou a
+     12 out: um ficheiro antigo que ainda os tenha não pára nada (o gerador já não os escreve). */
+  for (const k of ['seo', 'capa', 'vitrine', 'personalizacao', 'historia', 'oficina', 'comoEncomendar']) {
     if (!seccao(k)) bloqueia(`${k}:forma`, k, `A secção «${k}» da página inicial não está gravada. Só o Renato a pode repor.`);
   }
   if (out.length) return out;
@@ -650,10 +649,8 @@ export function problemasDoInicio(valor, { fotos = null, artigos = null, videos 
     ['vitrine.titulo', TAMANHOS.inicioTitulo, true],
     ['personalizacao.etiqueta', TAMANHOS.inicioCurto, true], ['personalizacao.titulo', TAMANHOS.inicioTitulo, true], ['personalizacao.texto', TAMANHOS.inicioTexto, true], ['personalizacao.botao', TAMANHOS.inicioCurto, true], ['personalizacao.legenda', TAMANHOS.inicioCurto, false],
     ['historia.etiqueta', TAMANHOS.inicioCurto, true], ['historia.titulo', TAMANHOS.inicioTitulo, true], ['historia.texto', TAMANHOS.inicioTexto, true], ['historia.botao', TAMANHOS.inicioCurto, true],
-    ['emCasa.titulo', TAMANHOS.inicioTitulo, true], ['emCasa.texto', TAMANHOS.inicioTexto, true],
     ['oficina.etiqueta', TAMANHOS.inicioCurto, true], ['oficina.titulo', TAMANHOS.inicioTitulo, true], ['oficina.texto', TAMANHOS.inicioTexto, true], ['oficina.botao', TAMANHOS.inicioCurto, true],
     ['comoEncomendar.titulo', TAMANHOS.inicioTitulo, true],
-    ['instagram.titulo', TAMANHOS.inicioTitulo, true], ['instagram.texto', TAMANHOS.inicioTexto, true],
   ];
   const valorEm = (caminho) => caminho.split('.').reduce((o, k) => (eObjecto(o) || Array.isArray(o) ? o[k] : undefined), h);
   const umTexto = (caminho, max, obrigatorio) => {
@@ -704,20 +701,6 @@ export function problemasDoInicio(valor, { fotos = null, artigos = null, videos 
   const umaFoto = (caminho, f) => { if (!nomeDeFotoValido(f) || (fotos && !fotos.has(f))) bloqueia(`${caminho}:foto`, caminho, 'Esta fotografia já não está na biblioteca: escolha outra.'); };
   umaFoto('capa.foto', h.capa.foto);
   umaFoto('personalizacao.foto', h.personalizacao.foto);
-  const ec = h.emCasa.fotos;
-  if (!Array.isArray(ec) || ec.length < 1 || ec.length > 8) bloqueia('emCasa.fotos:lista', 'emCasa.fotos', '«Em casa de quem já tem» tem de ter de 1 a 8 fotografias.');
-  else ec.forEach((x, i) => {
-    if (!eObjecto(x)) { bloqueia(`emCasa.fotos.${i}:forma`, `emCasa.fotos.${i}`, `A fotografia ${i + 1} não tem a forma certa.`); return; }
-    umaFoto(`emCasa.fotos.${i}.foto`, x.foto);
-    /* Um artigo escondido não pára nada: o site salta esse cartão (e esconder um artigo nunca
-       pode ficar preso por causa da página inicial). Só lembra. */
-    if (typeof x.produto !== 'string' || (artigos && !(eObjecto(artigos[x.produto]) && noSite(artigos[x.produto])))) {
-      avisa(`emCasa.fotos.${i}.produto`, `emCasa.fotos.${i}.produto`, `A fotografia ${i + 1} de «Em casa de quem já tem» é de um artigo que não está no site: não aparece. Escolha outro artigo, ou tire a fotografia.`, { lembrete: true });
-    }
-  });
-  const ig = h.instagram.fotos;
-  if (!Array.isArray(ig) || ig.length < 3 || ig.length > 12) bloqueia('instagram.fotos:lista', 'instagram.fotos', 'O bloco do Instagram tem de ter de 3 a 12 fotografias.');
-  else ig.forEach((f, i) => umaFoto(`instagram.fotos.${i}`, f));
   if (vazio(h.oficina.video) || (videos && !videos.includes(h.oficina.video))) bloqueia('oficina.video', 'oficina.video', 'O vídeo da oficina não existe. Só o Renato o pode trocar.');
   return out;
 }
@@ -784,7 +767,7 @@ export function problemas(dados = {}, opcoes = {}) {
   umFicheiro('site', 'Dados da loja', (o) => problemasDoSite(o, { producao: Boolean(opcoes.producao) }));
   umFicheiro('fotos', 'Fotografias', (o) => problemasDasFotos(o, Array.isArray(d.ficheirosFotos) ? d.ficheirosFotos : null));
   umFicheiro('categorias', 'Categorias', (o) => problemasDasCategorias(o, { fotos }));
-  umFicheiro('inicio', 'Página inicial', (o) => problemasDoInicio(o, { fotos, artigos: tem(d, 'artigos') ? artigosObj : null, videos }));
+  umFicheiro('inicio', 'Página inicial', (o) => problemasDoInicio(o, { fotos, videos }));
 
   let categorias = null;
   if (tem(d, 'categorias')) { const cs = categoriasDe(d.categorias); if (cs) categorias = cs.map((c) => c.slug); }

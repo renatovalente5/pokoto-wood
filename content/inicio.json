@@ -57,28 +57,6 @@
       "texto": "Em Vila Nova de Famalicão, ou enviamos para Portugal e Espanha."
     }
   ],
-  "emCasa": {
-    "titulo": "Em casa de quem já tem",
-    "texto": "Fotografias que as famílias nos mandam.",
-    "fotos": [
-      {
-        "foto": "torre-mesa-cozinha",
-        "produto": "torre-mesa-montessori"
-      },
-      {
-        "foto": "arco-quarto",
-        "produto": "arco-pikler"
-      },
-      {
-        "foto": "estante-dinossauro",
-        "produto": "estante-montessori"
-      },
-      {
-        "foto": "roupeiro-lateral",
-        "produto": "roupeiro-montessori"
-      }
-    ]
-  },
   "faixa": [
     "Crescer",
     "Brincar",
@@ -108,18 +86,6 @@
         "titulo": "Confirmamos consigo",
         "texto": "Respondemos com o total, o pagamento e o prazo. Depois é só levantar ou esperar pela entrega."
       }
-    ]
-  },
-  "instagram": {
-    "titulo": "Para crianças livres, felizes e autónomas",
-    "texto": "Segue-nos no Instagram",
-    "fotos": [
-      "triangulo-coelho",
-      "torre-cadeira-recorte",
-      "arco-prancha",
-      "regua-simao-carlota",
-      "torre-cadeira-fechada",
-      "arco-recorte"
     ]
   }
 }

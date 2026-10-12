@@ -9,6 +9,9 @@ const produtosDe = (ctx, cat) => ctx.produtos.filter((p) => p.categoria === cat)
 const categoriaDe = (ctx, slug) => ctx.categorias.find((c) => c.slug === slug);
 
 // ---------------------------------------------------------------- página inicial
+/* Sem «Para cada fase, uma peça» (os círculos das categorias), desde 10 out 2026, e sem «Em casa de
+   quem já tem» nem o bloco do Instagram («Para crianças livres, felizes e autónomas»), desde 12 out
+   2026: a Célia pediu que saíssem. */
 export function inicio(ctx) {
   const h = ctx.inicio;
   const capa = `<section class="capa">
@@ -75,19 +78,6 @@ export function inicio(ctx) {
   <ul>${h.vantagens.map((v) => `<li>${ilustracoes[v.icone] || ''}<h3>${esc(v.titulo)}</h3><p>${esc(v.texto)}</p></li>`).join('')}</ul>
 </section>`;
 
-  // Só as fotografias cujo artigo está no site (um artigo escondido, ou com um problema que o
-  // esconde, sai daqui em vez de partir a página).
-  const casas = h.emCasa.fotos.map((f) => ({ f, p: ctx.produtos.find((x) => x.slug === f.produto) })).filter((x) => x.p);
-  const emCasa = !casas.length ? '' : `<section class="em-casa" aria-labelledby="casa-titulo">
-  <div class="em-casa__topo"><h2 id="casa-titulo" class="titulo-seccao">${esc(h.emCasa.titulo)}</h2><p>${esc(h.emCasa.texto)}</p></div>
-  <ul class="em-casa__lista">
-    ${casas.map(({ f, p }) => {
-      return `<li class="em-casa__item">${imagem(ctx, f.foto, { tamanhos: '(min-width: 900px) 30vw, 80vw', classe: 'em-casa__foto' })}
-      <div class="em-casa__cartao">${imagem(ctx, p.fotos[0], { tamanhos: '64px', classe: 'em-casa__mini', alt: '' })}<div><p class="em-casa__nome">${esc(p.nomeCurto || p.nome)}</p>${preco(ctx, p)}</div><a class="botao botao--terracota botao--pequeno" href="${ctx.url(`/produtos/${p.slug}/`)}">Ver<span class="visualmente-escondido"> ${esc(p.nome)}</span></a></div></li>`;
-    }).join('\n')}
-  </ul>
-</section>`;
-
   const faixa = `<section class="faixa" aria-label="${esc(h.faixa.join(', '))}" data-faixa>
   <div class="faixa__pista" aria-hidden="true">${[0, 1, 2, 3].map(() => h.faixa.map((p) => `<span class="faixa__palavra">${esc(p)}</span><span class="faixa__sinal">${icones.estrela}</span>`).join('')).join('')}</div>
   <button class="faixa__pausa" type="button" aria-pressed="false" data-faixa-pausa>${icones.pausa}<span class="visualmente-escondido">Parar o movimento</span></button>
@@ -111,14 +101,6 @@ export function inicio(ctx) {
   ${botaoSeta(ctx.url('/como-encomendar/'), 'Saber mais')}
 </section>`;
 
-  const ig = h.instagram;
-  const contaIg = ctx.site.contactos.instagram;
-  const instagram = contaIg ? `<section class="instagram" aria-labelledby="ig-titulo">
-  <h2 id="ig-titulo" class="titulo-seccao">${esc(ig.titulo)}</h2>
-  <p class="instagram__chamada">${esc(ig.texto)} <a class="pilula" href="https://www.instagram.com/${esc(contaIg)}/" target="_blank" rel="noopener">@${esc(contaIg)}</a></p>
-  <ul class="instagram__fotos">${ig.fotos.map((f) => `<li><a href="https://www.instagram.com/${esc(contaIg)}/" target="_blank" rel="noopener" tabindex="-1">${imagem(ctx, f, { tamanhos: '(min-width: 900px) 16vw, 45vw' })}</a></li>`).join('')}</ul>
-</section>` : '';
-
   const org = organizacao(ctx);
   return {
     caminho: '/',
@@ -126,7 +108,7 @@ export function inicio(ctx) {
     descricao: h.seo.descricao,
     classe: 'pagina-inicio',
     jsonld: [org, { '@context': 'https://schema.org', '@type': 'WebSite', name: ctx.site.marca, url: ctx.absoluto('/'), inLanguage: 'pt-PT' }],
-    conteudo: [capa, vitrine, personalizacao, historia, vantagens, emCasa, faixa, oficina, comoEncomendar, instagram].join('\n\n'),
+    conteudo: [capa, vitrine, personalizacao, historia, vantagens, faixa, oficina, comoEncomendar].join('\n\n'),
   };
 }
 

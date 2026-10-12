@@ -250,3 +250,18 @@ O Renato escolheu entre três propostas desenhadas em cada caso (as capturas em 
   parar em cima (150 ms: passar a caminho de «Sobre nós» não abre); o que o rato abriu fecha ao
   sair; Escape, um clique fora ou o foco a sair fecham. Sem JavaScript abre ao passar e com o foco.
 - As miniaturas dos dois menus não têm texto alternativo: o nome da categoria está ao lado.
+
+## 10. A Célia, 12 out 2026 (à noite)
+
+Entre as 20:07 e as 20:52 a Célia trocou fotografias pelo painel (10 gravações: a fotografia da
+personalização na página inicial e capas novas do arco, da prancha, do triângulo com prancha, do arco
+com prancha, do trio e da estante) e pôs o **Triângulo com Prancha a 145 € (antes 160 €, promoção
+até 31 dez)** — a 11 out tinha dito 165 €. Às 20:55 mandou duas capturas: «Preciso que tire estas 2
+partes do site». Feito:
+
+- **Sem «Em casa de quem já tem»** (as fotografias das famílias com o cartão do artigo) **e sem o
+  bloco do Instagram** («Para crianças livres, felizes e autónomas», «Segue-nos no Instagram» e as
+  seis fotografias). Saíram do conteúdo, do gerador, das regras, do CSS e do painel, como os
+  círculos das categorias (§8). O Instagram continua no rodapé, nos contactos e no menu.
+- As fotografias que só estes blocos usavam ficam na biblioteca do painel (já não contam como «em
+  uso»).
