@@ -314,6 +314,11 @@ fs.writeFileSync(path.join(SAIDA, 'robots.txt'), producao
 // conteúdo, porque o nome muda com ele. Só grupos que não se tocam: duas regras para o
 // mesmo ficheiro JUNTAM os valores (as miniaturas do painel, assets/img/miniatura-*.webp,
 // não têm resumo e ficam fora — por isso as imagens não levam regra).
+// A chave do IndexNow (o aviso ao Bing, ao Yandex e aos outros de que uma página mudou): é pública
+// por desenho, e o ficheiro com ela na raiz é o que prova que o aviso vem de quem manda no domínio
+// (12 out 2026, com o Search Console do Google).
+const INDEXNOW = '0906d1066ec07d1f01adb9afcb32e413';
+if (producao) fs.writeFileSync(path.join(SAIDA, `${INDEXNOW}.txt`), INDEXNOW);
 if (producao) {
   const umAno = '  Cache-Control: public, max-age=31536000, immutable\n';
   fs.writeFileSync(path.join(SAIDA, '_headers'), ['/assets/site-*', '/assets/catalogo-*', '/assets/video/*'].map((r) => `${r}\n${umAno}`).join(''));
