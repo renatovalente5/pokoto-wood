@@ -271,3 +271,10 @@ partes do site». Feito:
   lados); na **«Personalização grátis»**, a colagem das gravações que ela já tinha posto na página
   inicial (`inicio-c531317c`, com uma descrição a sério). O original está em
   `_cliente/whatsapp/2026-10-12/media/`.
+- **No Google (pedido da Célia às 21:21, «Sim por favor»):** a propriedade de domínio
+  `sc-domain:pokotowood.pt` no Search Console da conta renato.lima.valente@gmail.com (o TXT
+  `google-site-verification` está no DNS da Cloudflare: não o tirar), o sitemap enviado, e a
+  indexação pedida da página inicial, da loja, da personalização, das categorias Pikler e Torres e
+  do «Sobre nós». O último rastreio do Google era de 16 mai 2026, do domínio antes de ser da Pokóto
+  (bloqueado pelo robots.txt de então). Para o Bing e os outros, o IndexNow: a chave está em
+  `scripts/build.mjs` e o ficheiro dela na raiz (só em produção); as 28 páginas foram enviadas (202).
