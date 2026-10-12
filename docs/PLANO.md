@@ -265,3 +265,9 @@ partes do site». Feito:
   círculos das categorias (§8). O Instagram continua no rodapé, nos contactos e no menu.
 - As fotografias que só estes blocos usavam ficam na biblioteca do painel (já não contam como «em
   uso»).
+- **As fotografias de duas páginas de texto** (o painel não edita as páginas, por isso a Célia não
+  as conseguia trocar; 21:02–21:16): no **«Sobre nós»**, a Célia e o Sandro («Para os clientes nos
+  conhecer», `sobre-nos-celia-sandro`, cortada sem as faixas pretas e sem as pessoas da festa nos
+  lados); na **«Personalização grátis»**, a colagem das gravações que ela já tinha posto na página
+  inicial (`inicio-c531317c`, com uma descrição a sério). O original está em
+  `_cliente/whatsapp/2026-10-12/media/`.

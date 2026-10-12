@@ -1,6 +1,6 @@
 titulo: Sobre nós
 descricao: Somos o Sandro e a Célia. Na nossa oficina em Vila Nova de Famalicão fazemos à mão torres de aprendizagem, peças Pikler e mobiliário Montessori.
-foto: arco-prancha
+foto: sobre-nos-celia-sandro
 ---
 ## A Nossa História
 

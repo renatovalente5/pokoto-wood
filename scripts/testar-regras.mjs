@@ -107,7 +107,10 @@ caso('em produção, o IVA e o prazo em falta param a publicação', () => {
 });
 caso('todas as fotografias estão em uso', () => {
   const d = dados();
-  assert.equal(R.fotosEmUso(d).size, d.ficheirosFotos.length);
+  /* As das páginas de texto (a linha «foto:») contam também: desde 12 out 2026 a do «Sobre nós» (a
+     Célia e o Sandro) só lá é usada. */
+  const paginas = Object.fromEntries(fs.readdirSync(path.join(RAIZ, 'content/paginas')).map((f) => [`content/paginas/${f}`, ler(`content/paginas/${f}`)]));
+  assert.equal(R.fotosEmUso({ ...d, paginas }).size, d.ficheirosFotos.length);
 });
 
 // --- um artigo -----------------------------------------------------------------------------
