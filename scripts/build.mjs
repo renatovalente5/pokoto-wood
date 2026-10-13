@@ -35,6 +35,10 @@ const semImagens = args.includes('--sem-imagens');
 // O domínio (comprado a 10 out 2026; o site está nele, na Cloudflare, desde 11 out): o
 // canonical, o sitemap e os cartões de partilha seguem-no.
 const DOMINIO = 'pokotowood.pt';
+// O perfil da Pokóto no Google (Maps: «Pokoto Wood», R. dos Portais, Requião): o identificador público do
+// sítio, achado a 13 out 2026 sem acesso de gestor (a pesquisa do Place ID Finder do Google). Dá a ligação
+// para avaliar (pede para entrar numa conta Google) e a da ficha no Maps.
+const GOOGLE_PLACE_ID = 'ChIJuZpwKgBZJA0Rok7Wc2b-eXY';
 const ORIGEM = producao ? `https://${DOMINIO}` : (base ? 'https://renatovalente5.github.io' : 'http://localhost:4810');
 
 const erros = [];
@@ -205,6 +209,7 @@ const opinioes = await lerOpinioes();
 const numero = numeroWhatsApp(site.contactos.whatsapp);
 const ctx = {
   site, inicio, categorias, produtos, fotos, manifesto, hoje, producao, ficheiros, opinioes, painel: PAINEL,
+  google: { avaliar: `https://search.google.com/local/writereview?placeid=${GOOGLE_PLACE_ID}`, ficha: `https://www.google.com/maps/place/?q=place_id:${GOOGLE_PLACE_ID}` },
   videos: {
     'oficina-torres': 'várias torres de aprendizagem personalizadas na nossa oficina',
     'trio-pikler': 'o triângulo, a prancha e o arco de Pikler montados juntos',

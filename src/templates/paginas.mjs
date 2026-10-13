@@ -544,7 +544,7 @@ export function opinioes(ctx) {
   ${ops.length
     ? `<ul class="opinioes-lista">${ops.map((o) => cartaoOpiniao(ctx, o, { artigo: true })).join('')}</ul>`
     : `<p class="opinioes-vazio">Ainda não há opiniões publicadas aqui.${ig ? ` Entretanto, veja o que as famílias nos dizem no nosso Instagram, <a href="https://www.instagram.com/${esc(ig)}/" target="_blank" rel="noopener">@${esc(ig)}</a>.` : ''}</p>`}
-  <p class="opinioes-pedir">${icones.coracao}<span>Comprou-nos uma peça? Depois da entrega, enviamos-lhe pelo WhatsApp uma ligação para deixar a sua opinião. Não a recebeu? <a href="${ctx.whatsapp('Olá! Comprei uma peça e gostava de deixar a minha opinião no site.')}">Peça-nos uma</a>.</span></p>
+  <p class="opinioes-pedir">${icones.coracao}<span>Comprou-nos uma peça? Depois da entrega, enviamos-lhe pelo WhatsApp uma ligação para deixar a sua opinião. Não a recebeu? <a href="${ctx.whatsapp('Olá! Comprei uma peça e gostava de deixar a minha opinião no site.')}">Peça-nos uma</a>.${ctx.google ? ` Também estamos no Google: <a href="${esc(ctx.google.ficha)}" target="_blank" rel="noopener">ver a nossa ficha</a> ou <a href="${esc(ctx.google.avaliar)}" target="_blank" rel="noopener">deixar lá uma opinião</a>.` : ''}</span></p>
   ${comoVerificamos(ctx)}
 </div>`;
   return {
@@ -595,6 +595,7 @@ export function escreverOpiniao(ctx) {
       <p class="escrever__ok">${icones.certo}<span data-enviada-texto>Obrigada pela sua opinião! Vamos lê-la e publicá-la até 5 dias úteis depois.</span></p>
       <p>Guarde esta ligação: é por ela que pode ver, alterar ou retirar a sua opinião.</p>
       <p class="escrever__ligacao"><input type="text" readonly data-ligacao aria-label="A ligação para ver, alterar ou retirar a sua opinião"><button class="botao botao--contorno" type="button" data-copiar>Copiar</button></p>
+      ${ctx.google ? `<p class="escrever__google">Se quiser, deixe também a sua opinião no Google: ajuda outras famílias a encontrar-nos. <a href="${esc(ctx.google.avaliar)}" target="_blank" rel="noopener">Avaliar no Google</a></p>` : ''}
     </div>
   </div>
   <p class="nota"><a href="${ctx.url('/opinioes/#como-verificamos')}">Como verificamos e publicamos as opiniões</a></p>
