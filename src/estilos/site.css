@@ -687,3 +687,64 @@ html:has(dialog[open]) { overflow: hidden; }
   .gaveta[open], .menu[open], .nav__loja[aria-expanded="true"] + .nav__painel { animation: none; }
   .cartao:hover .cartao__img img { transform: none; }
 }
+
+/* ------------------------------------------------------------------ opiniões dos clientes */
+.estrelas { display: inline-flex; gap: 1px; font-size: 1.05rem; line-height: 1; letter-spacing: 0; }
+.estrelas__cheia { color: var(--mel-escuro); }
+.estrelas__vazia { color: var(--creme-2); }
+.opinioes-lista { list-style: none; margin: 0; padding: 0; display: grid; gap: 14px; }
+.opinioes-lista--grelha { grid-template-columns: repeat(auto-fit, minmax(min(100%, 300px), 1fr)); }
+.opiniao { background: var(--papel); border: 1px solid var(--linha); border-radius: var(--raio); padding: 18px 20px; display: grid; gap: 10px; align-content: start; }
+.opiniao p { margin: 0; }
+.opiniao__topo { display: flex; justify-content: space-between; align-items: center; gap: 12px; }
+.opiniao__data { color: var(--tinta-2); font-size: .85rem; }
+.opiniao__texto { margin: 0; display: grid; gap: .6em; }
+.opiniao__quem { font-weight: 500; font-size: .95rem; }
+.opiniao__quem a { color: var(--tinta-2); font-weight: 400; }
+.opiniao__resposta { border-left: 3px solid var(--madeira); padding: 4px 0 4px 14px; color: var(--tinta-2); font-size: .95rem; display: grid; gap: .4em; }
+.opiniao__resposta-quem { font-weight: 700; color: var(--tinta); }
+.opinioes-media { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; margin: 0 0 14px; }
+.opinioes-media .estrelas { font-size: 1.3rem; }
+.opinioes-artigo { margin-top: clamp(48px, 7vw, 72px); max-width: 860px; }
+.opinioes-artigo .titulo-seccao { margin-bottom: 18px; }
+.opinioes-artigo > .nota { margin-top: 12px; }
+.familias { max-width: var(--largura); margin: clamp(48px, 7vw, 80px) auto 0; padding-inline: var(--margem); }
+.familias .titulo-seccao { margin-bottom: 18px; }
+.familias__mais { margin: 18px 0 0; text-align: center; }
+.opinioes-vazio { color: var(--tinta-2); }
+.opinioes-pedir { display: flex; gap: 12px; align-items: flex-start; margin: 28px 0; padding: 14px 16px; border-radius: var(--raio); background: var(--creme); }
+.opinioes-pedir .icone { flex: none; color: var(--terracota); margin-top: 2px; }
+.como-verificamos { margin-top: 36px; padding-top: 24px; border-top: 1px solid var(--linha); color: var(--tinta-2); }
+.como-verificamos h2 { color: var(--tinta); font-size: clamp(1.2rem, 2.4vw, 1.45rem); margin-bottom: .6em; }
+.como-verificamos p { margin: 0 0 .8em; }
+/* o formulário do convite */
+.escrever { margin-top: 8px; }
+.escrever__form { display: grid; gap: 18px; }
+.escrever__sobre { margin: 0; font-weight: 500; }
+.escrever__armadilha { position: absolute; left: -9999px; width: 1px; height: 1px; overflow: hidden; }
+.escrever__autorizo { display: flex; gap: 10px; align-items: flex-start; font-size: .95rem; }
+.escrever__autorizo input { width: 22px; height: 22px; flex: none; margin-top: 1px; accent-color: var(--salva-escura); }
+.escrever__ok { display: flex; gap: 10px; align-items: flex-start; font-weight: 500; }
+.escrever__ok .icone { flex: none; color: var(--salva-escura); }
+.escrever__ligacao { display: flex; gap: 10px; flex-wrap: wrap; }
+.escrever__ligacao input { flex: 1 1 240px; min-width: 0; font: inherit; padding: 10px 12px; border: 1.5px solid var(--linha-campo); border-radius: 12px; background: var(--branco); color: var(--tinta); }
+.escrever__estado { font-weight: 500; }
+.escrever__aviso { font-weight: 500; }
+.escrever .botoes { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 16px; }
+.campo select { width: 100%; font: inherit; color: var(--tinta); padding: 12px 42px 12px 14px; min-height: 48px; border-radius: 14px; border: 1.5px solid var(--linha-campo); background: var(--branco) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%233A2A1D' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E") no-repeat right 14px center / 18px 18px; -webkit-appearance: none; appearance: none; }
+/* as estrelas a escolher: cinco botões de rádio com cara de estrela (o teclado anda com as setas) */
+.estrelas-escolha { border: 0; padding: 0; margin: 0; }
+.estrelas-escolha legend { font-weight: 500; margin-bottom: 6px; }
+/* A ordem do HTML é 1 → 5 (as setas e o leitor de ecrã andam pela ordem que se vê). Pinta-se tudo
+   quando há uma escolhida, e despinta-se o que vem depois dela; o mesmo com o rato por cima. */
+.estrelas-escolha__opcoes { display: inline-flex; gap: 4px; }
+.estrelas-escolha__opcoes input { position: absolute; opacity: 0; width: 1px; height: 1px; }
+.estrelas-escolha__opcoes label { cursor: pointer; font-size: 2.2rem; line-height: 1; color: var(--creme-2); padding: 2px; border-radius: 8px; }
+.estrelas-escolha__opcoes:has(input:checked) label { color: var(--mel-escuro); }
+.estrelas-escolha__opcoes input:checked + label ~ label { color: var(--creme-2); }
+@media (hover: hover) {
+  .estrelas-escolha__opcoes:hover label { color: var(--mel-escuro); }
+  .estrelas-escolha__opcoes label:hover ~ label { color: var(--creme-2); }
+}
+.estrelas-escolha__opcoes input:focus-visible + label { outline: 3px solid var(--salva-escura); outline-offset: 1px; }
+.estrelas-escolha__opcoes input[aria-invalid="true"] + label { color: var(--terracota-claro); }

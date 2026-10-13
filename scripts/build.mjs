@@ -155,10 +155,56 @@ const ficheiros = { css: `site-${resumo(css)}.css`, js: `site-${resumo(js)}.js`,
 fs.writeFileSync(path.join(SAIDA, 'assets', ficheiros.css), css);
 fs.writeFileSync(path.join(SAIDA, 'assets', ficheiros.js), js);
 
+// ---------------------------------------------------------------- as opiniões dos clientes
+// Vivem no painel (backoffice.pokotowood.pt), e NÃO neste repositório, que é público: o histórico do
+// git não esquece, e quem escreve pode pedir para apagar a sua (RGPD, art. 17.º). A publicação vai
+// buscá-las a cada vez; se o painel não responder, usa as do site publicado (/opinioes.json), para uma
+// avaria do painel não as tirar do site — e, sem nenhuma das duas, pára (o site fica como estava).
+// Fora da produção (o ensaio, as baterias do painel) não há rede: só com OPINIOES_URL ou
+// OPINIOES_FICHEIRO (um JSON com a forma do GET /opinioes/publicadas).
+const PAINEL = (process.env.PAINEL_URL || (producao ? 'https://backoffice.pokotowood.pt' : 'http://localhost:8970')).replace(/\/+$/, '');
+const RE_DATA = /^\d{4}-\d{2}-\d{2}$/;
+function conferirOpinioes(j) {
+  const lista = Array.isArray(j?.opinioes) ? j.opinioes : null;
+  if (!lista) return null;
+  const txt = (v, max) => (typeof v === 'string' ? v.slice(0, max) : '');
+  return lista.filter((o) => o && typeof o.id === 'string' && /^[a-z0-9]+(?:-[a-z0-9]+)*$/.test(o.artigo || '') && txt(o.nome, 60).trim()
+    && Number.isInteger(o.estrelas) && o.estrelas >= 1 && o.estrelas <= 5 && txt(o.texto, 2000).trim() && RE_DATA.test(o.data || ''))
+    .map((o) => ({
+      id: o.id, artigo: o.artigo, nome: txt(o.nome, 60).trim(), localidade: txt(o.localidade, 60).trim(), estrelas: o.estrelas, texto: txt(o.texto, 2000).trim(), data: o.data,
+      resposta: o.resposta && typeof o.resposta.texto === 'string' && o.resposta.texto.trim() ? { texto: txt(o.resposta.texto, 2000).trim(), data: RE_DATA.test(o.resposta.data || '') ? o.resposta.data : o.data } : null,
+    }))
+    .sort((a, b) => (a.data < b.data ? 1 : a.data > b.data ? -1 : 0));
+}
+async function buscar(url) {
+  for (let i = 0; i < 3; i++) {
+    try {
+      const r = await fetch(url, { signal: AbortSignal.timeout(8000), headers: { accept: 'application/json' } });
+      if (r.status === 404) return { naoHa: true };
+      if (r.ok) { const o = conferirOpinioes(await r.json()); if (o) return { opinioes: o }; }
+    } catch { /* outra vez */ }
+    await new Promise((ok) => setTimeout(ok, 800 * (i + 1)));
+  }
+  return null;
+}
+async function lerOpinioes() {
+  if (process.env.OPINIOES_FICHEIRO) return conferirOpinioes(JSON.parse(fs.readFileSync(process.env.OPINIOES_FICHEIRO, 'utf8'))) ?? [];
+  if (!producao && !process.env.OPINIOES_URL) return [];
+  const doPainel = await buscar(process.env.OPINIOES_URL || `${PAINEL}/opinioes/publicadas`);
+  if (doPainel?.opinioes) return doPainel.opinioes;
+  if (!producao) { avisos.push('Opiniões: o painel não respondeu; o site local fica sem elas.'); return []; }
+  const publicadas = await buscar(`https://${DOMINIO}/opinioes.json`);
+  if (publicadas?.opinioes) { avisos.push('Opiniões: o painel não respondeu; ficam as do site publicado.'); return publicadas.opinioes; }
+  if (publicadas?.naoHa) return []; // a primeira publicação com opiniões
+  erros.push('Opiniões: nem o painel nem o site publicado responderam. Tente publicar de novo daqui a uns minutos.');
+  return [];
+}
+const opinioes = await lerOpinioes();
+
 // ---------------------------------------------------------------- contexto dos modelos
 const numero = numeroWhatsApp(site.contactos.whatsapp);
 const ctx = {
-  site, inicio, categorias, produtos, fotos, manifesto, hoje, producao, ficheiros,
+  site, inicio, categorias, produtos, fotos, manifesto, hoje, producao, ficheiros, opinioes, painel: PAINEL,
   videos: {
     'oficina-torres': 'várias torres de aprendizagem personalizadas na nossa oficina',
     'trio-pikler': 'o triângulo, a prancha e o arco de Pikler montados juntos',
@@ -173,6 +219,7 @@ const ctx = {
   numeroLegivel, custoChamada,
   marcador: (desc) => `<mark class="por-confirmar">[por confirmar: ${esc(desc)}]</mark>`,
 };
+
 
 // ---------------------------------------------------------------- catálogo do carrinho
 const fotoPequena = (f) => { const m = manifesto.fotos[f]; const w = m.larguras.find((x) => x >= 360) || m.larguras[0]; return ctx.asset(`img/${f}-${m.resumo}-${w}.webp`); };
@@ -280,6 +327,8 @@ for (const c of categorias) saidas.push(paginas.loja(ctx, c.slug));
 for (const p of produtos) saidas.push(paginas.produto(ctx, p));
 saidas.push(paginas.carrinho(ctx));
 saidas.push(paginas.contactos(ctx));
+saidas.push(paginas.opinioes(ctx));
+saidas.push(paginas.escreverOpiniao(ctx));
 for (const f of fs.readdirSync(path.join(CONTEUDO, 'paginas')).filter((x) => x.endsWith('.md'))) saidas.push(paginas.texto(ctx, paginaMarkdown(f)));
 saidas.push(paginas.erro404(ctx));
 
@@ -307,6 +356,8 @@ try {
     lastmod[s.caminho] = data(fontes) || hoje;
   }
 } catch { lastmod = {}; }
+// a cópia das opiniões publicadas: é a reserva da publicação seguinte, se o painel não responder
+fs.writeFileSync(path.join(SAIDA, 'opinioes.json'), `${JSON.stringify({ opinioes }, null, 1)}\n`);
 fs.writeFileSync(path.join(SAIDA, 'sitemap.xml'), `<?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
 ${indexaveis.map((s) => `  <url><loc>${ctx.absoluto(s.caminho)}</loc><lastmod>${lastmod[s.caminho] || hoje}</lastmod></url>`).join('\n')}

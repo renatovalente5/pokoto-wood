@@ -237,6 +237,183 @@
     if (document.fonts) document.fonts.ready.then(centrar);
   }
 
+  // ---------------------------------------------------------------- opiniões: o formulário do convite
+  // /opinioes/escrever/#c=<convite> (a ligação pessoal que a loja manda pelo WhatsApp depois da entrega)
+  // ou #e=<edição> (a ligação que a pessoa recebe ao enviar, para ver, alterar ou retirar a sua). Fala
+  // com o painel (data-api). O fragmento não vai nos pedidos ao servidor do site nem nos registos; e lê-se
+  // também quando muda sem recarregar (memória fragmento-nao-recarrega).
+  const escrever = $('[data-escrever]');
+  if (escrever) {
+    const api = escrever.dataset.api.replace(/\/+$/, '');
+    const titulo = $('[data-escrever-titulo]');
+    const form = $('form', escrever);
+    const erro = $('[data-erro]', form);
+    const passos = $$('[data-passo]', escrever);
+    const ESTRELAS = (n) => `${'★'.repeat(n)}${'☆'.repeat(5 - n)}`;
+    const escH = (t) => String(t ?? '').replace(/[&<>"]/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
+    const nomeDoArtigo = (slug) => ($(`#op-artigo option[value="${CSS.escape(slug || '')}"]`)?.textContent || '').trim();
+    let modo = null; // { c } ou { e }
+    const mostrar = (passo, { focar = true } = {}) => {
+      passos.forEach((p) => { p.hidden = p.dataset.passo !== passo; });
+      if (focar) titulo.focus({ preventScroll: false });
+    };
+    const aviso = (texto) => { $('[data-aviso]', escrever).textContent = texto; mostrar('aviso'); };
+    const SEM_REDE = 'Sem ligação à internet, ou o nosso servidor não respondeu. Tente de novo daqui a um minuto.';
+    async function pedir(caminho, corpo) {
+      const r = await fetch(`${api}${caminho}`, { method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify(corpo) });
+      let j = {}; try { j = await r.json(); } catch (_) { /* sem corpo */ }
+      return { estado: r.status, j };
+    }
+    const FRASES = {
+      convite_invalido: 'Esta ligação não é válida. Confirme que a abriu inteira, a partir da mensagem que lhe enviámos, ou peça-nos outra.',
+      convite_usado: 'Esta ligação já foi usada para enviar uma opinião. Para a ver ou alterar, use a ligação que recebeu quando a enviou.',
+      convite_caducado: 'Esta ligação já caducou (cada uma serve 90 dias). Peça-nos outra, e obrigada pela paciência.',
+      nao_existe: 'Não encontrámos a opinião desta ligação: pode já ter sido retirada.',
+      muitos_envios: 'Foram enviadas muitas opiniões a partir desta ligação à internet. Tente de novo daqui a uma hora.',
+      indisponivel: SEM_REDE,
+    };
+    const CAMPOS = {
+      estrelas: 'Escolha quantas estrelas dá à peça.',
+      texto: 'Escreva a sua opinião (pelo menos 10 letras).',
+      nome: 'Escreva o seu nome, como quer que apareça.',
+      artigo: 'Escolha a peça que comprou.',
+      autorizo: 'Para publicarmos a sua opinião, marque a autorização.',
+    };
+    const pedirOutra = () => {
+      const a = $('[data-passo="aviso"] a', escrever);
+      if (!a) $('[data-passo="aviso"]', escrever).insertAdjacentHTML('beforeend', `<p><a href="${escH(escrever.dataset.whatsapp)}">Falar connosco pelo WhatsApp</a></p>`);
+    };
+
+    function valores() {
+      const d = new FormData(form);
+      return { nome: d.get('nome') || '', localidade: d.get('localidade') || '', texto: d.get('texto') || '', estrelas: Number(d.get('estrelas') || 0), artigo: d.get('artigo') || '', autorizo: form.elements.autorizo.checked, site: d.get('site') || '' };
+    }
+    function errar(campo, texto) {
+      $$('[aria-invalid]', form).forEach((x) => x.removeAttribute('aria-invalid'));
+      erro.textContent = texto; erro.hidden = !texto;
+      if (!campo) return;
+      const alvo = campo === 'estrelas' ? $('#op-e1') : campo === 'autorizo' ? form.elements.autorizo : form.elements[campo];
+      if (alvo) { alvo.setAttribute('aria-invalid', 'true'); alvo.focus(); }
+    }
+    function conferir(v) {
+      if (!$('[data-campo-artigo]', form).hidden && !v.artigo) return 'artigo';
+      if (!(v.estrelas >= 1 && v.estrelas <= 5)) return 'estrelas';
+      if (v.texto.trim().length < 10) return 'texto';
+      if (!v.nome.trim()) return 'nome';
+      if (!v.autorizo) return 'autorizo';
+      return null;
+    }
+    function preencher(o) {
+      form.reset();
+      if (!o) return;
+      form.elements.nome.value = o.nome || ''; form.elements.localidade.value = o.localidade || ''; form.elements.texto.value = o.texto || '';
+      const r = $(`#op-e${o.estrelas}`); if (r) r.checked = true;
+    }
+    function sobre(artigo) {
+      const nome = nomeDoArtigo(artigo);
+      const s = $('[data-sobre]', form);
+      s.hidden = !nome; s.textContent = nome ? `Sobre: ${nome}` : '';
+      $('[data-campo-artigo]', form).hidden = Boolean(artigo);
+    }
+
+    async function abrirConvite(c) {
+      modo = { c };
+      mostrar('a-abrir', { focar: false });
+      let r;
+      try { r = await pedir('/opinioes/convite', { c }); } catch (_) { aviso(SEM_REDE); return; }
+      if (!r.j.ok) { aviso(FRASES[r.j.erro] || SEM_REDE); pedirOutra(); return; }
+      preencher(null); sobre(r.j.artigo || '');
+      $('[data-enviar]', form).textContent = 'Enviar a opinião';
+      erro.hidden = true;
+      mostrar('formulario');
+    }
+    async function abrirMinha(e, mensagem = '') {
+      modo = { e };
+      mostrar('a-abrir', { focar: false });
+      let r;
+      try { r = await pedir('/opinioes/minha', { e }); } catch (_) { aviso(SEM_REDE); return; }
+      if (!r.j.ok) { aviso(FRASES[r.j.erro] || SEM_REDE); return; }
+      const o = r.j.opiniao;
+      const estados = {
+        pendente: 'A sua opinião está à espera de ser publicada (até 5 dias úteis depois de a enviar).',
+        publicada: 'A sua opinião está publicada.',
+        recusada: `Não publicámos a sua opinião porque: ${o.motivo || 'não cumpria as regras'} Pode alterá-la e enviá-la de novo.`,
+      };
+      let estado = estados[o.estado] || '';
+      if (o.alteracao) estado += ' A alteração que fez está à espera de ser publicada; até lá fica a de antes.';
+      if (o.motivoAlteracao) estado += ` A última alteração não foi publicada porque: ${o.motivoAlteracao}`;
+      $('[data-minha-estado]', escrever).textContent = `${mensagem ? `${mensagem} ` : ''}${estado}`;
+      const mostrada = o.alteracao ? { ...o, ...o.alteracao } : o;
+      $('[data-minha-cartao]', escrever).innerHTML = `<li class="opiniao"><p class="opiniao__topo"><span class="estrelas" role="img" aria-label="${mostrada.estrelas} de 5 estrelas">${ESTRELAS(mostrada.estrelas)}</span></p><blockquote class="opiniao__texto"><p>${escH(mostrada.texto).replace(/\n/g, '<br>')}</p></blockquote><p class="opiniao__quem">${escH(mostrada.nome)}${mostrada.localidade ? `, ${escH(mostrada.localidade)}` : ''}${nomeDoArtigo(o.artigo) ? ` · ${escH(nomeDoArtigo(o.artigo))}` : ''}</p></li>`;
+      const retirar = $('[data-retirar]', escrever);
+      retirar.textContent = 'Retirar a opinião'; delete retirar.dataset.certeza;
+      $('[data-alterar]', escrever).onclick = () => {
+        preencher(mostrada); sobre(o.artigo);
+        $('[data-enviar]', form).textContent = 'Enviar a alteração';
+        erro.hidden = true; mostrar('formulario');
+      };
+      retirar.onclick = async () => {
+        if (!retirar.dataset.certeza) { retirar.dataset.certeza = '1'; retirar.textContent = 'Sim, retirar de vez'; return; }
+        retirar.disabled = true;
+        try {
+          const x = await pedir('/opinioes/retirar', { e });
+          if (!x.j.ok) { aviso(FRASES[x.j.erro] || SEM_REDE); return; }
+          history.replaceState(null, '', location.pathname);
+          aviso('A sua opinião foi retirada do site. Obrigada por nos ter dito o que pensa.');
+        } catch (_) { aviso(SEM_REDE); } finally { retirar.disabled = false; }
+      };
+      mostrar('minha');
+    }
+
+    // o erro sai quando a pessoa mexe no formulário (o seguinte só aparece ao enviar outra vez)
+    const limparErro = () => { if (!erro.hidden) errar(null, ''); };
+    form.addEventListener('input', limparErro);
+    form.addEventListener('change', limparErro);
+    form.addEventListener('submit', async (ev) => {
+      ev.preventDefault();
+      const v = valores();
+      const falta = conferir(v);
+      if (falta) { errar(falta, CAMPOS[falta]); return; }
+      errar(null, '');
+      const botao = $('[data-enviar]', form);
+      botao.disabled = true;
+      try {
+        if (modo?.c) {
+          const r = await pedir('/opinioes/enviar', { c: modo.c, ...v });
+          if (!r.j.ok) { if (r.j.campo && CAMPOS[r.j.campo]) errar(r.j.campo, CAMPOS[r.j.campo]); else { aviso(FRASES[r.j.erro] || SEM_REDE); } return; }
+          if (!r.j.edicao) { aviso('Obrigada!'); return; } // a armadilha (um robô): nada a guardar
+          // a página passa a ser a da ligação de edição: guardar o separador guarda a ligação
+          const ligacao = `${location.origin}${location.pathname}#e=${r.j.edicao}`;
+          history.replaceState(null, '', `#e=${r.j.edicao}`);
+          modo = { e: r.j.edicao };
+          $('[data-ligacao]', escrever).value = ligacao;
+          mostrar('enviada');
+        } else if (modo?.e) {
+          const r = await pedir('/opinioes/alterar', { e: modo.e, ...v });
+          if (!r.j.ok) { if (r.j.campo && CAMPOS[r.j.campo]) errar(r.j.campo, CAMPOS[r.j.campo]); else { aviso(FRASES[r.j.erro] || SEM_REDE); } return; }
+          await abrirMinha(modo.e, 'Alteração enviada.');
+        }
+      } catch (_) {
+        errar(null, SEM_REDE);
+      } finally {
+        botao.disabled = false;
+      }
+    });
+    $('[data-copiar]', escrever).addEventListener('click', async (ev) => {
+      const botao = ev.currentTarget; // depois do await, o currentTarget já é null (memória currenttarget-depois-de-await)
+      const campo = $('[data-ligacao]', escrever);
+      try { await navigator.clipboard.writeText(campo.value); botao.textContent = 'Copiada'; } catch (_) { campo.select(); }
+    });
+
+    const ler = () => {
+      const m = /^#([ce])=([A-Za-z0-9_-]{16,64})$/.exec(location.hash);
+      if (!m) { modo = null; mostrar('sem-ligacao', { focar: false }); return; }
+      if (m[1] === 'c') abrirConvite(m[2]); else abrirMinha(m[2]);
+    };
+    window.addEventListener('hashchange', ler);
+    ler();
+  }
+
   // ---------------------------------------------------------------- galeria da ficha
   $$('[data-galeria]').forEach((g) => {
     const pista = $('.galeria__pista', g);

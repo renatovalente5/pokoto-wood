@@ -315,3 +315,28 @@ partes do site». Feito:
   `media/video/torre-mesa.mp4` (17,7 s) e `torre-cadeira.mp4` (19,8 s), 576×1024, H.264 sem som,
   CRF 26, ~1,7 MB cada; capa = o 1.º fotograma. Só aparecem mãos de adulto (e o nome «Lourenço»
   gravado numa peça): sem crianças, podem ir para o site.
+
+## 12. As opiniões dos clientes (13 out 2026, pedido da Célia; a pesquisa legal e de UX em
+`~/Websites/research_notes/Pokóto Wood opiniões e avisos/`)
+
+- **Só escreve quem tem um convite.** A Célia cria no painel (Mais › Opiniões) uma ligação pessoal
+  para o artigo, de uso único e válida 90 dias, e manda-a pelo WhatsApp depois da entrega (o botão
+  «Abrir no WhatsApp» leva a mensagem escrita). A ligação é a prova da compra (DL 57/2008, art.
+  10.º-A, n.º 4, e art. 8.º, al. cc)). Convidam-se TODOS os clientes, da mesma forma.
+- **Publicam-se todas as verdadeiras**, boas e menos boas, até 5 dias úteis. Recusar só pelos
+  motivos publicados em /opinioes/ (não confirmada, ofensiva, dados pessoais de outros, publicidade);
+  esconder as negativas é proibido (art. 8.º, al. dd)). Uma que conte um acidente nunca se esconde.
+- **Nada disto está neste repositório** (é público; o histórico do git não esquece e quem escreve
+  pode pedir para apagar): vivem no painel (Durable Object `Opinioes`, na UE). A publicação vai
+  buscá-las a `GET https://backoffice.pokotowood.pt/opinioes/publicadas`; se o painel falhar, usa a
+  cópia do site publicado (`/opinioes.json`); sem nenhuma das duas, pára. Fora da produção só com
+  `OPINIOES_URL` ou `OPINIOES_FICHEIRO`.
+- **O site:** /opinioes/ (todas, das mais recentes, com «Como verificamos e publicamos as
+  opiniões»), /opinioes/escrever/ (o formulário: `#c=` o convite, `#e=` a ligação secreta de edição
+  para ver, alterar ou retirar; fora do Google), as da peça na ficha (a média só com 5 ou mais,
+  e só então as estrelas nos dados estruturados do Product), «O que dizem as famílias» no início
+  (as 3 mais recentes), e «Opiniões de clientes» no rodapé. Política de privacidade: secção
+  «Opiniões» (#opinioes). Os títulos das páginas de texto passaram a ter id.
+- **O painel publica** (a publicação do site corre sozinha a seguir), responde por baixo da opinião
+  e retira (a pedido de quem a escreveu ou pelas regras). Quem escreve altera: a publicada fica no
+  site até a alteração ser publicada.

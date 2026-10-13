@@ -110,6 +110,7 @@ function rodape(ctx) {
         <li><a href="${ctx.url('/como-encomendar/')}">Como encomendar</a></li>
         <li><a href="${ctx.url('/personalizacao/')}">Personalização</a></li>
         <li><a href="${ctx.url('/perguntas-frequentes/')}">Perguntas frequentes</a></li>
+        <li><a href="${ctx.url('/opinioes/')}">Opiniões de clientes</a></li>
         <li><a href="${ctx.url('/sobre-nos/')}">Sobre nós</a></li>
         <li><a href="${ctx.url('/contactos/')}">Contactos</a></li>
       </ul>

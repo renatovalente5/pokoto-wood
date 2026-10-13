@@ -43,7 +43,16 @@ export function precoDe(p, hoje) {
 // Markdown mínimo para as páginas de texto: títulos ##/###, parágrafos, listas (- e 1.),
 // **negrito**, *itálico*, [ligações](url) e quadros simples (| a | b |). Mais do que isto não
 // é preciso e cada coisa a mais é uma coisa a mais para o backoffice explicar.
+const idBase = (t) => t.normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase().replace(/\*|_|\[|\]\([^)]*\)/g, '').replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, '') || 'seccao';
+function idDoTitulo(t, ids) {
+  const base = idBase(t);
+  let id = base;
+  for (let n = 2; ids.has(id); n++) id = `${base}-${n}`;
+  ids.add(id);
+  return id;
+}
 export function markdown(src, url = (u) => u) {
+  const ids = new Set();
   const linhas = src.replace(/\r/g, '').split('\n');
   const out = [];
   let para = [];
@@ -64,7 +73,8 @@ export function markdown(src, url = (u) => u) {
     fecharQuadro();
     if (!t) { fecharPara(); fecharLista(); continue; }
     const h = t.match(/^(#{2,4})\s+(.*)$/);
-    if (h) { fecharPara(); fecharLista(); out.push(`<h${h[1].length}>${inline(h[2], url)}</h${h[1].length}>`); continue; }
+    // cada título leva um id (o texto sem acentos), para se poder ligar a ele: /politica-de-privacidade/#opinioes
+    if (h) { fecharPara(); fecharLista(); out.push(`<h${h[1].length} id="${idDoTitulo(h[2], ids)}">${inline(h[2], url)}</h${h[1].length}>`); continue; }
     const li = t.match(/^(-|\d+\.)\s+(.*)$/);
     if (li) {
       fecharPara();

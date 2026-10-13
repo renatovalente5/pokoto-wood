@@ -74,6 +74,14 @@ export function inicio(ctx) {
   ${botaoSeta(ctx.url('/sobre-nos/'), hi.botao)}
 </section>`;
 
+  // As opiniões: as 3 mais recentes, em cartões fixos (sem carrossel), quando as houver.
+  const recentes = ctx.opinioes.slice(0, 3);
+  const familias = recentes.length ? `<section class="familias" aria-labelledby="familias-titulo">
+  <h2 id="familias-titulo" class="titulo-seccao">O que dizem as famílias</h2>
+  <ul class="opinioes-lista opinioes-lista--grelha">${recentes.map((o) => cartaoOpiniao(ctx, o, { artigo: true })).join('')}</ul>
+  <p class="familias__mais"><a class="botao botao--contorno" href="${ctx.url('/opinioes/')}">Ver todas as opiniões</a></p>
+</section>` : '';
+
   // O Instagram em grande (a Célia, 13 out 2026: «é lá que tem muitos feedbacks, mais fotos e a nossa
   // história desde sempre»): uma faixa com a conta e um botão, sem trazer o feed de lá (nem
   // terceiros nem cookies na página). Logo a seguir à história, que é o que lá continua.
@@ -124,7 +132,7 @@ export function inicio(ctx) {
     descricao: h.seo.descricao,
     classe: 'pagina-inicio',
     jsonld: [org, { '@context': 'https://schema.org', '@type': 'WebSite', '@id': ctx.absoluto('/#site'), name: ctx.site.marca, alternateName: outrosNomes(ctx), url: ctx.absoluto('/'), inLanguage: 'pt-PT', publisher: { '@id': ctx.absoluto('/#loja') } }],
-    conteudo: [capa, vitrine, personalizacao, historia, instagram, vantagens, faixa, oficina, comoEncomendar].join('\n\n'),
+    conteudo: [capa, vitrine, personalizacao, historia, familias, instagram, vantagens, faixa, oficina, comoEncomendar].join('\n\n'),
   };
 }
 
@@ -146,6 +154,45 @@ export const AVISO_GRAVACAO = {
 export function avisoGravacao(ctx, { id = '', exemplos = true } = {}) {
   const ver = exemplos ? ` <a href="${ctx.url('/personalizacao/')}">Ver exemplos de gravações</a>` : '';
   return `<p class="aviso-gravacao"${id ? ` id="${id}"` : ''}>${icones.gravar}<span><strong>${esc(AVISO_GRAVACAO.titulo)}</strong> ${esc(AVISO_GRAVACAO.texto)}${ver}</span></p>`;
+}
+
+/* ---------------------------------------------------------------- as opiniões dos clientes
+   Vêm do painel na publicação (ctx.opinioes: as publicadas, das mais recentes para as mais antigas;
+   o porquê está em scripts/build.mjs e no painel, src/admin/opinioes.js). A média de estrelas só
+   aparece a partir de 5 opiniões de uma peça: com duas ou três, uma média engana. */
+const MIN_MEDIA = 5;
+const dataPorExtensoDe = (iso) => new Date(`${iso}T12:00:00Z`).toLocaleDateString('pt-PT', { day: 'numeric', month: 'long', year: 'numeric', timeZone: 'Europe/Lisbon' });
+const paragrafosDe = (t) => String(t).split(/\n{2,}/).map((p) => `<p>${esc(p).replace(/\n/g, '<br>')}</p>`).join('');
+export function estrelas(n, { rotulo = true } = {}) {
+  const cheias = '<span class="estrelas__cheia">★</span>'.repeat(n);
+  const vazias = '<span class="estrelas__vazia">★</span>'.repeat(5 - n);
+  return `<span class="estrelas"${rotulo ? ` role="img" aria-label="${n} de 5 estrelas"` : ' aria-hidden="true"'}>${cheias}${vazias}</span>`;
+}
+export const mediaDe = (lista) => Math.round((lista.reduce((s, o) => s + o.estrelas, 0) / lista.length) * 10) / 10;
+const mediaEmTexto = (m) => m.toLocaleString('pt-PT', { minimumFractionDigits: 1, maximumFractionDigits: 1 });
+function cartaoOpiniao(ctx, o, { artigo = false } = {}) {
+  const p = artigo ? ctx.produtos.find((x) => x.slug === o.artigo) : null;
+  return `<li class="opiniao">
+  <p class="opiniao__topo">${estrelas(o.estrelas)}<time class="opiniao__data" datetime="${esc(o.data)}">${esc(dataPorExtensoDe(o.data))}</time></p>
+  <blockquote class="opiniao__texto">${paragrafosDe(o.texto)}</blockquote>
+  <p class="opiniao__quem">${esc(o.nome)}${o.localidade ? `, ${esc(o.localidade)}` : ''}${p ? ` · <a href="${ctx.url(`/produtos/${p.slug}/`)}">${esc(p.nome)}</a>` : ''}</p>
+  ${o.resposta ? `<div class="opiniao__resposta"><p class="opiniao__resposta-quem">Resposta da ${esc(ctx.site.marca)}</p>${paragrafosDe(o.resposta.texto)}</div>` : ''}
+</li>`;
+}
+/* O que a lei pede junto das opiniões (DL 57/2008, art. 10.º-A, n.º 4; DL 24/2014, art. 4.º-B): se e
+   como se garante que são de quem comprou, o que se publica e o que fica de fora, a ordem, a média,
+   e como alterar, retirar ou denunciar. O texto é o da pesquisa legal de 13 out 2026, ajustado ao
+   convite pessoal (não há formulário aberto). */
+function comoVerificamos(ctx) {
+  const c = ctx.site.contactos;
+  const contacto = [c.email ? `por <a href="mailto:${esc(c.email)}">${esc(c.email)}</a>` : '', c.whatsapp ? `pelo <a href="${ctx.whatsapp('Olá! É sobre uma opinião do site.')}">WhatsApp</a>` : ''].filter(Boolean).join(' ou ');
+  return `<section class="como-verificamos" id="como-verificamos" aria-labelledby="como-verificamos-titulo">
+  <h2 id="como-verificamos-titulo">Como verificamos e publicamos as opiniões</h2>
+  <p>Só publicamos opiniões de clientes que nos compraram a peça de que falam. Depois da entrega, enviamos a cada cliente, pelo WhatsApp, uma ligação pessoal para deixar a sua opinião, e só se escreve por essa ligação. Convidamos todos os clientes, da mesma forma.</p>
+  <p>Publicamos todas as opiniões de clientes, positivas ou negativas, até 5 dias úteis depois de as recebermos. Só ficam de fora as que não conseguimos confirmar, as que ofendem alguém, as que têm dados pessoais de outras pessoas (como o nome ou a fotografia de uma criança) e as que fazem publicidade. Não alteramos o que escreveu: se for preciso, pedimos-lhe que corrija.</p>
+  <p>Não pagamos nem oferecemos nada em troca de opiniões. Mostramos primeiro as mais recentes, todas durante o mesmo tempo (nunca menos de 6 meses), e a média de estrelas de uma peça, quando aparece, é a média simples de todas as suas opiniões publicadas. Podemos responder a cada opinião, por baixo dela.</p>
+  <p>Quem escreveu pode alterar ou retirar a sua opinião a qualquer momento, pela ligação que recebe ao enviá-la${contacto ? `, ou pedindo-nos ${contacto}` : ''}. Se uma opinião lhe parecer falsa, avise-nos${contacto ? ` ${contacto}` : ''}.</p>
+</section>`;
 }
 
 /* A capa de um vídeo na largura mais pequena (a miniatura da galeria da ficha). */
@@ -332,6 +379,14 @@ export function produto(ctx, p) {
     <details><summary>${icones.escudo}Segurança e fabricante</summary><div class="acordeoes__corpo"><ul><li>Use sempre sob a supervisão de um adulto.</li><li>${/desmontad/i.test(p.montagem || '') ? 'Monte e use' : 'Use'} a peça numa superfície plana e estável${p.categoria === 'torres-de-aprendizagem' ? ', sempre encostada a uma bancada' : ''}.</li></ul><p class="nota">Fabricante: ${fabricante}.</p></div></details>
   </div>`;
 
+  const ops = ctx.opinioes.filter((o) => o.artigo === p.slug);
+  const blocoOpinioes = ops.length ? `<section class="opinioes-artigo" aria-labelledby="op-titulo">
+    <h2 id="op-titulo" class="titulo-seccao">Opiniões de quem comprou</h2>
+    ${ops.length >= MIN_MEDIA ? `<p class="opinioes-media">${estrelas(Math.round(mediaDe(ops)))} <strong>${mediaEmTexto(mediaDe(ops))} de 5</strong> · ${ops.length} opiniões</p>` : ''}
+    <ul class="opinioes-lista">${ops.map((o) => cartaoOpiniao(ctx, o)).join('')}</ul>
+    <p class="nota"><a href="${ctx.url('/opinioes/#como-verificamos')}">Como verificamos as opiniões</a></p>
+  </section>` : '';
+
   const relacionados = ctx.produtos.filter((x) => x.slug !== p.slug && x.vendaIsolada !== false)
     .sort((a, b) => (b.categoria === p.categoria) - (a.categoria === p.categoria) || a.ordem - b.ordem).slice(0, 4);
 
@@ -349,6 +404,7 @@ export function produto(ctx, p) {
       ${acordeoes}
     </div>
   </div>
+  ${blocoOpinioes}
   <section class="relacionados" aria-labelledby="rel-titulo">
     <h2 id="rel-titulo" class="titulo-seccao">Os pequenos também adoram</h2>
     <div class="grelha">${relacionados.map((x) => cartaoProduto(ctx, x)).join('\n')}</div>
@@ -387,6 +443,12 @@ export function produto(ctx, p) {
     category: c.nome,
     offers: offer,
     ...(idade ? { audience: { '@type': 'PeopleAudience', suggestedMinAge: Math.round((p.idade / 12) * 100) / 100 } } : {}),
+    /* As estrelas para o Google: só no Product (as de uma loja sobre si mesma, no Store, não contam)
+       e só a partir de 5 opiniões, como no ecrã. */
+    ...(ops.length >= MIN_MEDIA ? {
+      aggregateRating: { '@type': 'AggregateRating', ratingValue: mediaDe(ops), reviewCount: ops.length, bestRating: 5, worstRating: 1 },
+      review: ops.slice(0, 10).map((o) => ({ '@type': 'Review', reviewRating: { '@type': 'Rating', ratingValue: o.estrelas, bestRating: 5, worstRating: 1 }, author: { '@type': 'Person', name: o.nome }, datePublished: o.data, reviewBody: o.texto })),
+    } : {}),
   };
   return {
     caminho,
@@ -468,6 +530,76 @@ export function texto(ctx, pag) {
   </article>
 </div>`;
   return { caminho: pag.caminho, titulo: pag.tituloSeo || pag.titulo, descricao: pag.descricao, indexar: pag.indexar, jsonld: [m.ld], conteudo };
+}
+
+// ---------------------------------------------------------------- opiniões
+export function opinioes(ctx) {
+  const m = migalhas(ctx, [{ nome: 'Início', caminho: '/' }, { nome: 'Opiniões', caminho: '/opinioes/' }]);
+  const ops = ctx.opinioes;
+  const ig = ctx.site.contactos.instagram;
+  const conteudo = `<div class="contentor texto-pagina texto-pagina--largo">
+  ${m.html}
+  <h1 class="titulo-pagina">Opiniões de clientes</h1>
+  <p class="texto__intro">O que dizem as famílias que já têm as nossas peças em casa, das mais recentes para as mais antigas.</p>
+  ${ops.length
+    ? `<ul class="opinioes-lista">${ops.map((o) => cartaoOpiniao(ctx, o, { artigo: true })).join('')}</ul>`
+    : `<p class="opinioes-vazio">Ainda não há opiniões publicadas aqui.${ig ? ` Entretanto, veja o que as famílias nos dizem no nosso Instagram, <a href="https://www.instagram.com/${esc(ig)}/" target="_blank" rel="noopener">@${esc(ig)}</a>.` : ''}</p>`}
+  <p class="opinioes-pedir">${icones.coracao}<span>Comprou-nos uma peça? Depois da entrega, enviamos-lhe pelo WhatsApp uma ligação para deixar a sua opinião. Não a recebeu? <a href="${ctx.whatsapp('Olá! Comprei uma peça e gostava de deixar a minha opinião no site.')}">Peça-nos uma</a>.</span></p>
+  ${comoVerificamos(ctx)}
+</div>`;
+  return {
+    caminho: '/opinioes/', titulo: 'Opiniões de clientes',
+    descricao: `As opiniões de quem comprou na ${ctx.site.marca}: torres de aprendizagem, Pikler e mobiliário Montessori em madeira. Só de clientes, boas e menos boas.`,
+    jsonld: [m.ld], conteudo,
+  };
+}
+
+/* O formulário do convite (/opinioes/escrever/#c=<convite>) e da ligação de edição (#e=<…>): fora do
+   Google e do sitemap. Sem JavaScript fica a primeira frase (não se envia nada sem ele). O resto
+   (src/scripts/site.js, «opiniões») fala com o painel, em ctx.painel. */
+export function escreverOpiniao(ctx) {
+  const m = migalhas(ctx, [{ nome: 'Início', caminho: '/' }, { nome: 'Opiniões', caminho: '/opinioes/' }, { nome: 'Deixar a sua opinião', caminho: '/opinioes/escrever/' }]);
+  // todas as peças (também as que só se vendem com outra: também se pode dar a opinião delas)
+  const artigos = ctx.produtos.map((p) => `<option value="${esc(p.slug)}">${esc(p.nome)}</option>`).join('');
+  const conteudo = `<div class="contentor texto-pagina">
+  ${m.html}
+  <h1 class="titulo-pagina" tabindex="-1" data-escrever-titulo>Deixar a sua opinião</h1>
+  <div class="escrever" data-escrever data-api="${esc(ctx.painel)}" data-whatsapp="${esc(ctx.whatsapp('Olá! A ligação para deixar a minha opinião não funciona.'))}">
+    <div data-passo="sem-ligacao">
+      <p>Para deixar a sua opinião, use a ligação que lhe enviámos pelo WhatsApp depois da entrega: é ela que mostra que nos comprou a peça.</p>
+      <p>Não a recebeu, ou já não funciona? <a href="${ctx.whatsapp('Olá! Comprei uma peça e gostava de deixar a minha opinião no site.')}">Peça-nos uma</a>.</p>
+    </div>
+    <p data-passo="a-abrir" hidden>A abrir…</p>
+    <div data-passo="aviso" hidden><p class="escrever__aviso" data-aviso></p></div>
+    <div data-passo="minha" hidden>
+      <p class="escrever__estado" data-minha-estado></p>
+      <ul class="opinioes-lista" data-minha-cartao></ul>
+      <div class="botoes"><button class="botao botao--mel" type="button" data-alterar>Alterar a opinião</button><button class="botao botao--contorno" type="button" data-retirar>Retirar a opinião</button></div>
+    </div>
+    <form class="escrever__form" data-passo="formulario" hidden novalidate>
+      <p class="escrever__sobre" data-sobre hidden></p>
+      <div class="campo" data-campo-artigo hidden><label for="op-artigo">A peça que comprou</label><select id="op-artigo" name="artigo"><option value="">Escolha a peça</option>${artigos}</select></div>
+      <fieldset class="campo estrelas-escolha">
+        <legend>Quantas estrelas dá à peça?</legend>
+        <div class="estrelas-escolha__opcoes">${[1, 2, 3, 4, 5].map((n) => `<input type="radio" id="op-e${n}" name="estrelas" value="${n}"><label for="op-e${n}"><span aria-hidden="true">★</span><span class="visualmente-escondido">${n} ${n === 1 ? 'estrela' : 'estrelas'}</span></label>`).join('')}</div>
+      </fieldset>
+      <div class="campo"><label for="op-texto">A sua opinião</label><textarea id="op-texto" name="texto" rows="6" maxlength="1500" aria-describedby="op-texto-ajuda"></textarea><p class="campo__ajuda" id="op-texto-ajuda">Conte o que gostou e o que mudaria. Para proteger as crianças, não escreva o nome delas.</p></div>
+      <div class="campo"><label for="op-nome">O seu nome, como quer que apareça</label><input id="op-nome" name="nome" type="text" maxlength="40" autocomplete="name" aria-describedby="op-nome-ajuda"><p class="campo__ajuda" id="op-nome-ajuda">Por exemplo, «Ana S.»: o nome próprio e a inicial do apelido.</p></div>
+      <div class="campo"><label for="op-local">A sua localidade <span class="campo__opcional">(opcional)</span></label><input id="op-local" name="localidade" type="text" maxlength="40" autocomplete="address-level2"></div>
+      <div class="escrever__armadilha" aria-hidden="true"><label for="op-site">Não preencha este campo</label><input id="op-site" name="site" type="text" tabindex="-1" autocomplete="off"></div>
+      <label class="escrever__autorizo"><input type="checkbox" name="autorizo"> <span>Autorizo a ${esc(ctx.site.marca)} a publicar esta opinião neste site, com o nome e a localidade que indiquei. Posso pedir para a retirar a qualquer momento. <a href="${ctx.url('/politica-de-privacidade/#opinioes')}">Como tratamos estes dados</a></span></label>
+      <p class="comprar__erro" data-erro role="alert" hidden></p>
+      <button class="botao botao--mel botao--largo" type="submit" data-enviar>Enviar a opinião</button>
+    </form>
+    <div data-passo="enviada" hidden>
+      <p class="escrever__ok">${icones.certo}<span data-enviada-texto>Obrigada pela sua opinião! Vamos lê-la e publicá-la até 5 dias úteis depois.</span></p>
+      <p>Guarde esta ligação: é por ela que pode ver, alterar ou retirar a sua opinião.</p>
+      <p class="escrever__ligacao"><input type="text" readonly data-ligacao aria-label="A ligação para ver, alterar ou retirar a sua opinião"><button class="botao botao--contorno" type="button" data-copiar>Copiar</button></p>
+    </div>
+  </div>
+  <p class="nota"><a href="${ctx.url('/opinioes/#como-verificamos')}">Como verificamos e publicamos as opiniões</a></p>
+</div>`;
+  return { caminho: '/opinioes/escrever/', titulo: 'Deixar a sua opinião', descricao: `Deixe a sua opinião sobre a peça que comprou na ${ctx.site.marca}.`, indexar: false, jsonld: [m.ld], conteudo };
 }
 
 export function contactos(ctx) {

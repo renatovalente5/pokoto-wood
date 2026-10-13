@@ -20,7 +20,17 @@ Quando nos envia uma encomenda ou uma mensagem — pelo WhatsApp, por email ou n
 - emitir a fatura e cumprir as obrigações fiscais (fundamento: obrigação legal);
 - tratar de uma garantia ou de uma reclamação (fundamento: obrigação legal).
 
-Não usamos os seus dados para publicidade nem os vendemos a ninguém.
+Não usamos os seus dados para publicidade nem os vendemos a ninguém. A única mensagem que lhe podemos enviar sem a ter pedido é, depois da entrega, a que pede a sua opinião (ver «Opiniões», mais abaixo).
+
+## Opiniões
+
+Quando deixa uma opinião no site, pela ligação pessoal que lhe enviámos, tratamos o nome que escolheu para aparecer, a localidade (se a indicar), a peça, as estrelas, o texto e a data. Publicamos tudo isto com o seu consentimento, que dá ao marcar a autorização no formulário e pode retirar a qualquer momento: pela ligação que recebe ao enviar a opinião (serve para a ver, alterar ou retirar), ou pedindo-nos por {{email}} ou pelo WhatsApp. Retirada, a opinião sai do site sem demora e, no máximo, num mês.
+
+O formulário não pede telefone nem email: é a ligação pessoal que mostra que comprou a peça. Da ligação que recebe ao enviar, guardamos só um resumo que não permite reconstruí-la. Para evitar abusos, contamos durante uma hora os envios feitos a partir de cada ligação à internet, por um resumo do endereço IP que não diz qual é; o endereço IP não fica guardado.
+
+Depois da entrega podemos enviar-lhe, pelo WhatsApp, uma única mensagem com a ligação para deixar a sua opinião (fundamento: o interesse legítimo em conhecer a opinião de quem nos comprou). Se preferir não receber este tipo de mensagem, basta dizer-nos.
+
+Uma opinião publicada fica no site enquanto a peça estiver à venda, e nunca menos de 6 meses, salvo se nos pedir antes para a retirar. Se não a publicarmos, o texto apaga-se 6 meses depois da decisão. Guardamos, sem o seu nome nem o texto, um registo de como confirmámos a compra até 5 anos depois de a opinião sair do site, para podermos provar que as opiniões são verdadeiras (fundamento: obrigação legal e interesse legítimo). As opiniões ficam guardadas na Cloudflare, Inc., em servidores na União Europeia.
 
 ## Por quanto tempo
 
