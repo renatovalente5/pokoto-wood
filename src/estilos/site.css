@@ -614,6 +614,14 @@ html:has(dialog[open]) { overflow: hidden; }
 .aviso-gravacao .icone { flex: none; width: 22px; height: 22px; color: var(--mel-escuro); margin-top: 1px; }
 .aviso-gravacao strong { display: block; font-size: 1.02rem; margin-bottom: 3px; }
 .texto .aviso-gravacao { margin: 1.2em 0; }
+.aviso-gravacao a { color: inherit; font-weight: 500; }
+/* «O que acontece a seguir», no carrinho, antes do botão: os passos depois de enviar, com a
+   maquete da gravação só quando há uma. */
+.seguir { padding: 14px 16px 14px 18px; border-radius: var(--raio); background: var(--mel-claro); color: var(--tinta); font-size: .95rem; }
+.seguir__titulo { margin: 0 0 6px; font-weight: 700; }
+.seguir ol { margin: 0; padding-left: 1.3em; display: grid; gap: 4px; }
+.encomenda__instagram { display: flex; gap: 10px; align-items: flex-start; }
+.encomenda__instagram .icone { flex: none; color: var(--terracota); margin-top: 2px; }
 .encomenda__aviso .icone { color: var(--castanho); margin-top: 2px; }
 /* Já abriu o WhatsApp com esta encomenda (carrinho.js): fica o título e o painel. */
 .encomenda[data-estado="enviada"] > :not(.encomenda__titulo, .encomenda__enviada) { display: none; }

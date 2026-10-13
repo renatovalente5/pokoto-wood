@@ -1,6 +1,6 @@
 titulo: Política de privacidade
 descricao: Que dados pessoais tratamos, para quê e por quanto tempo: as encomendas seguem pelo WhatsApp e este site não guarda nada do que escreve.
-atualizado: 2026-10-07
+atualizado: 2026-10-13
 ---
 ## Quem trata os seus dados
 
@@ -31,7 +31,7 @@ As conversas e os dados de uma encomenda guardam-se enquanto forem precisos para
 - **WhatsApp (Meta Platforms Ireland Ltd.)**, por onde seguem as encomendas e as conversas. O WhatsApp tem a sua própria política de privacidade.
 - **Transportadoras**, quando há envio: o nome, a morada e o contacto necessários para a entrega.
 - **Contabilista e Autoridade Tributária**, para a faturação.
-- **Alojamento do site**: as páginas são servidas pela GitHub, Inc., que regista os endereços IP de quem as visita por razões de segurança.
+- **Alojamento do site**: as páginas são servidas pela Cloudflare, Inc., que trata os endereços IP de quem as visita para as entregar e por razões de segurança.
 
 Algumas destas entidades podem tratar dados fora da União Europeia, ao abrigo de decisões de adequação (como o Quadro de Proteção de Dados UE–EUA) ou de cláusulas contratuais-tipo.
 

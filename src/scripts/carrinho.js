@@ -221,6 +221,8 @@
       s.textContent = cz.portesPorConfirmar ? 'a confirmar' : euros(cz.portes);
     });
     $('[data-totais]', form).innerHTML = totaisHtml(c, cat, estado.zona);
+    const gravacao = $('[data-se-gravacao]', form);
+    if (gravacao) gravacao.hidden = !estado.linhas.some((l) => (l.personalizacao || '').trim());
     const comMorada = (cat.zonas.find((z) => z.id === estado.zona) || {}).morada;
     $$('[data-so-envio]', form).forEach((e) => { e.hidden = !comMorada; });
     $$('[data-obrigatorio-envio]', form).forEach((i) => { i.required = Boolean(comMorada); });
@@ -302,7 +304,7 @@
     for (const d of c.validas) {
       linhas.push(`*${d.linha.qtd}× ${d.p.nome}* — ${euros(d.total)}`);
       for (const x of d.comps) linhas.push(`   + ${x.c.nome}`);
-      if (d.linha.personalizacao) linhas.push(`   Personalização: «${d.linha.personalizacao}»`);
+      if (d.linha.personalizacao) linhas.push(`   Personalização: «${d.linha.personalizacao}» (maquete para aprovar depois do pagamento)`);
     }
     linhas.push('');
     linhas.push(`Artigos: ${euros(c.artigos)}`);

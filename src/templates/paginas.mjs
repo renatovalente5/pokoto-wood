@@ -82,7 +82,7 @@ export function inicio(ctx) {
   <div class="instagram__caixa">
     <span class="instagram__icone" aria-hidden="true">${icones.instagram}</span>
     <div class="instagram__texto">
-      <p class="instagram__conta">@${esc(ig)}</p>
+      <p class="instagram__conta">@${esc(ig)} · ${esc(INSTAGRAM.seguidores)}</p>
       <h2 id="instagram-titulo" class="instagram__titulo">${esc(INSTAGRAM.titulo)}</h2>
       <p>${esc(INSTAGRAM.texto)}</p>
     </div>
@@ -133,17 +133,19 @@ export function inicio(ctx) {
    botão, e na página da personalização ({{avisoGravacao}}). */
 /* A faixa do Instagram na página inicial. */
 const INSTAGRAM = {
-  titulo: 'Veja mais no nosso Instagram',
-  texto: 'As peças em casa de quem já as tem, o que as famílias nos dizem e o dia a dia da oficina, desde 2021.',
-  botao: 'Seguir no Instagram',
+  seguidores: 'mais de 50 mil seguidores', // 52 mil a 7 out 2026: arredondado para baixo, para continuar verdade
+  titulo: 'As nossas peças em casa das famílias',
+  texto: 'As opiniões de quem já tem, as gravações novas e as peças a sair da oficina.',
+  botao: 'Seguir @pokotowood',
 };
 
 export const AVISO_GRAVACAO = {
-  titulo: 'A gravação só começa depois de a encomenda estar paga e confirmada.',
-  texto: 'Nessa altura enviamos-lhe a maquete pelo WhatsApp para aprovar. Antes disso, não fazemos maquetes.',
+  titulo: 'Maquete só depois do pagamento.',
+  texto: 'Com a encomenda paga e confirmada, enviamos-lhe a maquete da gravação pelo WhatsApp. Só gravamos depois de a aprovar.',
 };
-export function avisoGravacao({ id = '' } = {}) {
-  return `<p class="aviso-gravacao"${id ? ` id="${id}"` : ''}>${icones.gravar}<span><strong>${esc(AVISO_GRAVACAO.titulo)}</strong> ${esc(AVISO_GRAVACAO.texto)}</span></p>`;
+export function avisoGravacao(ctx, { id = '', exemplos = true } = {}) {
+  const ver = exemplos ? ` <a href="${ctx.url('/personalizacao/')}">Ver exemplos de gravações</a>` : '';
+  return `<p class="aviso-gravacao"${id ? ` id="${id}"` : ''}>${icones.gravar}<span><strong>${esc(AVISO_GRAVACAO.titulo)}</strong> ${esc(AVISO_GRAVACAO.texto)}${ver}</span></p>`;
 }
 
 /* A capa de um vídeo na largura mais pequena (a miniatura da galeria da ficha). */
@@ -279,7 +281,7 @@ export function produto(ctx, p) {
         <label for="pers-${p.slug}">Personalização${pers.obrigatoria ? '' : ' <span class="campo__opcional">(grátis, opcional)</span>'}</label>
         <input id="pers-${p.slug}" name="personalizacao" type="text" maxlength="80" autocomplete="off"${pers.obrigatoria ? ' required' : ''} placeholder="${pers.obrigatoria ? 'O nome a gravar' : 'Ex.: o nome ou uma frase'}" aria-describedby="${pers.obrigatoria ? '' : `pers-ajuda-${p.slug} `}pers-aviso-${p.slug}">
         ${pers.obrigatoria ? '' : `<p class="campo__ajuda" id="pers-ajuda-${p.slug}">Para um desenho, descreva a ideia em poucas palavras.</p>`}
-        ${avisoGravacao({ id: `pers-aviso-${p.slug}` })}
+        ${avisoGravacao(ctx, { id: `pers-aviso-${p.slug}` })}
       </div>` : ''}
       ${complementos.length ? `<fieldset class="complementos"><legend>Complete com</legend>${complementos.map((k) => {
         const kv = precoDe(k.p, ctx.hoje);
@@ -304,8 +306,12 @@ export function produto(ctx, p) {
   const zonasEnvio = ctx.site.entrega.zonas.filter((z) => z.morada);
   /* A idade recomendada, à vista antes de encomendar, com a nota de que é indicativa. */
   const idade = idadeTexto(p.idade, p.idadeAte);
+  /* O prazo, à vista na ficha (a pesquisa de 13 out: estava só em «Como encomendar»): a primeira
+     frase do prazo da loja, «Fazemos cada peça por encomenda: fica pronta em 2 a 3 semanas…». */
+  const prazoCurto = String(ctx.site.entrega.prazo || '').trim().split(/(?<=\.)\s+/)[0];
   const entrega = `<div class="entrega-caixa">
     ${idade ? `<p class="entrega-caixa__linha" data-idade>${icones.crianca}<span><strong>${esc(idade)}.</strong> ${esc(NOTA_IDADE)}</span></p>` : ''}
+    ${prazoCurto ? `<p class="entrega-caixa__linha">${icones.relogio}<span>${esc(prazoCurto)}</span></p>` : ''}
     <p class="entrega-caixa__linha">${icones.local}<span><strong>Levantamento grátis</strong> na nossa oficina, em ${esc(ctx.site.local.localidade)}.</span></p>
     ${envio ? `<p class="entrega-caixa__linha">${icones.camiao}<span><strong>Envio:</strong> ${zonasEnvio.map((z) => `${esc(z.curto)} <span data-envio-zona="${z.id}">${linhaEnvio(z)}</span>`).join(' · ')}</span></p>` : ''}
     ${p.montagem ? `<p class="entrega-caixa__linha">${icones.caixa}<span>${inline(p.montagem, ctx.url)}</span></p>` : ''}
@@ -422,13 +428,21 @@ export function carrinho(ctx) {
           <div class="campo"><label for="e-nif">NIF para a fatura <span class="campo__opcional">(opcional)</span></label><input id="e-nif" name="nif" type="text" inputmode="numeric" maxlength="12" autocomplete="off"></div>
           <div class="campo"><label for="e-notas">Observações <span class="campo__opcional">(opcional)</span></label><textarea id="e-notas" name="notas" rows="3" maxlength="500"></textarea></div>
         </fieldset>
-        ${avisoGravacao()}
-        <p class="encomenda__aviso">${icones.info}<span>Ao carregar no botão abre-se o WhatsApp com a sua encomenda escrita. A encomenda fica feita quando a confirmarmos consigo por lá, com o total, o pagamento e o prazo. Nada do que escreve aqui fica guardado neste site.</span></p>
+        <div class="seguir">
+          <p class="seguir__titulo">O que acontece a seguir</p>
+          <ol>
+            <li>Confirmamos consigo, pelo WhatsApp, o total e o prazo: só aí a encomenda fica feita.</li>
+            <li>Enviamos-lhe os dados para o pagamento.</li>
+            <li data-se-gravacao hidden><strong>Enviamos a maquete da gravação: só gravamos depois do seu «sim».</strong></li>
+          </ol>
+        </div>
+        <p class="encomenda__aviso">${icones.info}<span>Ao carregar no botão abre-se o WhatsApp com a sua encomenda escrita. Nada do que escreve aqui fica guardado neste site.</span></p>
         <p class="comprar__erro" data-erro-encomenda role="alert" hidden></p>
         <button class="botao botao--whatsapp botao--largo" type="submit">${icones.whatsapp}<span>Enviar encomenda pelo WhatsApp</span></button>
         <div class="encomenda__enviada" data-enviada hidden>
           <p class="encomenda__enviada-cabeca">${icones.certo}<span>Abrimos o WhatsApp com a sua encomenda escrita<span data-enviada-quando></span>.</span></p>
           <p>Se ainda não carregou em enviar na conversa, faça-o lá. A encomenda fica feita quando a confirmarmos consigo pelo WhatsApp, com o total, o pagamento e o prazo. Se pediu uma gravação, enviamos a maquete para aprovar depois do pagamento.</p>
+          ${ctx.site.contactos.instagram ? `<p class="encomenda__instagram">${icones.instagram}<span>Enquanto espera, veja as peças em casa das famílias no nosso Instagram: <a href="https://www.instagram.com/${esc(ctx.site.contactos.instagram)}/" target="_blank" rel="noopener">@${esc(ctx.site.contactos.instagram)}</a></span></p>` : ''}
           <button class="botao botao--whatsapp botao--largo" type="button" data-continuar>${icones.whatsapp}<span>Continuar no WhatsApp</span></button>
           <button class="botao botao--contorno botao--largo" type="button" data-copiar>${icones.copiar}<span>Copiar a mensagem</span></button>
           <p class="encomenda__enviada-mais"><button class="botao botao--texto" type="button" data-alterar>Alterar a encomenda</button><button class="botao botao--texto" type="button" data-esvaziar>Fazer outra encomenda</button></p>
