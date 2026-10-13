@@ -18,7 +18,7 @@ export function inicio(ctx) {
   <div class="capa__caixa">
     <div class="capa__texto">
       <p class="etiqueta etiqueta--terracota">${esc(h.capa.etiqueta)}</p>
-      <h1 class="capa__titulo"><span class="capa__l1">${esc(h.capa.tituloLinha1)}</span> <span class="capa__l2">${esc(h.capa.tituloLinha2)}</span></h1>
+      <h1 class="capa__titulo"><span class="visualmente-escondido">${esc(ctx.site.marca)}: </span><span class="capa__l1">${esc(h.capa.tituloLinha1)}</span> <span class="capa__l2">${esc(h.capa.tituloLinha2)}</span></h1>
       <p class="capa__subtitulo">${esc(h.capa.texto)}</p>
       ${botaoSeta(ctx.url(h.capa.ligacao || '/loja/'), h.capa.botao, { classe: 'botao botao--mel' })}
     </div>
@@ -107,7 +107,7 @@ export function inicio(ctx) {
     titulo: h.seo.titulo,
     descricao: h.seo.descricao,
     classe: 'pagina-inicio',
-    jsonld: [org, { '@context': 'https://schema.org', '@type': 'WebSite', name: ctx.site.marca, url: ctx.absoluto('/'), inLanguage: 'pt-PT' }],
+    jsonld: [org, { '@context': 'https://schema.org', '@type': 'WebSite', '@id': ctx.absoluto('/#site'), name: ctx.site.marca, alternateName: outrosNomes(ctx), url: ctx.absoluto('/'), inLanguage: 'pt-PT', publisher: { '@id': ctx.absoluto('/#loja') } }],
     conteudo: [capa, vitrine, personalizacao, historia, vantagens, faixa, oficina, comoEncomendar].join('\n\n'),
   };
 }
@@ -124,6 +124,14 @@ export function video(ctx, nome) {
 </div>`;
 }
 
+/* Os outros nomes por que a marca é procurada (13 out 2026: «Pokoto Wood» sem acento e «pokotowood» não
+   davam o site no Google; o nome do site e da loja vão nos dados estruturados de todas as páginas). */
+function outrosNomes(ctx) {
+  const semAcentos = ctx.site.marca.normalize('NFD').replace(/[\u0300-\u036f]/g, '');
+  const colado = semAcentos.toLowerCase().replace(/[^a-z0-9]/g, '');
+  return [...new Set([semAcentos, colado, ctx.site.contactos.instagram].filter((x) => x && x !== ctx.site.marca))];
+}
+
 export function organizacao(ctx) {
   const c = ctx.site.contactos;
   const e = ctx.site.empresa;
@@ -138,7 +146,8 @@ export function organizacao(ctx) {
     image: ctx.absoluto(`/assets/img/${ctx.manifesto.partilha._site}`),
     ...(ctx.site.fundadores ? { founder: ctx.site.fundadores.split(/ e /).map((n) => ({ '@type': 'Person', name: n.trim() })) } : {}),
     address: { '@type': 'PostalAddress', addressLocality: ctx.site.local.localidade, addressRegion: ctx.site.local.distrito, addressCountry: 'PT' },
-    sameAs: [c.instagram && `https://www.instagram.com/${c.instagram}/`, c.facebook && `https://www.facebook.com/${c.facebook}`].filter(Boolean),
+    alternateName: outrosNomes(ctx),
+    sameAs: [c.instagram && `https://www.instagram.com/${c.instagram}/`, c.instagram && `https://www.threads.com/@${c.instagram}`, c.facebook && `https://www.facebook.com/${c.facebook}`].filter(Boolean),
   };
   if (c.email) ld.email = c.email;
   if (c.whatsapp) ld.telephone = `+${numeroWhatsApp(c.whatsapp)}`;
