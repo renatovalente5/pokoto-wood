@@ -29,7 +29,6 @@
   ],
   "montagem": "Vai totalmente montada e pronta a usar.",
   "idade": 12,
-  "idadeAte": 18,
   "personalizacao": {
     "disponivel": true,
     "obrigatoria": false
