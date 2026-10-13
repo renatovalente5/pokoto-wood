@@ -159,7 +159,12 @@ fs.writeFileSync(path.join(SAIDA, 'assets', ficheiros.js), js);
 const numero = numeroWhatsApp(site.contactos.whatsapp);
 const ctx = {
   site, inicio, categorias, produtos, fotos, manifesto, hoje, producao, ficheiros,
-  videos: { 'oficina-torres': 'várias torres de aprendizagem personalizadas na nossa oficina', 'trio-pikler': 'o triângulo, a prancha e o arco de Pikler montados juntos' },
+  videos: {
+    'oficina-torres': 'várias torres de aprendizagem personalizadas na nossa oficina',
+    'trio-pikler': 'o triângulo, a prancha e o arco de Pikler montados juntos',
+    'torre-cadeira': 'a torre de aprendizagem a passar a cadeira, e a fechar no fim',
+    'torre-mesa': 'a torre de aprendizagem a passar a mesa com banco',
+  },
   url: (c) => (/^https?:|^mailto:|^tel:|^#/.test(c) ? c : `${base}${c}`),
   asset: (rel) => `${base}/assets/${rel}`,
   absoluto: (c) => `${ORIGEM}${base}${c}`,

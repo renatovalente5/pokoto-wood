@@ -305,8 +305,13 @@ partes do site». Feito:
     miniaturas mostram o centro da fotografia (mostravam o cimo), o exemplo da personalização cabe
     no campo («Ex.: o nome ou uma frase») e o botão «Adicionar ao carrinho» cabe num ecrã de 320 px;
   - na gaveta do carrinho, a lista da entrega com os nomes curtos e a seta desenhada.
-- **O vídeo do artigo na galeria** (Renato: «em vez de ficar perdido na página»): é a última
-  «fotografia» da galeria da ficha, com miniatura própria (a capa com o sinal de tocar), e enche a
-  caixa 4:5. Começa sozinho, sem som, só quando se chega a ele, e pára ao voltar às fotografias;
-  com «reduzir movimento» fica na capa. No telemóvel as miniaturas encolhem até 48 px para caberem
-  todas na linha, o vídeo incluído.
+- **O vídeo do artigo na galeria** (Renato: «em vez de ficar perdido na página»; a Célia, 15:04:
+  «Fica foto capa e a seguir um vídeo»): vem logo a seguir à fotografia de capa, com miniatura
+  própria (a capa do vídeo com o sinal de tocar), inteiro na caixa 4:5 (margem creme dos lados).
+  Começa sozinho, sem som, só quando se chega a ele, e pára ao voltar às fotografias; com «reduzir
+  movimento» fica na capa. No telemóvel as miniaturas encolhem até 48 px para caberem todas.
+- **Vídeos novos da Célia** (grupo, 13 out, 15:10 e 15:11; o áudio privado das 14:35 explica o
+  porquê: os clientes perguntam pelo WhatsApp como a torre passa a mesa ou a cadeira):
+  `media/video/torre-mesa.mp4` (17,7 s) e `torre-cadeira.mp4` (19,8 s), 576×1024, H.264 sem som,
+  CRF 26, ~1,7 MB cada; capa = o 1.º fotograma. Só aparecem mãos de adulto (e o nome «Lourenço»
+  gravado numa peça): sem crianças, podem ir para o site.

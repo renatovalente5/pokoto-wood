@@ -208,16 +208,20 @@ export function produto(ctx, p) {
   const v = precoDe(p, ctx.hoje);
   const pct = desconto(ctx, p);
 
-  // O vídeo do artigo vem a seguir às fotografias, na mesma galeria (Renato, 13 out 2026: solto
-  // por baixo da ficha, ficava perdido na página). Começa sozinho, sem som, quando se chega a ele.
-  const comVideo = Boolean(p.video);
-  const itens = p.fotos.length + (comVideo ? 1 : 0);
+  // O vídeo do artigo vem logo a seguir à fotografia de capa, na mesma galeria (Renato e Célia,
+  // 13 out 2026: solto por baixo da ficha ficava perdido; «Fica foto capa e a seguir um vídeo»).
+  // Começa sozinho, sem som, quando se chega a ele.
+  const itens = p.fotos.map((f, i) => ({ foto: f, n: i + 1 }));
+  if (p.video) itens.splice(1, 0, { video: p.video });
   const galeria = `<div class="galeria" data-galeria>
-    <div class="galeria__pista" tabindex="0" role="region" aria-label="${comVideo ? 'Fotografias e vídeo' : 'Fotografias'} de ${esc(p.nome)}">
-      ${p.fotos.map((f, i) => `<figure class="galeria__foto" id="foto-${i + 1}">${imagem(ctx, f, { tamanhos: '(min-width: 1000px) 46vw, 100vw', prioridade: i === 0 })}</figure>`).join('\n')}
-      ${comVideo ? `<figure class="galeria__foto galeria__foto--video" id="video">${video(ctx, p.video)}</figure>` : ''}
+    <div class="galeria__pista" tabindex="0" role="region" aria-label="${p.video ? 'Fotografias e vídeo' : 'Fotografias'} de ${esc(p.nome)}">
+      ${itens.map((it) => (it.video
+    ? `<figure class="galeria__foto galeria__foto--video" id="video">${video(ctx, it.video)}</figure>`
+    : `<figure class="galeria__foto" id="foto-${it.n}">${imagem(ctx, it.foto, { tamanhos: '(min-width: 1000px) 46vw, 100vw', prioridade: it.n === 1 })}</figure>`)).join('\n')}
     </div>
-    ${itens > 1 ? `<ul class="galeria__miniaturas">${p.fotos.map((f, i) => `<li><button type="button" data-foto="${i}"${i === 0 ? ' aria-current="true"' : ''}>${imagem(ctx, f, { tamanhos: '80px', alt: '' })}<span class="visualmente-escondido">Fotografia ${i + 1} de ${p.fotos.length}</span></button></li>`).join('')}${comVideo ? `<li><button class="galeria__mini-video" type="button" data-foto="${p.fotos.length}">${capaDoVideo(ctx, p.video)}<span class="galeria__tocar">${icones.tocar}</span><span class="visualmente-escondido">Vídeo</span></button></li>` : ''}</ul>` : ''}
+    ${itens.length > 1 ? `<ul class="galeria__miniaturas">${itens.map((it, i) => `<li>${it.video
+    ? `<button class="galeria__mini-video" type="button" data-foto="${i}">${capaDoVideo(ctx, it.video)}<span class="galeria__tocar">${icones.tocar}</span><span class="visualmente-escondido">Vídeo</span></button>`
+    : `<button type="button" data-foto="${i}"${i === 0 ? ' aria-current="true"' : ''}>${imagem(ctx, it.foto, { tamanhos: '80px', alt: '' })}<span class="visualmente-escondido">Fotografia ${it.n} de ${p.fotos.length}</span></button>`}</li>`).join('')}</ul>` : ''}
   </div>`;
 
   const selos = [
