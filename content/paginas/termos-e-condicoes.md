@@ -47,7 +47,7 @@ Reservamo-nos o direito de corrigir erros manifestos de preço. Se isso acontece
 
 {{prazo}}
 
-Em nenhum caso a entrega ultrapassa 30 dias a contar da confirmação da encomenda, salvo se tiver aceitado expressamente um prazo mais longo. Se não conseguirmos cumprir o prazo combinado, avisamos e pode resolver o contrato, recebendo de volta tudo o que pagou.
+Em nenhum caso a entrega ultrapassa 30 dias a contar do pagamento e, quando há gravação, da aprovação da maquete, salvo se tiver aceitado expressamente um prazo mais longo. Se não conseguirmos cumprir o prazo combinado, avisamos e pode resolver o contrato, recebendo de volta tudo o que pagou.
 
 O risco de perda ou dano da peça passa para si quando a recebe.
 
