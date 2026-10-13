@@ -363,6 +363,20 @@ html:has(dialog[open]) { overflow: hidden; }
   .bolha--3 { right: 9%; bottom: 20%; }
 }
 
+/* ------------------------------------------------------------------ início: Instagram */
+.instagram { max-width: var(--largura); margin: clamp(48px, 7vw, 80px) auto 0; padding-inline: var(--margem); }
+.instagram__caixa { display: grid; gap: 18px; justify-items: center; text-align: center; padding: clamp(28px, 5vw, 48px) clamp(20px, 5vw, 56px); border-radius: var(--raio-grande); background: linear-gradient(135deg, var(--mel-claro), var(--terracota-claro)); }
+.instagram__icone { display: grid; place-items: center; width: 64px; height: 64px; border-radius: 20px; background: var(--branco); color: var(--terracota); box-shadow: var(--sombra); }
+.instagram__icone .icone { width: 34px; height: 34px; }
+.instagram__conta { margin: 0; font-weight: 700; letter-spacing: .04em; color: var(--terracota); }
+.instagram__titulo { font-size: clamp(1.7rem, 4.2vw, 2.6rem); margin: .1em 0 .3em; text-wrap: balance; }
+.instagram__botao { align-self: center; }
+.instagram__texto p:last-child { margin: 0 auto; max-width: 52ch; color: var(--tinta); }
+@media (min-width: 900px) {
+  .instagram__caixa { grid-template-columns: auto 1fr auto; justify-items: start; text-align: left; gap: 28px; }
+  .instagram__texto p:last-child { margin: 0; }
+}
+
 /* ------------------------------------------------------------------ início: vantagens */
 .vantagens { margin-top: clamp(64px, 9vw, 104px); background: var(--creme); padding: clamp(32px, 5vw, 48px) var(--margem); }
 .vantagens ul { list-style: none; max-width: var(--largura); margin-inline: auto; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 28px 18px; text-align: center; }

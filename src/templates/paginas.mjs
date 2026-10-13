@@ -74,6 +74,22 @@ export function inicio(ctx) {
   ${botaoSeta(ctx.url('/sobre-nos/'), hi.botao)}
 </section>`;
 
+  // O Instagram em grande (a Célia, 13 out 2026: «é lá que tem muitos feedbacks, mais fotos e a nossa
+  // história desde sempre»): uma faixa com a conta e um botão, sem trazer o feed de lá (nem
+  // terceiros nem cookies na página). Logo a seguir à história, que é o que lá continua.
+  const ig = ctx.site.contactos.instagram;
+  const instagram = ig ? `<section class="instagram" aria-labelledby="instagram-titulo">
+  <div class="instagram__caixa">
+    <span class="instagram__icone" aria-hidden="true">${icones.instagram}</span>
+    <div class="instagram__texto">
+      <p class="instagram__conta">@${esc(ig)}</p>
+      <h2 id="instagram-titulo" class="instagram__titulo">${esc(INSTAGRAM.titulo)}</h2>
+      <p>${esc(INSTAGRAM.texto)}</p>
+    </div>
+    <a class="botao botao--mel instagram__botao" href="https://www.instagram.com/${esc(ig)}/" target="_blank" rel="noopener">${icones.instagram}<span>${esc(INSTAGRAM.botao)}</span><span class="visualmente-escondido"> (abre o Instagram)</span></a>
+  </div>
+</section>` : '';
+
   const vantagens = `<section class="vantagens" aria-label="Porquê a Pokóto">
   <ul>${h.vantagens.map((v) => `<li>${ilustracoes[v.icone] || ''}<h3>${esc(v.titulo)}</h3><p>${esc(v.texto)}</p></li>`).join('')}</ul>
 </section>`;
@@ -108,13 +124,20 @@ export function inicio(ctx) {
     descricao: h.seo.descricao,
     classe: 'pagina-inicio',
     jsonld: [org, { '@context': 'https://schema.org', '@type': 'WebSite', '@id': ctx.absoluto('/#site'), name: ctx.site.marca, alternateName: outrosNomes(ctx), url: ctx.absoluto('/'), inLanguage: 'pt-PT', publisher: { '@id': ctx.absoluto('/#loja') } }],
-    conteudo: [capa, vitrine, personalizacao, historia, vantagens, faixa, oficina, comoEncomendar].join('\n\n'),
+    conteudo: [capa, vitrine, personalizacao, historia, instagram, vantagens, faixa, oficina, comoEncomendar].join('\n\n'),
   };
 }
 
 /* O aviso das gravações (a Célia, 13 out 2026: «90% das perguntas são de gravações», feitas pelo
    WhatsApp antes de haver encomenda). O mesmo texto na ficha, junto ao campo, no carrinho, antes do
    botão, e na página da personalização ({{avisoGravacao}}). */
+/* A faixa do Instagram na página inicial. */
+const INSTAGRAM = {
+  titulo: 'Veja mais no nosso Instagram',
+  texto: 'As peças em casa de quem já as tem, o que as famílias nos dizem e o dia a dia da oficina, desde 2021.',
+  botao: 'Seguir no Instagram',
+};
+
 export const AVISO_GRAVACAO = {
   titulo: 'A gravação só começa depois de a encomenda estar paga e confirmada.',
   texto: 'Nessa altura enviamos-lhe a maquete pelo WhatsApp para aprovar. Antes disso, não fazemos maquetes.',
