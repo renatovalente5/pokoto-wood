@@ -246,6 +246,7 @@ function resolverMarcadores(fonte, onde) {
     levantamento: () => esc(site.entrega.levantamento || ''),
     notaVariosArtigos: () => esc(site.entrega.notaVariosArtigos || ''),
     tabelaPortes: () => guardar(tabelaPortes()),
+    avisoGravacao: () => guardar(paginas.avisoGravacao()),
     botoesDesistencia: () => guardar(botoesDesistencia()),
     avisoGarantia: () => guardar(`<figure class="aviso-garantia"><img src="${ctx.asset('legal/aviso-garantia-legal-pt.svg')}" width="600" height="848" alt="${esc(AVISO_ALT)}" loading="lazy"><figcaption><a href="${ctx.asset('legal/aviso-garantia-legal-pt.pdf')}">Descarregar o aviso oficial (PDF)</a> · <a href="https://europa.eu/youreurope/garantias" target="_blank" rel="noopener">europa.eu/youreurope/garantias</a></figcaption></figure>`),
   };

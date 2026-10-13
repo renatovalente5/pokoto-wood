@@ -9,6 +9,10 @@ Sim. Seguem montadas e prontas a usar. A única exceção é o roupeiro, que env
 
 Não. O nome, a frase ou o desenho estão incluídos no preço. [Ver como funciona](/personalizacao/).
 
+## Quando vejo a maquete da gravação?
+
+Depois de a encomenda estar paga e confirmada: enviamos-lhe a maquete pelo WhatsApp e só gravamos depois de a aprovar. Antes disso, não fazemos maquetes.
+
 ## Posso levantar a encomenda?
 
 Pode, na nossa oficina em {{localidade}}, sem custos. Combinamos o dia e a hora pelo WhatsApp.

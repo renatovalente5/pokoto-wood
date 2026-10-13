@@ -112,6 +112,17 @@ export function inicio(ctx) {
   };
 }
 
+/* O aviso das gravações (a Célia, 13 out 2026: «90% das perguntas são de gravações», feitas pelo
+   WhatsApp antes de haver encomenda). O mesmo texto na ficha, junto ao campo, no carrinho, antes do
+   botão, e na página da personalização ({{avisoGravacao}}). */
+export const AVISO_GRAVACAO = {
+  titulo: 'A gravação só começa depois de a encomenda estar paga e confirmada.',
+  texto: 'Nessa altura enviamos-lhe a maquete pelo WhatsApp para aprovar. Antes disso, não fazemos maquetes.',
+};
+export function avisoGravacao({ id = '' } = {}) {
+  return `<p class="aviso-gravacao"${id ? ` id="${id}"` : ''}>${icones.gravar}<span><strong>${esc(AVISO_GRAVACAO.titulo)}</strong> ${esc(AVISO_GRAVACAO.texto)}</span></p>`;
+}
+
 /* A capa de um vídeo na largura mais pequena (a miniatura da galeria da ficha). */
 function capaDoVideo(ctx, nome) {
   const poster = ctx.manifesto.posters[`video-${nome}`];
@@ -243,8 +254,9 @@ export function produto(ctx, p) {
     : `<form class="comprar" data-comprar="${esc(p.slug)}" novalidate>
       ${pers.disponivel ? `<div class="campo">
         <label for="pers-${p.slug}">Personalização${pers.obrigatoria ? '' : ' <span class="campo__opcional">(grátis, opcional)</span>'}</label>
-        <input id="pers-${p.slug}" name="personalizacao" type="text" maxlength="80" autocomplete="off"${pers.obrigatoria ? ' required' : ''} placeholder="${pers.obrigatoria ? 'O nome a gravar' : 'Ex.: o nome ou uma frase'}"${pers.obrigatoria ? '' : ` aria-describedby="pers-ajuda-${p.slug}"`}>
-        ${pers.obrigatoria ? '' : `<p class="campo__ajuda" id="pers-ajuda-${p.slug}">Para um desenho, descreva a ideia: combinamos os pormenores consigo pelo WhatsApp.</p>`}
+        <input id="pers-${p.slug}" name="personalizacao" type="text" maxlength="80" autocomplete="off"${pers.obrigatoria ? ' required' : ''} placeholder="${pers.obrigatoria ? 'O nome a gravar' : 'Ex.: o nome ou uma frase'}" aria-describedby="${pers.obrigatoria ? '' : `pers-ajuda-${p.slug} `}pers-aviso-${p.slug}">
+        ${pers.obrigatoria ? '' : `<p class="campo__ajuda" id="pers-ajuda-${p.slug}">Para um desenho, descreva a ideia em poucas palavras.</p>`}
+        ${avisoGravacao({ id: `pers-aviso-${p.slug}` })}
       </div>` : ''}
       ${complementos.length ? `<fieldset class="complementos"><legend>Complete com</legend>${complementos.map((k) => {
         const kv = precoDe(k.p, ctx.hoje);
@@ -286,7 +298,7 @@ export function produto(ctx, p) {
 
   const acordeoes = `<div class="acordeoes">
     ${medidas ? `<details><summary>${icones.regua}Medidas</summary><div class="acordeoes__corpo">${medidas}<p class="nota">Medidas aproximadas. Cada peça é feita à mão: pode haver pequenas diferenças de uma para outra.</p></div></details>` : ''}
-    ${pers.disponivel ? `<details><summary>${icones.gravar}Personalização</summary><div class="acordeoes__corpo"><p>${pers.obrigatoria ? 'O nome vai gravado na régua.' : 'Pode gravar o nome do seu filho, uma frase ou um desenho. A gravação está incluída no preço.'} Antes de avançar, enviamos a maquete para aprovação.</p><p><a href="${ctx.url('/personalizacao/')}">Como funciona a personalização</a></p></div></details>` : ''}
+    ${pers.disponivel ? `<details><summary>${icones.gravar}Personalização</summary><div class="acordeoes__corpo"><p>${pers.obrigatoria ? 'O nome vai gravado na régua.' : 'Pode gravar o nome do seu filho, uma frase ou um desenho. A gravação está incluída no preço.'} Depois de a encomenda estar paga e confirmada, enviamos a maquete para aprovar, e só depois gravamos.</p><p><a href="${ctx.url('/personalizacao/')}">Como funciona a personalização</a></p></div></details>` : ''}
     ${envio ? `<details><summary>${icones.camiao}Envio e entrega</summary><div class="acordeoes__corpo">${quadroEnvio}<p><a href="${ctx.url('/como-encomendar/')}">Como encomendar e prazos</a></p></div></details>` : ''}
     <details><summary>${icones.escudo}Segurança e fabricante</summary><div class="acordeoes__corpo"><ul><li>Use sempre sob a supervisão de um adulto.</li><li>${/desmontad/i.test(p.montagem || '') ? 'Monte e use' : 'Use'} a peça numa superfície plana e estável${p.categoria === 'torres-de-aprendizagem' ? ', sempre encostada a uma bancada' : ''}.</li></ul><p class="nota">Fabricante: ${fabricante}.</p></div></details>
   </div>`;
@@ -387,12 +399,13 @@ export function carrinho(ctx) {
           <div class="campo"><label for="e-nif">NIF para a fatura <span class="campo__opcional">(opcional)</span></label><input id="e-nif" name="nif" type="text" inputmode="numeric" maxlength="12" autocomplete="off"></div>
           <div class="campo"><label for="e-notas">Observações <span class="campo__opcional">(opcional)</span></label><textarea id="e-notas" name="notas" rows="3" maxlength="500"></textarea></div>
         </fieldset>
+        ${avisoGravacao()}
         <p class="encomenda__aviso">${icones.info}<span>Ao carregar no botão abre-se o WhatsApp com a sua encomenda escrita. A encomenda fica feita quando a confirmarmos consigo por lá, com o total, o pagamento e o prazo. Nada do que escreve aqui fica guardado neste site.</span></p>
         <p class="comprar__erro" data-erro-encomenda role="alert" hidden></p>
         <button class="botao botao--whatsapp botao--largo" type="submit">${icones.whatsapp}<span>Enviar encomenda pelo WhatsApp</span></button>
         <div class="encomenda__enviada" data-enviada hidden>
           <p class="encomenda__enviada-cabeca">${icones.certo}<span>Abrimos o WhatsApp com a sua encomenda escrita<span data-enviada-quando></span>.</span></p>
-          <p>Se ainda não carregou em enviar na conversa, faça-o lá. A encomenda fica feita quando a confirmarmos consigo pelo WhatsApp, com o total, o pagamento e o prazo.</p>
+          <p>Se ainda não carregou em enviar na conversa, faça-o lá. A encomenda fica feita quando a confirmarmos consigo pelo WhatsApp, com o total, o pagamento e o prazo. Se pediu uma gravação, enviamos a maquete para aprovar depois do pagamento.</p>
           <button class="botao botao--whatsapp botao--largo" type="button" data-continuar>${icones.whatsapp}<span>Continuar no WhatsApp</span></button>
           <button class="botao botao--contorno botao--largo" type="button" data-copiar>${icones.copiar}<span>Copiar a mensagem</span></button>
           <p class="encomenda__enviada-mais"><button class="botao botao--texto" type="button" data-alterar>Alterar a encomenda</button><button class="botao botao--texto" type="button" data-esvaziar>Fazer outra encomenda</button></p>

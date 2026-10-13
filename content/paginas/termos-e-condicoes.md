@@ -1,6 +1,6 @@
 titulo: Termos e condições
 descricao: As condições das encomendas feitas na Pokóto Wood: quem vende, preços, portes, como se encomenda pelo WhatsApp, prazos, desistência e garantia.
-atualizado: 2026-10-07
+atualizado: 2026-10-13
 ---
 ## Quem vende
 
@@ -53,7 +53,7 @@ O risco de perda ou dano da peça passa para si quando a recebe.
 
 ## Personalização
 
-A personalização (o nome, uma frase ou um desenho) está incluída no preço. Gravamos o que nos indicar e, antes de gravar, enviamos a maquete para aprovação. Verifique a ortografia com cuidado: depois de gravada, a madeira não se corrige.
+A personalização (o nome, uma frase ou um desenho) está incluída no preço. Gravamos o que nos indicar: depois de a encomenda estar paga e confirmada, enviamos a maquete para aprovação, e só gravamos depois de a aprovar. Verifique a ortografia com cuidado: depois de gravada, a madeira não se corrige.
 
 ## Direito de livre resolução (desistir da compra)
 
