@@ -59,10 +59,6 @@
     "alt": "Duas réguas de crescimento com os nomes Simão e Carlota, pousadas no chão",
     "foco": "50% 45%"
   },
-  "oficina-pecas-personalizadas": {
-    "alt": "Torres de aprendizagem personalizadas com nomes e desenhos, alinhadas na oficina da Pokóto Wood, prontas a seguir para as famílias",
-    "foco": "50% 60%"
-  },
   "arco-pikler-bbc0cfd2": {
     "alt": "Arco de Pikler",
     "foco": "50% 50%"
@@ -105,6 +101,10 @@
   },
   "torre-mesa-montessori-1fbbca4e": {
     "alt": "Torre/Mesa Aprendizagem Montessori",
+    "foco": "50% 50%"
+  },
+  "inicio-557c5d70": {
+    "alt": "Fotografia da capa da página inicial",
     "foco": "50% 50%"
   }
 }
