@@ -305,3 +305,8 @@ partes do site». Feito:
     miniaturas mostram o centro da fotografia (mostravam o cimo), o exemplo da personalização cabe
     no campo («Ex.: o nome ou uma frase») e o botão «Adicionar ao carrinho» cabe num ecrã de 320 px;
   - na gaveta do carrinho, a lista da entrega com os nomes curtos e a seta desenhada.
+- **O vídeo do artigo na galeria** (Renato: «em vez de ficar perdido na página»): é a última
+  «fotografia» da galeria da ficha, com miniatura própria (a capa com o sinal de tocar), e enche a
+  caixa 4:5. Começa sozinho, sem som, só quando se chega a ele, e pára ao voltar às fotografias;
+  com «reduzir movimento» fica na capa. No telemóvel as miniaturas encolhem até 48 px para caberem
+  todas na linha, o vídeo incluído.

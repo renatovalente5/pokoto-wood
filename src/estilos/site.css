@@ -475,6 +475,19 @@ html:has(dialog[open]) { overflow: hidden; }
 .galeria__miniaturas button { position: relative; width: 72px; height: 72px; padding: 0; border: 2px solid transparent; border-radius: 12px; overflow: hidden; background: var(--creme); flex: none; }
 .galeria__miniaturas button[aria-current="true"] { border-color: var(--tinta); }
 .galeria__miniaturas picture { position: absolute; inset: 0; }
+/* O vídeo do artigo, última «fotografia» da galeria: enche a caixa 4:5 (o vídeo é 9:16; perde só
+   um pouco da parede e do chão) e a miniatura é a capa com o sinal de tocar. */
+.galeria__foto--video .video { position: absolute; inset: 0; border-radius: 0; box-shadow: none; }
+.galeria__foto--video .video video { width: 100%; height: 100%; aspect-ratio: auto; object-fit: cover; }
+.galeria__mini-video img { position: absolute; inset: 0; }
+.galeria__tocar { position: absolute; inset: 0; margin: auto; width: 32px; height: 32px; border-radius: 50%; background: rgba(58, 42, 29, .62); color: var(--branco); display: grid; place-items: center; }
+.galeria__tocar .icone { width: 16px; height: 16px; }
+/* No telemóvel as miniaturas encolhem até 48 px para caberem todas na linha, o vídeo incluído (a
+   72 px, a quinta, a do vídeo, ficava para lá da borda); com mais do que isso, a tira desliza. */
+@media (max-width: 999px) {
+  .galeria__miniaturas li { flex: 1 1 0; min-width: 48px; max-width: 72px; }
+  .galeria__miniaturas button { width: 100%; height: auto; aspect-ratio: 1; }
+}
 .galeria__miniaturas img { width: 100%; height: 100%; object-fit: cover; }
 @media (min-width: 1000px) {
   .galeria { grid-template-columns: 76px 1fr; align-items: start; }
@@ -538,7 +551,6 @@ html:has(dialog[open]) { overflow: hidden; }
 .medidas th, .medidas td { text-align: left; padding: 8px 10px; border-bottom: 1px solid var(--linha); }
 .medidas thead th { font-size: .82rem; text-transform: uppercase; letter-spacing: .04em; color: var(--tinta-2); }
 .medidas tbody th { font-weight: 500; }
-.produto__video { max-width: min(340px, 78vw); margin: clamp(48px, 7vw, 72px) auto 0; }
 .relacionados { margin-top: clamp(56px, 8vw, 88px); }
 .relacionados h2 { margin-bottom: 24px; }
 

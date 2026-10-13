@@ -112,6 +112,13 @@ export function inicio(ctx) {
   };
 }
 
+/* A capa de um vídeo na largura mais pequena (a miniatura da galeria da ficha). */
+function capaDoVideo(ctx, nome) {
+  const poster = ctx.manifesto.posters[`video-${nome}`];
+  const w = poster.larguras[0];
+  return `<img src="${ctx.asset(`img/video-${nome}-${poster.resumo}-${w}.webp`)}" width="${w}" height="${Math.round((w * poster.altura) / poster.largura)}" alt="" loading="lazy" decoding="async">`;
+}
+
 export function video(ctx, nome) {
   const poster = ctx.manifesto.posters[`video-${nome}`];
   if (!poster) throw new Error(`vídeo «${nome}» sem capa em media/video/${nome}.jpg`);
@@ -201,11 +208,16 @@ export function produto(ctx, p) {
   const v = precoDe(p, ctx.hoje);
   const pct = desconto(ctx, p);
 
+  // O vídeo do artigo vem a seguir às fotografias, na mesma galeria (Renato, 13 out 2026: solto
+  // por baixo da ficha, ficava perdido na página). Começa sozinho, sem som, quando se chega a ele.
+  const comVideo = Boolean(p.video);
+  const itens = p.fotos.length + (comVideo ? 1 : 0);
   const galeria = `<div class="galeria" data-galeria>
-    <div class="galeria__pista" tabindex="0" role="region" aria-label="Fotografias de ${esc(p.nome)}">
+    <div class="galeria__pista" tabindex="0" role="region" aria-label="${comVideo ? 'Fotografias e vídeo' : 'Fotografias'} de ${esc(p.nome)}">
       ${p.fotos.map((f, i) => `<figure class="galeria__foto" id="foto-${i + 1}">${imagem(ctx, f, { tamanhos: '(min-width: 1000px) 46vw, 100vw', prioridade: i === 0 })}</figure>`).join('\n')}
+      ${comVideo ? `<figure class="galeria__foto galeria__foto--video" id="video">${video(ctx, p.video)}</figure>` : ''}
     </div>
-    ${p.fotos.length > 1 ? `<ul class="galeria__miniaturas">${p.fotos.map((f, i) => `<li><button type="button" data-foto="${i}"${i === 0 ? ' aria-current="true"' : ''}>${imagem(ctx, f, { tamanhos: '80px', alt: '' })}<span class="visualmente-escondido">Fotografia ${i + 1} de ${p.fotos.length}</span></button></li>`).join('')}</ul>` : ''}
+    ${itens > 1 ? `<ul class="galeria__miniaturas">${p.fotos.map((f, i) => `<li><button type="button" data-foto="${i}"${i === 0 ? ' aria-current="true"' : ''}>${imagem(ctx, f, { tamanhos: '80px', alt: '' })}<span class="visualmente-escondido">Fotografia ${i + 1} de ${p.fotos.length}</span></button></li>`).join('')}${comVideo ? `<li><button class="galeria__mini-video" type="button" data-foto="${p.fotos.length}">${capaDoVideo(ctx, p.video)}<span class="galeria__tocar">${icones.tocar}</span><span class="visualmente-escondido">Vídeo</span></button></li>` : ''}</ul>` : ''}
   </div>`;
 
   const selos = [
@@ -292,7 +304,6 @@ export function produto(ctx, p) {
       ${acordeoes}
     </div>
   </div>
-  ${p.video ? `<section class="produto__video" aria-label="Vídeo">${video(ctx, p.video)}</section>` : ''}
   <section class="relacionados" aria-labelledby="rel-titulo">
     <h2 id="rel-titulo" class="titulo-seccao">Os pequenos também adoram</h2>
     <div class="grelha">${relacionados.map((x) => cartaoProduto(ctx, x)).join('\n')}</div>
