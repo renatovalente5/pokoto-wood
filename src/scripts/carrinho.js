@@ -182,7 +182,7 @@
       <ul class="linhas">${c.detalhe.map((d) => linhaHtml(d, cat)).join('')}</ul>
       <div class="gaveta__zonas">
         <label for="gaveta-zona">Entrega</label>
-        <select id="gaveta-zona" data-zona>${cat.zonas.map((z) => `<option value="${esc(z.id)}"${z.id === zona ? ' selected' : ''}>${esc(z.nome)}</option>`).join('')}</select>
+        <select id="gaveta-zona" data-zona>${cat.zonas.map((z) => `<option value="${esc(z.id)}"${z.id === zona ? ' selected' : ''}>${esc(z.curto)}</option>`).join('')}</select>
       </div>
       <div class="totais" aria-live="polite">${totaisHtml(c, cat, zona)}</div>
       ${enviada() ? `<p class="gaveta__enviada">${ICONES.certo}<span>Já abriu o WhatsApp com esta encomenda.</span></p>` : ''}

@@ -227,7 +227,7 @@ export function produto(ctx, p) {
     : `<form class="comprar" data-comprar="${esc(p.slug)}" novalidate>
       ${pers.disponivel ? `<div class="campo">
         <label for="pers-${p.slug}">Personalização${pers.obrigatoria ? '' : ' <span class="campo__opcional">(grátis, opcional)</span>'}</label>
-        <input id="pers-${p.slug}" name="personalizacao" type="text" maxlength="80" autocomplete="off"${pers.obrigatoria ? ' required' : ''} placeholder="${pers.obrigatoria ? 'O nome a gravar' : 'Ex.: o nome, uma frase ou a ideia de um desenho'}"${pers.obrigatoria ? '' : ` aria-describedby="pers-ajuda-${p.slug}"`}>
+        <input id="pers-${p.slug}" name="personalizacao" type="text" maxlength="80" autocomplete="off"${pers.obrigatoria ? ' required' : ''} placeholder="${pers.obrigatoria ? 'O nome a gravar' : 'Ex.: o nome ou uma frase'}"${pers.obrigatoria ? '' : ` aria-describedby="pers-ajuda-${p.slug}"`}>
         ${pers.obrigatoria ? '' : `<p class="campo__ajuda" id="pers-ajuda-${p.slug}">Para um desenho, descreva a ideia: combinamos os pormenores consigo pelo WhatsApp.</p>`}
       </div>` : ''}
       ${complementos.length ? `<fieldset class="complementos"><legend>Complete com</legend>${complementos.map((k) => {
@@ -402,7 +402,7 @@ export function texto(ctx, pag) {
     ${pag.html}
   </article>
 </div>`;
-  return { caminho: pag.caminho, titulo: pag.tituloSeo || pag.titulo, descricao: pag.descricao, jsonld: [m.ld], conteudo };
+  return { caminho: pag.caminho, titulo: pag.tituloSeo || pag.titulo, descricao: pag.descricao, indexar: pag.indexar, jsonld: [m.ld], conteudo };
 }
 
 export function contactos(ctx) {

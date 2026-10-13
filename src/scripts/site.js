@@ -221,6 +221,22 @@
     desenhar();
   });
 
+  // ---------------------------------------------------------------- loja: a categoria aberta à vista
+  // No telemóvel a fila das categorias desliza, e a categoria aberta (a quinta, «Decoração») ficava
+  // para lá da borda: não se via qual estava escolhida. Centra-se na fila, sem mexer na página; e
+  // outra vez quando as letras chegam, porque mudam a largura dos botões.
+  const fila = $('.chips ul');
+  const aberta = fila && $('[aria-current]', fila);
+  if (aberta) {
+    const centrar = () => {
+      if (fila.scrollWidth <= fila.clientWidth) return;
+      const li = aberta.parentElement;
+      fila.scrollLeft = li.offsetLeft - (fila.clientWidth - li.offsetWidth) / 2;
+    };
+    centrar();
+    if (document.fonts) document.fonts.ready.then(centrar);
+  }
+
   // ---------------------------------------------------------------- galeria da ficha
   $$('[data-galeria]').forEach((g) => {
     const pista = $('.galeria__pista', g);

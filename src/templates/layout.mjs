@@ -187,7 +187,7 @@ function menuMovel(ctx) {
 </dialog>`;
 }
 
-export function pagina(ctx, { titulo, descricao, caminho, conteudo, partilha, tipo = 'website', jsonld = [], classe = '' }) {
+export function pagina(ctx, { titulo, descricao, caminho, conteudo, partilha, tipo = 'website', jsonld = [], classe = '', indexar = true }) {
   const tituloCompleto = titulo.includes(ctx.site.marca) ? titulo : `${titulo} | ${ctx.site.marca}`;
   const cartao = partilha || ctx.manifesto.partilha._site;
   const l = ctx.manifesto.logo;
@@ -200,7 +200,7 @@ export function pagina(ctx, { titulo, descricao, caminho, conteudo, partilha, ti
 <title>${esc(tituloCompleto)}</title>
 <meta name="description" content="${esc(descricao)}">
 <link rel="canonical" href="${ctx.absoluto(caminho)}">
-${ctx.producao ? '' : '<meta name="robots" content="noindex, nofollow">\n'}<meta property="og:type" content="${tipo}">
+${!ctx.producao ? '<meta name="robots" content="noindex, nofollow">\n' : indexar === false ? '<meta name="robots" content="noindex">\n' : ''}<meta property="og:type" content="${tipo}">
 <meta property="og:site_name" content="${esc(ctx.site.marca)}">
 <meta property="og:locale" content="pt_PT">
 <meta property="og:title" content="${esc(tituloCompleto)}">

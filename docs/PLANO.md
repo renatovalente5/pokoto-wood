@@ -279,3 +279,29 @@ partes do site». Feito:
   do «Sobre nós». O último rastreio do Google era de 16 mai 2026, do domínio antes de ser da Pokóto
   (bloqueado pelo robots.txt de então). Para o Bing e os outros, o IndexNow: a chave está em
   `scripts/build.mjs` e o ficheiro dela na raiz (só em produção); as 28 páginas foram enviadas (202).
+
+## 11. O Google e o telemóvel (Renato, 13 out 2026)
+
+- **A marca nas pesquisas:** «Pokoto Wood» e «pokotowood» como `alternateName` (dados estruturados
+  da loja e do site) e a marca no `h1` da página inicial (escondida, antes de «Pequenos passos»).
+- **O título da página inicial** (pedido do Renato): «Pokóto Wood — Artigos Montessori & Pikler em
+  madeira» (era «… torres de aprendizagem e Pikler em madeira»). A Célia pode mudá-lo no painel
+  (Página inicial › Google).
+- **O «Sobre nós» fora do Google** (aparecia nas pesquisas da marca em vez da página inicial):
+  `indexar: não` no cabeçalho de `content/paginas/sobre-nos.md` põe `<meta name="robots"
+  content="noindex">` (só em produção) e tira a página do sitemap. O robots.txt continua a deixá-la
+  ler: é assim que o Google vê o `noindex`. A página continua no menu e no rodapé.
+- **Formatação no telemóvel** (a captura do Renato: o «11» de «Todos» cortado). Uma passagem por
+  todas as páginas em larguras de iPhone (320, 375, 390, 430), no Safari e no Chrome, à procura de
+  conteúdo maior do que a caixa, coisas fora do ecrã e texto cortado:
+  - os botões das categorias não encolhem (no Safari o mínimo de um inline-flex com `gap` conta um
+    espaço a menos: o número saía 9 px do botão); a fila desliza de ponta a ponta do ecrã e a
+    categoria aberta aparece centrada;
+  - o quadro dos portes em «Como encomendar» deixou de deslizar para o lado (escondia a Madeira e
+    Espanha): no telemóvel cada artigo ocupa a linha e os portes ficam por baixo, alinhados com as
+    zonas; os papéis ARIA mantêm-no uma tabela para os leitores de ecrã;
+  - a estrela «Feito à mão» da história cortava o «F» e o «o» (agora em duas linhas);
+  - na ficha: a fotografia ocupa a caixa 4:5 inteira (passava 29 px e era cortada em baixo), as
+    miniaturas mostram o centro da fotografia (mostravam o cimo), o exemplo da personalização cabe
+    no campo («Ex.: o nome ou uma frase») e o botão «Adicionar ao carrinho» cabe num ecrã de 320 px;
+  - na gaveta do carrinho, a lista da entrega com os nomes curtos e a seta desenhada.

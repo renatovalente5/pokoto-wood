@@ -353,7 +353,7 @@ html:has(dialog[open]) { overflow: hidden; }
 .historia__titulo { font-size: clamp(2rem, 4.6vw, 3.1rem); text-transform: uppercase; font-weight: 500; }
 .historia__texto { color: var(--tinta-2); font-size: 1.05rem; margin-bottom: 1.8em !important; }
 .bolha { display: inline-grid; place-items: center; font-family: var(--letra-titulos); font-size: .9rem; text-align: center; line-height: 1.1; user-select: none; margin: 0 6px 22px; color: var(--tinta); }
-.bolha--1 { width: 84px; height: 84px; background: var(--terracota-claro); clip-path: polygon(50% 0, 61% 18%, 82% 10%, 80% 32%, 100% 40%, 85% 57%, 96% 77%, 74% 79%, 68% 100%, 50% 87%, 32% 100%, 26% 79%, 4% 77%, 15% 57%, 0 40%, 20% 32%, 18% 10%, 39% 18%); transform: rotate(-12deg); }
+.bolha--1 { width: 84px; height: 84px; padding-inline: 1em; background: var(--terracota-claro); clip-path: polygon(50% 0, 61% 18%, 82% 10%, 80% 32%, 100% 40%, 85% 57%, 96% 77%, 74% 79%, 68% 100%, 50% 87%, 32% 100%, 26% 79%, 4% 77%, 15% 57%, 0 40%, 20% 32%, 18% 10%, 39% 18%); transform: rotate(-12deg); }
 .bolha--2 { width: 84px; height: 84px; border-radius: 50%; background: var(--salva); transform: rotate(-14deg); }
 .bolha--3 { padding: 10px 20px; border-radius: 999px; background: var(--mel); transform: rotate(14deg); }
 @media (min-width: 900px) {
@@ -367,7 +367,7 @@ html:has(dialog[open]) { overflow: hidden; }
 .vantagens { margin-top: clamp(64px, 9vw, 104px); background: var(--creme); padding: clamp(32px, 5vw, 48px) var(--margem); }
 .vantagens ul { list-style: none; max-width: var(--largura); margin-inline: auto; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 28px 18px; text-align: center; }
 .vantagens svg { margin: 0 auto 10px; width: 60px; height: 60px; }
-.vantagens h3 { font-size: 1.15rem; margin-bottom: .3em; }
+.vantagens h3 { font-size: min(1.15rem, 5.2vw); margin-bottom: .3em; }
 .vantagens p { font-size: .92rem; color: var(--tinta-2); margin: 0 auto; max-width: 26ch; }
 @media (min-width: 900px) { .vantagens ul { grid-template-columns: repeat(4, minmax(0, 1fr)); } }
 
@@ -440,8 +440,16 @@ html:has(dialog[open]) { overflow: hidden; }
 .loja__texto ul { padding-left: 1.2em; margin: 0 0 .9em; }
 .loja__texto li { margin-bottom: .2em; }
 .loja__texto strong { color: var(--tinta); }
-.chips ul { list-style: none; display: flex; gap: 10px; overflow-x: auto; padding: 4px 2px 12px; scrollbar-width: none; }
+/* A fila das categorias desliza de ponta a ponta do ecrã (sai da margem da página): no telemóvel o
+   corte fica na borda do ecrã, e não a meio da margem, a parecer um erro. O espaço do fim é um
+   ::after porque o padding do fim de uma fila que desliza não conta em todos os browsers. */
+.chips ul { list-style: none; display: flex; gap: 10px; overflow-x: auto; margin-inline: calc(-1 * var(--margem)); padding: 4px 0 12px var(--margem); scroll-padding-inline: var(--margem); scrollbar-width: none; }
 .chips ul::-webkit-scrollbar { display: none; }
+.chips ul::after { content: ''; flex: none; width: calc(var(--margem) - 10px); }
+/* Os botões não encolhem: quem não cabe fica para lá da borda, à espera de deslizar. No Safari
+   o mínimo de um inline-flex com «gap» conta um espaço a menos, e o número (o «11» de «Todos»)
+   saía 9 px para fora do botão. */
+.chips li { flex: none; }
 .chip { display: inline-flex; align-items: center; gap: 10px; white-space: nowrap; padding: 10px 16px 10px 12px; border-radius: 16px; border: 1px solid var(--linha); background: var(--papel); text-decoration: none; color: var(--tinta); font-size: .92rem; text-transform: uppercase; letter-spacing: .03em; min-height: 52px; }
 .chip .icone { width: 26px; height: 26px; color: var(--castanho); }
 .chip__n { font-size: .78rem; background: var(--creme); border-radius: 999px; padding: 1px 8px; color: var(--tinta-2); }
@@ -458,12 +466,15 @@ html:has(dialog[open]) { overflow: hidden; }
 .galeria { display: grid; gap: 12px; }
 .galeria__pista { display: grid; grid-auto-flow: column; grid-auto-columns: 100%; overflow-x: auto; scroll-snap-type: x mandatory; scrollbar-width: none; border-radius: var(--raio-grande); background: var(--creme); }
 .galeria__pista::-webkit-scrollbar { display: none; }
-.galeria__foto { margin: 0; scroll-snap-align: center; aspect-ratio: 4 / 5; display: grid; place-items: center; background: var(--creme); }
-.galeria__foto picture { width: 100%; height: 100%; }
+.galeria__foto { position: relative; margin: 0; scroll-snap-align: center; aspect-ratio: 4 / 5; display: grid; place-items: center; background: var(--creme); }
+/* A altura de 100% não se resolve numa grelha de linha automática: a fotografia (3:4) passava
+   29 px da caixa (4:5) e era cortada em baixo. Posta por cima da caixa inteira, cabe toda. */
+.galeria__foto picture { position: absolute; inset: 0; }
 .galeria__foto img { width: 100%; height: 100%; object-fit: contain; }
 .galeria__miniaturas { list-style: none; display: flex; gap: 8px; overflow-x: auto; padding: 2px; scrollbar-width: none; }
-.galeria__miniaturas button { width: 72px; height: 72px; padding: 0; border: 2px solid transparent; border-radius: 12px; overflow: hidden; background: var(--creme); flex: none; }
+.galeria__miniaturas button { position: relative; width: 72px; height: 72px; padding: 0; border: 2px solid transparent; border-radius: 12px; overflow: hidden; background: var(--creme); flex: none; }
 .galeria__miniaturas button[aria-current="true"] { border-color: var(--tinta); }
+.galeria__miniaturas picture { position: absolute; inset: 0; }
 .galeria__miniaturas img { width: 100%; height: 100%; object-fit: cover; }
 @media (min-width: 1000px) {
   .galeria { grid-template-columns: 76px 1fr; align-items: start; }
@@ -505,6 +516,7 @@ html:has(dialog[open]) { overflow: hidden; }
 .quantidade input { width: 36px; border: 0; text-align: center; font: inherit; font-weight: 700; background: none; color: var(--tinta); -moz-appearance: textfield; appearance: textfield; }
 .quantidade input::-webkit-outer-spin-button, .quantidade input::-webkit-inner-spin-button { -webkit-appearance: none; margin: 0; }
 .comprar .botao--mel { min-height: 52px; }
+@media (max-width: 380px) { .comprar__linha .botao { padding-inline: 14px; gap: 8px; } }
 .comprar__total { margin: 0; color: var(--tinta-2); font-size: .95rem; min-height: 1.4em; }
 .comprar__erro { margin: 0; color: var(--terracota); font-weight: 500; }
 .so-complemento { background: var(--salva-clara); border-radius: var(--raio); padding: 20px; margin: 20px 0; }
@@ -551,7 +563,8 @@ html:has(dialog[open]) { overflow: hidden; }
 .totais__nota { font-size: .85rem; color: var(--tinta-2); display: block !important; }
 .gaveta__zonas { margin-top: 18px; }
 .gaveta__zonas label { display: block; font-weight: 500; margin-bottom: 6px; }
-.gaveta__zonas select { width: 100%; font: inherit; color: var(--tinta); padding: 12px 14px; min-height: 48px; border-radius: 14px; border: 1.5px solid var(--linha-campo); background: var(--branco); }
+.gaveta__zonas select { width: 100%; font: inherit; color: var(--tinta); padding: 12px 42px 12px 14px; min-height: 48px; border-radius: 14px; border: 1.5px solid var(--linha-campo); background: var(--branco) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%233A2A1D' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E") no-repeat right 14px center / 18px 18px; -webkit-appearance: none; appearance: none; text-overflow: ellipsis; }
+.gaveta__zonas select:focus-visible { outline: 3px solid var(--salva-escura); outline-offset: 1px; border-color: var(--salva-escura); }
 .gaveta__acoes { display: grid; gap: 10px; margin-top: auto; padding-top: 16px; }
 
 .carrinho-pagina__grelha { display: grid; gap: 28px; margin-top: 8px; }
@@ -599,6 +612,22 @@ html:has(dialog[open]) { overflow: hidden; }
 .quadro thead th { background: var(--creme); font-size: .82rem; text-transform: uppercase; letter-spacing: .04em; }
 .quadro tbody th { font-weight: 500; }
 .quadro__sub th { font-weight: 400; padding-left: 28px; color: var(--tinta-2); }
+/* Os portes no telemóvel: o quadro deslizava para o lado e cortava as colunas da Madeira e de
+   Espanha. Aqui cada artigo ocupa a linha toda e os portes ficam por baixo, alinhados com as
+   zonas do cabeçalho. Os papéis (role) no HTML mantêm-no uma tabela para os leitores de ecrã,
+   que o Safari esquece quando o display muda. */
+@media (max-width: 599px) {
+  .quadro--portes { overflow: visible; }
+  .quadro--portes table, .quadro--portes thead, .quadro--portes tbody { display: block; min-width: 0; }
+  .quadro--portes tr { display: flex; flex-wrap: wrap; border-bottom: 1px solid var(--linha); }
+  .quadro--portes tbody tr:last-child { border-bottom: 0; }
+  .quadro--portes th, .quadro--portes td { flex: 1 1 0; min-width: 0; padding-inline: 10px; border-bottom: 0; }
+  .quadro--portes thead th { font-size: .66rem; letter-spacing: .02em; line-height: 1.3; }
+  .quadro--portes thead th:first-child { position: absolute; width: 1px; height: 1px; padding: 0; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
+  .quadro--portes tbody th { flex-basis: 100%; padding-bottom: 0; }
+  .quadro--portes tbody td { padding-top: 4px; }
+  .quadro--portes .quadro__sub th { padding-left: 22px; }
+}
 .quadro tr:last-child th, .quadro tr:last-child td { border-bottom: 0; }
 .aviso-garantia { margin: 1.4em 0; }
 .aviso-garantia img { width: 100%; max-width: 600px; height: auto; border-radius: 8px; box-shadow: var(--sombra); }

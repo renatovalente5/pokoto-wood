@@ -196,14 +196,14 @@ function tabelaPortes() {
   for (const p of produtos) {
     if (p.vendaIsolada === false) continue;
     const celula = (v) => (Number.isFinite(v) ? euros(v) : 'a confirmar');
-    linhas.push(`<tr><th scope="row"><a href="${ctx.url(`/produtos/${p.slug}/`)}">${esc(p.nome)}</a></th>${zonas.map((z) => `<td>${celula(p.envio?.[z.id])}</td>`).join('')}</tr>`);
+    linhas.push(`<tr role="row"><th scope="row" role="rowheader"><a href="${ctx.url(`/produtos/${p.slug}/`)}">${esc(p.nome)}</a></th>${zonas.map((z) => `<td role="cell">${celula(p.envio?.[z.id])}</td>`).join('')}</tr>`);
     for (const k of p.complementos || []) {
       const c = produtos.find((x) => x.slug === k.produto);
       if (!c) continue;
-      linhas.push(`<tr class="quadro__sub"><th scope="row">${esc(p.nomeCurto || p.nome)} + ${esc((c.nomeCurto || c.nome).toLowerCase())}</th>${zonas.map((z) => `<td>${Number.isFinite(p.envio?.[z.id]) && Number.isFinite(k.envioExtra?.[z.id]) ? euros(p.envio[z.id] + k.envioExtra[z.id]) : 'a confirmar'}</td>`).join('')}</tr>`);
+      linhas.push(`<tr class="quadro__sub" role="row"><th scope="row" role="rowheader">${esc(p.nomeCurto || p.nome)} + ${esc((c.nomeCurto || c.nome).toLowerCase())}</th>${zonas.map((z) => `<td role="cell">${Number.isFinite(p.envio?.[z.id]) && Number.isFinite(k.envioExtra?.[z.id]) ? euros(p.envio[z.id] + k.envioExtra[z.id]) : 'a confirmar'}</td>`).join('')}</tr>`);
     }
   }
-  return `<div class="quadro"><table><thead><tr><th scope="col">Artigo</th>${zonas.map((z) => `<th scope="col">${esc(z.curto)}</th>`).join('')}</tr></thead><tbody>${linhas.join('')}</tbody></table></div><p class="nota">O levantamento na nossa oficina, em ${esc(site.local.localidade)}, não tem custos.</p>`;
+  return `<div class="quadro quadro--portes"><table role="table"><thead role="rowgroup"><tr role="row"><th scope="col" role="columnheader">Artigo</th>${zonas.map((z) => `<th scope="col" role="columnheader">${esc(z.curto)}</th>`).join('')}</tr></thead><tbody role="rowgroup">${linhas.join('')}</tbody></table></div><p class="nota">O levantamento na nossa oficina, em ${esc(site.local.localidade)}, não tem custos.</p>`;
 }
 
 function identificacao() {
@@ -261,7 +261,9 @@ function paginaMarkdown(ficheiro) {
   html = html.replace(/\u0000(\d+)\u0000/g, (_, i) => tokens[Number(i)]);
   const slug = ficheiro.replace(/\.md$/, '');
   if (meta.foto && !fotoExiste(meta.foto)) erros.push(`Páginas › ${ficheiro}: a fotografia «${meta.foto}» não existe`);
-  return { caminho: `/${slug}/`, titulo: meta.titulo, tituloSeo: meta.tituloSeo, descricao: meta.descricao, atualizado: meta.atualizado, foto: meta.foto, html };
+  // «indexar: não» no cabeçalho tira a página do Google (noindex e fora do sitemap); continua no site
+  const indexar = !/^(n[ãa]o|false)$/i.test(meta.indexar || '');
+  return { caminho: `/${slug}/`, titulo: meta.titulo, tituloSeo: meta.tituloSeo, descricao: meta.descricao, atualizado: meta.atualizado, foto: meta.foto, indexar, html };
 }
 
 // ---------------------------------------------------------------- páginas
@@ -285,7 +287,7 @@ for (const s of saidas) {
 }
 
 // ---------------------------------------------------------------- robots, sitemap, _headers
-const indexaveis = saidas.filter((s) => !['/404.html', '/carrinho/'].includes(s.caminho));
+const indexaveis = saidas.filter((s) => !['/404.html', '/carrinho/'].includes(s.caminho) && s.indexar !== false);
 let lastmod = {};
 try {
   // a data da última alteração de cada página sai do git (o conteúdo de que ela é feita)
