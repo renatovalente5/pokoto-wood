@@ -148,8 +148,9 @@ const INSTAGRAM = {
 };
 
 export const AVISO_GRAVACAO = {
-  titulo: 'Maquete só depois do pagamento.',
-  texto: 'Com a encomenda paga e confirmada, enviamos-lhe a maquete da gravação pelo WhatsApp. Só gravamos depois de a aprovar.',
+  // o texto da Célia (14 out 2026): a gravação é sempre a última operação, por isso a maquete vai uns dias antes do envio
+  titulo: 'Só tratamos da personalização depois da encomenda confirmada.',
+  texto: 'A maquete é enviada para aprovação uns dias antes da data de envio, porque é sempre a última operação.',
 };
 export function avisoGravacao(ctx, { id = '', exemplos = true } = {}) {
   const ver = exemplos ? ` <a href="${ctx.url('/personalizacao/')}">Ver exemplos de gravações</a>` : '';
@@ -374,7 +375,7 @@ export function produto(ctx, p) {
 
   const acordeoes = `<div class="acordeoes">
     ${medidas ? `<details><summary>${icones.regua}Medidas</summary><div class="acordeoes__corpo">${medidas}<p class="nota">Medidas aproximadas. Cada peça é feita à mão: pode haver pequenas diferenças de uma para outra.</p></div></details>` : ''}
-    ${pers.disponivel ? `<details><summary>${icones.gravar}Personalização</summary><div class="acordeoes__corpo"><p>${pers.obrigatoria ? 'O nome vai gravado na régua.' : 'Pode gravar o nome do seu filho, uma frase ou um desenho. A gravação está incluída no preço.'} Depois de a encomenda estar paga e confirmada, enviamos a maquete para aprovar, e só depois gravamos.</p><p><a href="${ctx.url('/personalizacao/')}">Como funciona a personalização</a></p></div></details>` : ''}
+    ${pers.disponivel ? `<details><summary>${icones.gravar}Personalização</summary><div class="acordeoes__corpo"><p>${pers.obrigatoria ? 'O nome vai gravado na régua.' : 'Pode gravar o nome do seu filho, uma frase ou um desenho. A gravação está incluída no preço.'} Só tratamos da personalização depois da encomenda confirmada; a maquete vai para aprovação uns dias antes do envio, e só depois gravamos.</p><p><a href="${ctx.url('/personalizacao/')}">Como funciona a personalização</a></p></div></details>` : ''}
     ${envio ? `<details><summary>${icones.camiao}Envio e entrega</summary><div class="acordeoes__corpo">${quadroEnvio}<p><a href="${ctx.url('/como-encomendar/')}">Como encomendar e prazos</a></p></div></details>` : ''}
     <details><summary>${icones.escudo}Segurança e fabricante</summary><div class="acordeoes__corpo"><ul><li>Use sempre sob a supervisão de um adulto.</li><li>${/desmontad/i.test(p.montagem || '') ? 'Monte e use' : 'Use'} a peça numa superfície plana e estável${p.categoria === 'torres-de-aprendizagem' ? ', sempre encostada a uma bancada' : ''}.</li></ul><p class="nota">Fabricante: ${fabricante}.</p></div></details>
   </div>`;
@@ -495,7 +496,7 @@ export function carrinho(ctx) {
           <ol>
             <li>Confirmamos consigo, pelo WhatsApp, o total e o prazo: só aí a encomenda fica feita.</li>
             <li>Enviamos-lhe os dados para o pagamento.</li>
-            <li data-se-gravacao hidden><strong>Enviamos a maquete da gravação: só gravamos depois do seu «sim».</strong></li>
+            <li data-se-gravacao hidden><strong>Uns dias antes do envio, mandamos a maquete da gravação para aprovar: só gravamos depois do seu «sim».</strong></li>
           </ol>
         </div>
         <p class="encomenda__aviso">${icones.info}<span>Ao carregar no botão abre-se o WhatsApp com a sua encomenda escrita. Nada do que escreve aqui fica guardado neste site.</span></p>
@@ -503,7 +504,7 @@ export function carrinho(ctx) {
         <button class="botao botao--whatsapp botao--largo" type="submit">${icones.whatsapp}<span>Enviar encomenda pelo WhatsApp</span></button>
         <div class="encomenda__enviada" data-enviada hidden>
           <p class="encomenda__enviada-cabeca">${icones.certo}<span>Abrimos o WhatsApp com a sua encomenda escrita<span data-enviada-quando></span>.</span></p>
-          <p>Se ainda não carregou em enviar na conversa, faça-o lá. A encomenda fica feita quando a confirmarmos consigo pelo WhatsApp, com o total, o pagamento e o prazo. Se pediu uma gravação, enviamos a maquete para aprovar depois do pagamento.</p>
+          <p>Se ainda não carregou em enviar na conversa, faça-o lá. A encomenda fica feita quando a confirmarmos consigo pelo WhatsApp, com o total, o pagamento e o prazo. Se pediu uma gravação, enviamos a maquete para aprovar uns dias antes do envio.</p>
           ${ctx.site.contactos.instagram ? `<p class="encomenda__instagram">${icones.instagram}<span>Enquanto espera, veja as peças em casa das famílias no nosso Instagram: <a href="https://www.instagram.com/${esc(ctx.site.contactos.instagram)}/" target="_blank" rel="noopener">@${esc(ctx.site.contactos.instagram)}</a></span></p>` : ''}
           <button class="botao botao--whatsapp botao--largo" type="button" data-continuar>${icones.whatsapp}<span>Continuar no WhatsApp</span></button>
           <button class="botao botao--contorno botao--largo" type="button" data-copiar>${icones.copiar}<span>Copiar a mensagem</span></button>

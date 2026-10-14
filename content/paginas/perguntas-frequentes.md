@@ -11,7 +11,7 @@ Não. O nome, a frase ou o desenho estão incluídos no preço. [Ver como funcio
 
 ## Quando vejo a maquete da gravação?
 
-Depois de a encomenda estar paga e confirmada: enviamos-lhe a maquete pelo WhatsApp e só gravamos depois de a aprovar. Antes disso, não fazemos maquetes.
+Uns dias antes da data de envio, pelo WhatsApp: a gravação é sempre a última operação. Só tratamos da personalização depois da encomenda confirmada, e só gravamos depois de aprovar a maquete.
 
 ## Posso levantar a encomenda?
 

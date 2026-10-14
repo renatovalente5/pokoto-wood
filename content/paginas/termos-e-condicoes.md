@@ -1,6 +1,6 @@
 titulo: Termos e condições
 descricao: As condições das encomendas feitas na Pokóto Wood: quem vende, preços, portes, como se encomenda pelo WhatsApp, prazos, desistência e garantia.
-atualizado: 2026-10-13
+atualizado: 2026-10-14
 ---
 ## Quem vende
 
@@ -47,13 +47,13 @@ Reservamo-nos o direito de corrigir erros manifestos de preço. Se isso acontece
 
 {{prazo}}
 
-Em nenhum caso a entrega ultrapassa 30 dias a contar do pagamento e, quando há gravação, da aprovação da maquete, salvo se tiver aceitado expressamente um prazo mais longo. Se não conseguirmos cumprir o prazo combinado, avisamos e pode resolver o contrato, recebendo de volta tudo o que pagou.
+Em nenhum caso a entrega ultrapassa 30 dias a contar do pagamento, salvo se tiver aceitado expressamente um prazo mais longo ou se a aprovação da maquete da gravação se atrasar do seu lado. Se não conseguirmos cumprir o prazo combinado, avisamos e pode resolver o contrato, recebendo de volta tudo o que pagou.
 
 O risco de perda ou dano da peça passa para si quando a recebe.
 
 ## Personalização
 
-A personalização (o nome, uma frase ou um desenho) está incluída no preço. Gravamos o que nos indicar: depois de a encomenda estar paga e confirmada, enviamos a maquete para aprovação, e só gravamos depois de a aprovar. Verifique a ortografia com cuidado: depois de gravada, a madeira não se corrige.
+A personalização (o nome, uma frase ou um desenho) está incluída no preço. Gravamos o que nos indicar: só tratamos da personalização depois de a encomenda estar confirmada; uns dias antes da data de envio enviamos a maquete para aprovação, e só gravamos depois de a aprovar. Verifique a ortografia com cuidado: depois de gravada, a madeira não se corrige.
 
 ## Direito de livre resolução (desistir da compra)
 

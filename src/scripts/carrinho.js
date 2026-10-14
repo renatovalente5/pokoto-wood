@@ -304,7 +304,7 @@
     for (const d of c.validas) {
       linhas.push(`*${d.linha.qtd}× ${d.p.nome}* — ${euros(d.total)}`);
       for (const x of d.comps) linhas.push(`   + ${x.c.nome}`);
-      if (d.linha.personalizacao) linhas.push(`   Personalização: «${d.linha.personalizacao}» (maquete para aprovar depois do pagamento)`);
+      if (d.linha.personalizacao) linhas.push(`   Personalização: «${d.linha.personalizacao}» (maquete para aprovar antes do envio)`);
     }
     linhas.push('');
     linhas.push(`Artigos: ${euros(c.artigos)}`);
