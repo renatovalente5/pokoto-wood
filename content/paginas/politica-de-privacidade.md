@@ -1,6 +1,6 @@
 titulo: Política de privacidade
 descricao: Que dados pessoais tratamos, para quê e por quanto tempo: as encomendas seguem pelo WhatsApp e este site não guarda nada do que escreve.
-atualizado: 2026-10-13
+atualizado: 2026-10-16
 ---
 ## Quem trata os seus dados
 
@@ -8,7 +8,7 @@ atualizado: 2026-10-13
 
 ## O que este site guarda
 
-**Nada do que escreve no carrinho fica guardado neste site.** O nome, a morada, o NIF e as observações que escreve no carrinho servem apenas para compor a mensagem da encomenda, no seu próprio aparelho. Quando carrega em «Enviar encomenda pelo WhatsApp», essa mensagem passa para o WhatsApp, e é você que a envia.
+**Nada do que escreve no carrinho fica guardado neste site.** O nome, a morada, o NIF e as observações que escreve no carrinho servem apenas para compor a mensagem da encomenda, no seu próprio aparelho. Quando carrega em «Enviar encomenda pelo WhatsApp», essa mensagem passa para o WhatsApp, e é você que a envia. Se chegou ao site por um anúncio nosso, a mensagem diz também de onde veio (por exemplo, «Vi o vosso anúncio no Instagram/Facebook»), e pode apagar essa linha antes de a enviar. Para isso o endereço das páginas leva a palavra «origem»; não se usam cookies.
 
 O carrinho (os artigos, a personalização e a entrega escolhida e, depois de abrir o WhatsApp com a encomenda, o dia e a hora em que o abriu) fica guardado no armazenamento local do seu browser, para não se perder se fechar a página. Não sai do seu aparelho, e apaga-se ao esvaziar o carrinho ou ao limpar os dados do site no browser. Os dados pessoais do formulário não são guardados aí.
 

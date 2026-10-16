@@ -316,8 +316,12 @@
     if (z.morada) linhas.push(`Morada: ${dados.morada}, ${dados.codigoPostal} ${dados.localidade}`);
     if (dados.nif) linhas.push(`NIF: ${dados.nif}`);
     if (dados.notas) linhas.push(`Observações: ${dados.notas}`);
+    // De onde veio: só quando o endereço traz a marca de um anúncio (site.js, «a origem dos anúncios»).
+    const veio = ORIGENS[new URLSearchParams(location.search).get('origem')];
+    if (veio) linhas.push('', veio);
     return linhas.join('\n');
   }
+  const ORIGENS = { meta: 'Vi o vosso anúncio no Instagram/Facebook.', google: 'Encontrei-vos num anúncio do Google.' };
 
   /* ABRIR O WHATSAPP. No telemóvel, a própria página segue para o wa.me, que é uma ligação
      universal: abre logo a aplicação, e o separador fica no carrinho. No computador, um separador

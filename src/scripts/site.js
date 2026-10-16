@@ -18,6 +18,26 @@
   addEventListener('pointerdown', () => { raiz.dataset.entrada = 'ponteiro'; }, { capture: true, passive: true });
   addEventListener('keydown', (e) => { if (!e.metaKey && !e.ctrlKey) delete raiz.dataset.entrada; }, { capture: true });
 
+  // ---------------------------------------------------------------- a origem dos anúncios
+  // Os links dos anúncios levam ?origem=meta ou ?origem=google (plano de anúncios, 16 out 2026).
+  // Sem cookies nem armazenamento: a marca segue no endereço, de ligação interna em ligação
+  // interna, até ao carrinho, que a junta à mensagem do WhatsApp (carrinho.js). Quem chega de
+  // outra forma não leva nada.
+  const origem = new URLSearchParams(location.search).get('origem');
+  if (/^(meta|google)$/.test(origem || '')) {
+    const marcar = (e) => {
+      const a = e.target.closest && e.target.closest('a[href]');
+      if (!a || a.hasAttribute('download')) return;
+      const url = new URL(a.href, location.href);
+      if (url.origin !== location.origin || url.searchParams.has('origem')) return;
+      if (url.pathname === location.pathname && url.hash) return; // âncora na mesma página
+      url.searchParams.set('origem', origem);
+      a.href = url.href;
+    };
+    addEventListener('click', marcar, { capture: true });
+    addEventListener('auxclick', marcar, { capture: true });
+  }
+
   // ---------------------------------------------------------------- etiquetas em duas linhas
   // Partido em duas linhas, o texto deixava a caixa com a largura toda e um vazio à direita. Mede-se
   // a linha mais comprida e a caixa fica à medida dela (outra vez quando as letras chegam e quando
