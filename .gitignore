@@ -6,6 +6,9 @@ _cliente/
 # Gerado
 _site/
 .cache/
+# O estado local do wrangler (o `wrangler dev`): o cache/cf.json traz a localização aproximada e o
+# operador de quem o correu. NUNCA para o repositório, que é público.
+.wrangler/
 node_modules/
 .DS_Store
 *.log
