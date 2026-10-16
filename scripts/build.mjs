@@ -385,7 +385,11 @@ const INDEXNOW = '0906d1066ec07d1f01adb9afcb32e413';
 if (producao) fs.writeFileSync(path.join(SAIDA, `${INDEXNOW}.txt`), INDEXNOW);
 if (producao) {
   const umAno = '  Cache-Control: public, max-age=31536000, immutable\n';
-  fs.writeFileSync(path.join(SAIDA, '_headers'), ['/assets/site-*', '/assets/catalogo-*', '/assets/video/*'].map((r) => `${r}\n${umAno}`).join(''));
+  /* E os cabeçalhos de segurança em todas as respostas (como no ithos e na Mimices): sem
+     Cache-Control, porque duas regras para o mesmo ficheiro JUNTAM os valores. Vão depois das da
+     cache (a ordem não conta para a Cloudflare). O HSTS começa curto (um dia). */
+  const seguranca = '/*\n  X-Content-Type-Options: nosniff\n  X-Frame-Options: SAMEORIGIN\n  Content-Security-Policy: frame-ancestors \'self\'\n  Referrer-Policy: strict-origin-when-cross-origin\n  Strict-Transport-Security: max-age=86400\n';
+  fs.writeFileSync(path.join(SAIDA, '_headers'), ['/assets/site-*', '/assets/catalogo-*', '/assets/video/*'].map((r) => `${r}\n${umAno}`).join('') + seguranca);
 }
 fs.writeFileSync(path.join(SAIDA, '.nojekyll'), '');
 

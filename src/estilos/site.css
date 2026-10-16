@@ -50,7 +50,9 @@ img { height: auto; }
 h1, h2, h3, h4 { font-family: var(--letra-titulos); font-weight: 500; line-height: 1.15; margin: 0 0 .5em; color: var(--tinta); }
 p { margin: 0 0 1em; }
 a { color: var(--castanho); text-underline-offset: .18em; }
-a:hover { color: var(--tinta); }
+/* Os «:hover» vão dentro de @media (hover: hover): num ecrã de toque o Safari deixa-os presos no
+   último elemento tocado (o mesmo que se viu na Mimices a 16 out 2026). */
+@media (hover: hover) { a:hover { color: var(--tinta); } }
 button { font: inherit; color: inherit; cursor: pointer; }
 :focus-visible { outline: 3px solid var(--salva-escura); outline-offset: 3px; border-radius: 6px; }
 /* Depois de um toque ou de um clique (site.js), o anel que o foco leva quando o menu ou o carrinho
@@ -75,16 +77,16 @@ main:focus { outline: none; }
 
 /* ------------------------------------------------------------------ botões e etiquetas */
 .botao { display: inline-flex; align-items: center; justify-content: center; text-align: center; gap: .6em; min-height: 48px; padding: .7em 1.4em; border-radius: 999px; border: 2px solid transparent; font-family: var(--letra-titulos); font-size: 1.05rem; font-weight: 500; text-decoration: none; line-height: 1.1; transition: transform .15s ease, background-color .15s ease, box-shadow .15s ease; }
-.botao:hover { transform: translateY(-1px); }
+@media (hover: hover) { .botao:hover { transform: translateY(-1px); } }
 .botao:active { transform: none; }
 .botao--mel { background: var(--mel); color: var(--tinta); box-shadow: 0 6px 16px -8px rgba(138, 90, 11, .7); }
-.botao--mel:hover { background: #F5C15F; color: var(--tinta); }
+@media (hover: hover) { .botao--mel:hover { background: #F5C15F; color: var(--tinta); } }
 .botao--contorno { background: transparent; color: var(--tinta); border-color: var(--salva); }
-.botao--contorno:hover { background: var(--salva-clara); color: var(--tinta); }
+@media (hover: hover) { .botao--contorno:hover { background: var(--salva-clara); color: var(--tinta); } }
 .botao--terracota { background: var(--terracota); color: var(--branco); }
-.botao--terracota:hover { background: #923B26; color: var(--branco); }
+@media (hover: hover) { .botao--terracota:hover { background: #923B26; color: var(--branco); } }
 .botao--whatsapp { background: #1E8E50; color: var(--branco); }
-.botao--whatsapp:hover { background: #17783F; color: var(--branco); }
+@media (hover: hover) { .botao--whatsapp:hover { background: #17783F; color: var(--branco); } }
 .botao--texto { background: none; border: 0; text-decoration: underline; font-family: var(--letra-texto); font-size: .95rem; min-height: 44px; color: var(--tinta-2); }
 .botao--pequeno { min-height: 40px; padding: .45em 1em; font-size: .95rem; }
 .botao--largo { width: 100%; }
@@ -112,13 +114,13 @@ main:focus { outline: none; }
 .aviso { background: var(--salva-escura); color: var(--branco); text-align: center; font-size: .92rem; padding: 7px var(--margem); }
 .aviso p { margin: 0; }
 .aviso a { color: inherit; text-decoration: underline; text-decoration-thickness: 1px; }
-.aviso a:hover { color: var(--mel-claro); }
+@media (hover: hover) { .aviso a:hover { color: var(--mel-claro); } }
 
 /* ------------------------------------------------------------------ cabeçalho */
 .topo { position: sticky; top: 0; z-index: 30; background: rgba(246, 238, 227, .94); backdrop-filter: saturate(1.2) blur(10px); -webkit-backdrop-filter: saturate(1.2) blur(10px); border-bottom: 1px solid var(--linha); }
 .topo__barra { max-width: var(--largura); margin-inline: auto; padding-inline: var(--margem); height: var(--topo-h); display: grid; grid-template-columns: 48px 1fr 48px; align-items: center; gap: 12px; }
 .topo__menu, .topo__carrinho { width: 48px; height: 48px; display: grid; place-items: center; border-radius: 50%; border: 0; background: none; color: var(--castanho); position: relative; text-decoration: none; }
-.topo__menu:hover, .topo__carrinho:hover { background: var(--creme-2); color: var(--castanho); }
+@media (hover: hover) { .topo__menu:hover, .topo__carrinho:hover { background: var(--creme-2); color: var(--castanho); } }
 .topo__menu .icone, .topo__carrinho .icone { width: 26px; height: 26px; }
 .topo__marca { justify-self: center; display: block; }
 .logo { height: 56px; width: auto; }
@@ -138,14 +140,15 @@ main:focus { outline: none; }
   .nav__lista { list-style: none; height: 100%; display: flex; justify-content: center; gap: 4px; }
   .nav__item { display: flex; align-items: center; }
   .nav__ligacao, .nav__loja { display: flex; align-items: center; gap: 7px; min-height: 44px; padding: 10px 12px; border: 0; border-radius: 10px; background: none; font-size: .98rem; font-weight: 500; line-height: 1.2; white-space: nowrap; color: var(--tinta); text-decoration: none; }
-  .nav__ligacao:hover, .nav__loja:hover, .nav__loja[aria-expanded="true"] { background: var(--creme-2); color: var(--tinta); }
+  .nav__loja[aria-expanded="true"] { background: var(--creme-2); color: var(--tinta); }
+  @media (hover: hover) { .nav__ligacao:hover, .nav__loja:hover { background: var(--creme-2); color: var(--tinta); } }
   .nav__ligacao[aria-current], .nav__loja[data-atual] { text-decoration: underline 2px var(--mel); text-underline-offset: 7px; }
   .nav__loja .icone { width: 16px; height: 16px; color: var(--castanho); transition: transform .2s; }
   .nav__loja[aria-expanded="true"] .icone { transform: rotate(180deg); }
   .nav__ligacao--pz, .nav__ligacao--pz:hover { color: var(--terracota); font-weight: 700; }
   .nav__ligacao--pz .icone { width: 20px; height: 20px; }
   .topo__whatsapp { display: flex; align-items: center; gap: 8px; min-height: 44px; padding: 8px 18px; border-radius: 999px; background: var(--mel); color: var(--tinta); text-decoration: none; font-family: var(--letra-titulos); font-size: 1rem; white-space: nowrap; }
-  .topo__whatsapp:hover { background: #F5C15F; color: var(--tinta); }
+  @media (hover: hover) { .topo__whatsapp:hover { background: #F5C15F; color: var(--tinta); } }
   .topo__whatsapp .icone { width: 20px; height: 20px; }
   /* A Grandstander tem o meio das maiúsculas 0,09em acima do meio da linha (subida 1465, descida
      530, maiúsculas 1291, em 2000): sem isto, o texto fica acima do ícone. */
@@ -162,23 +165,25 @@ main:focus { outline: none; }
   .nav__coluna { display: grid; grid-row: 1 / span 2; grid-template-rows: subgrid; }
   .nav__coluna ul { list-style: none; padding-top: 6px; }
   .nav__categoria { display: flex; align-items: center; gap: 12px; min-height: 78px; padding: 8px 10px 10px; border-bottom: 1px solid var(--linha); border-radius: 14px 14px 0 0; color: var(--tinta); text-decoration: none; }
-  .nav__categoria:hover, .nav__categoria[aria-current] { background: var(--creme); color: var(--tinta); }
+  .nav__categoria[aria-current] { background: var(--creme); color: var(--tinta); }
+  @media (hover: hover) { .nav__categoria:hover { background: var(--creme); color: var(--tinta); } }
   .nav__mini { flex: none; width: 56px; height: 56px; border-radius: 14px; overflow: hidden; background: var(--creme); }
   .nav__mini picture, .nav__mini img { display: block; width: 100%; height: 100%; object-fit: cover; }
   .nav__cat { display: grid; }
   .nav__cat-nome { font-family: var(--letra-titulos); font-size: 1.15rem; line-height: 1.2; }
   .nav__conta { font-size: .84rem; line-height: 1.4; color: var(--tinta-2); }
   .nav__artigo { display: flex; align-items: baseline; justify-content: space-between; gap: 12px; padding: 8px 10px; border-radius: 10px; font-size: .93rem; line-height: 1.3; color: var(--tinta); text-decoration: none; }
-  .nav__artigo:hover, .nav__artigo[aria-current] { background: var(--creme); color: var(--tinta); }
+  .nav__artigo[aria-current] { background: var(--creme); color: var(--tinta); }
+  @media (hover: hover) { .nav__artigo:hover { background: var(--creme); color: var(--tinta); } }
   .nav__preco { flex: none; font-size: .88rem; white-space: nowrap; }
   .nav__preco--promocao b { color: var(--terracota); }
   .nav__preco s { margin-left: 3px; font-size: .8rem; color: var(--tinta-2); }
   .nav__pe { max-width: var(--largura); margin: 0 auto; padding: 6px var(--margem) 22px; display: flex; align-items: center; justify-content: space-between; gap: 24px; }
   .nav__tudo { display: inline-flex; align-items: center; gap: 8px; padding: 10px; border-radius: 10px; font-weight: 500; color: var(--terracota); text-decoration: none; }
-  .nav__tudo:hover { background: var(--creme); color: var(--terracota); }
+  @media (hover: hover) { .nav__tudo:hover { background: var(--creme); color: var(--terracota); } }
   .nav__tudo .icone { width: 18px; height: 18px; }
   .nav__pz { display: flex; align-items: center; gap: 12px; padding: 10px 16px; border-radius: 14px; background: var(--terracota); color: var(--branco); font-size: .92rem; text-decoration: none; }
-  .nav__pz:hover { background: #963D27; color: var(--branco); }
+  @media (hover: hover) { .nav__pz:hover { background: #963D27; color: var(--branco); } }
   .nav__pz b { font-family: var(--letra-titulos); font-size: 1rem; text-transform: uppercase; }
   .nav__pz .icone:first-child { width: 24px; height: 24px; }
   .nav__pz .icone:last-child { width: 16px; height: 16px; }
@@ -197,7 +202,7 @@ html:has(dialog[open]) { overflow: hidden; }
 .gaveta__topo { display: flex; align-items: center; justify-content: space-between; padding: 14px 12px 14px var(--margem); border-bottom: 1px solid var(--linha); }
 .gaveta__topo h2 { margin: 0; font-size: 1.45rem; }
 .gaveta__fechar, .menu__fechar { width: 48px; height: 48px; border-radius: 50%; border: 0; background: none; display: grid; place-items: center; color: var(--castanho); }
-.gaveta__fechar:hover, .menu__fechar:hover { background: var(--creme); }
+@media (hover: hover) { .gaveta__fechar:hover, .menu__fechar:hover { background: var(--creme); } }
 .gaveta__conteudo { flex: 1; overflow-y: auto; padding: 16px var(--margem) 24px; display: flex; flex-direction: column; }
 .gaveta__vazio { margin: 40px 0; text-align: center; color: var(--tinta-2); }
 
@@ -251,10 +256,10 @@ html:has(dialog[open]) { overflow: hidden; }
 /* redes sociais (rodapé e menu) */
 .redes { list-style: none; display: flex; gap: 10px; }
 .redes a { width: 46px; height: 46px; display: grid; place-items: center; border-radius: 14px; background: var(--mel); color: var(--tinta); }
-.redes a:hover { background: #F5C15F; color: var(--tinta); }
+@media (hover: hover) { .redes a:hover { background: #F5C15F; color: var(--tinta); } }
 .redes--menu { gap: 8px; }
 .redes--menu a { width: 40px; height: 40px; border-radius: 50%; background: var(--creme); color: var(--castanho); }
-.redes--menu a:hover { background: var(--mel); color: var(--tinta); }
+@media (hover: hover) { .redes--menu a:hover { background: var(--mel); color: var(--tinta); } }
 .redes--menu .icone { width: 19px; height: 19px; }
 
 /* ------------------------------------------------------------------ preços e selos */
@@ -274,7 +279,7 @@ html:has(dialog[open]) { overflow: hidden; }
 .cartao { position: relative; display: flex; flex-direction: column; gap: 6px; }
 .cartao__foto { position: relative; border-radius: var(--raio); overflow: hidden; background: var(--creme); margin-bottom: 6px; }
 .cartao__img img { width: 100%; aspect-ratio: 1; object-fit: cover; transition: transform .5s ease; }
-.cartao:hover .cartao__img img { transform: scale(1.04); }
+@media (hover: hover) { .cartao:hover .cartao__img img { transform: scale(1.04); } }
 .cartao__foto .selo { position: absolute; left: 10px; top: 10px; }
 .cartao__foto .selo + .selo { top: 42px; }
 .cartao__nome { font-size: 1.05rem; font-weight: 500; margin: 0; line-height: 1.25; }
@@ -282,7 +287,7 @@ html:has(dialog[open]) { overflow: hidden; }
 .cartao__ligacao::after { content: ''; position: absolute; inset: 0; border-radius: var(--raio); }
 .cartao__ligacao:focus-visible { outline: none; }
 .cartao__ligacao:focus-visible::after { outline: 3px solid var(--salva-escura); outline-offset: 4px; }
-.cartao:hover .cartao__ligacao { text-decoration: underline; text-decoration-color: var(--mel); text-decoration-thickness: 2px; }
+@media (hover: hover) { .cartao:hover .cartao__ligacao { text-decoration: underline; text-decoration-color: var(--mel); text-decoration-thickness: 2px; } }
 
 .grelha { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 28px 14px; }
 @media (min-width: 700px) { .grelha { grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 36px 22px; } }
@@ -320,7 +325,7 @@ html:has(dialog[open]) { overflow: hidden; }
 .carrossel__progresso { flex: 1; max-width: 200px; height: 3px; background: var(--creme-2); border-radius: 3px; position: relative; overflow: hidden; margin-right: auto; }
 .carrossel__progresso span { position: absolute; inset: 0 auto 0 0; width: 25%; background: var(--tinta); border-radius: 3px; transition: left .2s, width .2s; }
 .carrossel__botao { width: 44px; height: 44px; border-radius: 50%; border: 1px solid var(--linha); background: var(--papel); display: grid; place-items: center; color: var(--tinta); }
-.carrossel__botao:hover:not(:disabled) { background: var(--creme); }
+@media (hover: hover) { .carrossel__botao:hover:not(:disabled) { background: var(--creme); } }
 .carrossel__botao:disabled { opacity: .35; cursor: default; }
 
 /* ------------------------------------------------------------------ início: personalização */
@@ -343,7 +348,7 @@ html:has(dialog[open]) { overflow: hidden; }
 .personaliza__foto--legenda::before { content: ''; position: absolute; inset: 0 0 auto 0; height: 45%; z-index: 1; background: linear-gradient(rgba(40, 28, 18, .62), rgba(40, 28, 18, 0)); pointer-events: none; }
 .personaliza__legenda { z-index: 2; position: absolute; top: 24px; left: 0; right: 0; text-align: center; font-family: var(--letra-titulos); font-size: clamp(1.4rem, 3vw, 1.9rem); color: var(--branco); text-shadow: 0 2px 14px rgba(0, 0, 0, .55), 0 1px 3px rgba(0, 0, 0, .5); margin: 0; }
 .personaliza__botao { z-index: 2; white-space: nowrap; width: max-content; position: absolute; bottom: 24px; left: 50%; transform: translateX(-50%); }
-.personaliza__botao:hover { transform: translateX(-50%) translateY(-1px); }
+@media (hover: hover) { .personaliza__botao:hover { transform: translateX(-50%) translateY(-1px); } }
 @media (min-width: 900px) { .personaliza { grid-template-columns: 1fr 1fr; } .personaliza__foto { min-height: 520px; } }
 
 /* ------------------------------------------------------------------ início: história */
@@ -392,7 +397,7 @@ html:has(dialog[open]) { overflow: hidden; }
 .faixa__sinal { flex: none; color: var(--mel); }
 .faixa__sinal .icone { width: 22px; height: 22px; }
 .faixa__pausa { position: absolute; right: 10px; top: 50%; transform: translateY(-50%); width: 44px; height: 44px; border-radius: 50%; border: 0; background: rgba(255, 255, 255, .16); color: var(--creme); display: grid; place-items: center; }
-.faixa__pausa:hover { background: rgba(255, 255, 255, .28); }
+@media (hover: hover) { .faixa__pausa:hover { background: rgba(255, 255, 255, .28); } }
 
 /* ------------------------------------------------------------------ início: oficina (vídeo) */
 .oficina { max-width: var(--largura); margin: clamp(64px, 9vw, 104px) auto 0; padding-inline: var(--margem); display: grid; gap: 28px; align-items: center; }
@@ -402,7 +407,7 @@ html:has(dialog[open]) { overflow: hidden; }
 .video { position: relative; border-radius: var(--raio-grande); overflow: hidden; background: var(--creme); box-shadow: var(--sombra); }
 .video video { width: 100%; height: auto; aspect-ratio: 9 / 16; object-fit: cover; }
 .video__botao { position: absolute; right: 14px; bottom: 14px; width: 52px; height: 52px; border-radius: 50%; border: 0; background: rgba(58, 42, 29, .62); color: var(--branco); display: grid; place-items: center; backdrop-filter: blur(6px); -webkit-backdrop-filter: blur(6px); }
-.video__botao:hover { background: rgba(58, 42, 29, .8); }
+@media (hover: hover) { .video__botao:hover { background: rgba(58, 42, 29, .8); } }
 /* Os botões de parar não se vêem (a Célia, 9 out 2026): parar é tocar na faixa ou no vídeo. Com o
    teclado, o botão aparece quando se chega a ele; o de ver o vídeo aparece quando o vídeo está
    parado sem ser por estar fora do ecrã (site.js: «reduzir movimento», «poupar dados», parado por
@@ -428,7 +433,7 @@ html:has(dialog[open]) { overflow: hidden; }
 .rodape__coluna h2 { font-family: var(--letra-titulos); font-size: 1.15rem; color: var(--terracota); margin-bottom: .7em; }
 .rodape__coluna ul { list-style: none; }
 .rodape__coluna a { display: inline-block; padding: 6px 0; color: var(--tinta); text-decoration: none; font-size: .95rem; }
-.rodape__coluna a:hover { text-decoration: underline; color: var(--tinta); }
+@media (hover: hover) { .rodape__coluna a:hover { text-decoration: underline; color: var(--tinta); } }
 .rodape__fim { max-width: var(--largura); margin: 36px auto 0; padding-top: 18px; border-top: 1px solid var(--linha); display: flex; flex-wrap: wrap; justify-content: space-between; gap: 6px 24px; font-size: .88rem; color: var(--tinta-2); }
 .rodape__fim p { margin: 0; }
 @media (min-width: 700px) { .rodape__grelha { grid-template-columns: 1fr 1fr 1fr; } .rodape__marca { grid-column: 1 / -1; } }
@@ -439,7 +444,7 @@ html:has(dialog[open]) { overflow: hidden; }
 .migalhas ol { list-style: none; display: flex; flex-wrap: wrap; gap: 4px; }
 .migalhas li + li::before { content: '/'; margin-right: 6px; color: var(--tinta-2); }
 .migalhas a { color: var(--tinta); text-decoration: none; }
-.migalhas a:hover { text-decoration: underline; }
+@media (hover: hover) { .migalhas a:hover { text-decoration: underline; } }
 .migalhas [aria-current] { color: var(--tinta-2); }
 
 /* ------------------------------------------------------------------ loja */
@@ -467,7 +472,7 @@ html:has(dialog[open]) { overflow: hidden; }
 .chip { display: inline-flex; align-items: center; gap: 10px; white-space: nowrap; padding: 10px 16px 10px 12px; border-radius: 16px; border: 1px solid var(--linha); background: var(--papel); text-decoration: none; color: var(--tinta); font-size: .92rem; text-transform: uppercase; letter-spacing: .03em; min-height: 52px; }
 .chip .icone { width: 26px; height: 26px; color: var(--castanho); }
 .chip__n { font-size: .78rem; background: var(--creme); border-radius: 999px; padding: 1px 8px; color: var(--tinta-2); }
-.chip:hover { background: var(--creme); color: var(--tinta); }
+@media (hover: hover) { .chip:hover { background: var(--creme); color: var(--tinta); } }
 .chip[aria-current] { background: var(--tinta); color: var(--papel); border-color: var(--tinta); }
 .chip[aria-current] .icone { color: var(--mel); }
 .chip[aria-current] .chip__n { background: rgba(255, 255, 255, .18); color: var(--papel); }
@@ -539,7 +544,7 @@ html:has(dialog[open]) { overflow: hidden; }
 .comprar__linha { display: grid; grid-template-columns: auto 1fr; gap: 12px; align-items: center; }
 .quantidade { display: inline-flex; align-items: center; border: 1.5px solid var(--linha-campo); border-radius: 999px; height: 52px; background: var(--branco); }
 .quantidade button { width: 44px; height: 48px; border: 0; background: none; display: grid; place-items: center; border-radius: 999px; color: var(--tinta); }
-.quantidade button:hover { background: var(--creme); }
+@media (hover: hover) { .quantidade button:hover { background: var(--creme); } }
 .quantidade .icone { width: 18px; height: 18px; }
 .quantidade input { width: 36px; border: 0; text-align: center; font: inherit; font-weight: 700; background: none; color: var(--tinta); -moz-appearance: textfield; appearance: textfield; }
 .quantidade input::-webkit-outer-spin-button, .quantidade input::-webkit-inner-spin-button { -webkit-appearance: none; margin: 0; }
@@ -575,14 +580,14 @@ html:has(dialog[open]) { overflow: hidden; }
 .linha__foto img { width: 76px; height: 76px; object-fit: cover; border-radius: 12px; background: var(--creme); }
 .linha__nome { font-weight: 700; margin: 0; line-height: 1.25; }
 .linha__nome a { color: var(--tinta); text-decoration: none; }
-.linha__nome a:hover { text-decoration: underline; }
+@media (hover: hover) { .linha__nome a:hover { text-decoration: underline; } }
 .linha__extra { margin: 2px 0 0; font-size: .88rem; color: var(--tinta-2); }
 .linha__fundo { display: flex; align-items: center; justify-content: space-between; gap: 8px; margin-top: 8px; }
 .linha .quantidade { height: 40px; }
 .linha .quantidade button { width: 36px; height: 36px; }
 .linha__preco { font-weight: 700; white-space: nowrap; }
 .linha__tirar { width: 40px; height: 40px; border: 0; background: none; border-radius: 50%; display: grid; place-items: center; color: var(--tinta-2); }
-.linha__tirar:hover { background: var(--creme); color: var(--terracota); }
+@media (hover: hover) { .linha__tirar:hover { background: var(--creme); color: var(--terracota); } }
 .linha__indisponivel { color: var(--terracota); font-size: .88rem; margin: 4px 0 0; }
 .totais { display: grid; gap: 6px; margin: 16px 0; }
 .totais p { display: flex; justify-content: space-between; gap: 12px; margin: 0; }
