@@ -30,9 +30,9 @@
   },
   "complementos": [],
   "envio": {
-    "continente": null,
-    "ilhas": null,
-    "espanha": null
+    "continente": 15,
+    "ilhas": 70,
+    "espanha": 50
   },
   "vendaIsolada": true,
   "video": "trio-pikler",

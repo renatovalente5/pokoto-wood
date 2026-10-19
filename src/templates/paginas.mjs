@@ -223,6 +223,28 @@ function outrosNomes(ctx) {
   return [...new Set([semAcentos, colado, ctx.site.contactos.instagram].filter((x) => x && x !== ctx.site.marca))];
 }
 
+/* A devolução de uma peça não personalizada (termos e condições): 14 dias a contar da receção e os
+   portes da devolução por conta do cliente (Célia, 19 out 2026). As personalizadas não têm direito de
+   livre resolução, mas a personalização é opcional, por isso a regra geral é esta. */
+/* Dias úteis da transportadora por zona, [mínimo, máximo] (Célia, 19 out 2026). */
+const TRANSPORTE = { continente: [1, 1], espanha: [2, 3], ilhas: [10, 10] };
+/* Quando começou cada promoção, pela data em que acaba (Célia, 19 out 2026: as que vão até
+   31 dez começaram a 1 jun). Uma promoção nova, com outra data de fim, fica sem validFrom até
+   se saber o início: mais vale nada do que uma data errada. */
+const INICIO_PROMOCAO = { '2026-12-31': '2026-06-01' };
+
+function politicaDevolucao(ctx) {
+  return {
+    '@type': 'MerchantReturnPolicy',
+    applicableCountry: ['PT', 'ES'],
+    returnPolicyCategory: 'https://schema.org/MerchantReturnFiniteReturnWindow',
+    merchantReturnDays: 14,
+    returnMethod: 'https://schema.org/ReturnByMail',
+    returnFees: 'https://schema.org/ReturnFeesCustomerResponsibility',
+    merchantReturnLink: ctx.absoluto('/desistir/'),
+  };
+}
+
 export function organizacao(ctx) {
   const c = ctx.site.contactos;
   const e = ctx.site.empresa;
@@ -239,6 +261,7 @@ export function organizacao(ctx) {
     address: { '@type': 'PostalAddress', addressLocality: ctx.site.local.localidade, addressRegion: ctx.site.local.distrito, addressCountry: 'PT' },
     alternateName: outrosNomes(ctx),
     sameAs: [c.instagram && `https://www.instagram.com/${c.instagram}/`, c.instagram && `https://www.threads.com/@${c.instagram}`, c.facebook && `https://www.facebook.com/${c.facebook}`].filter(Boolean),
+    hasMerchantReturnPolicy: politicaDevolucao(ctx),
   };
   if (c.email) ld.email = c.email;
   if (c.whatsapp) ld.telephone = `+${numeroWhatsApp(c.whatsapp)}`;
@@ -425,14 +448,22 @@ export function produto(ctx, p) {
     seller: { '@id': ctx.absoluto('/#loja') },
   };
   if (v.ate) offer.priceValidUntil = v.ate;
+  if (v.anterior && INICIO_PROMOCAO[v.ate]) offer.validFrom = INICIO_PROMOCAO[v.ate];
+  offer.hasMerchantReturnPolicy = politicaDevolucao(ctx);
   // Sem portes definidos não vai a lista vazia: o Google lê-a como «shippingDetails em falta» na mesma.
   const zonasComPortes = envio ? zonasEnvio.filter((z) => Number.isFinite(envio[z.id])) : [];
   if (zonasComPortes.length) {
     offer.shippingDetails = zonasComPortes.map((z) => ({
       '@type': 'OfferShippingDetails',
       shippingRate: { '@type': 'MonetaryAmount', value: envio[z.id].toFixed(2), currency: 'EUR' },
-      // «fica pronta em 2 a 3 semanas, a contar do pagamento» (site.json, entrega.prazo)
-      deliveryTime: { '@type': 'ShippingDeliveryTime', handlingTime: { '@type': 'QuantitativeValue', minValue: 14, maxValue: 21, unitCode: 'DAY' } },
+      /* Em dias úteis, de segunda a sexta (a convenção do schema.org): «fica pronta em 2 a 3 semanas,
+         a contar do pagamento» (site.json, entrega.prazo) são 10 a 15; a transportadora, pela Célia. */
+      deliveryTime: {
+        '@type': 'ShippingDeliveryTime',
+        businessDays: { '@type': 'OpeningHoursSpecification', dayOfWeek: ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday'].map((d) => `https://schema.org/${d}`) },
+        handlingTime: { '@type': 'QuantitativeValue', minValue: 10, maxValue: 15, unitCode: 'DAY' },
+        ...(TRANSPORTE[z.id] ? { transitTime: { '@type': 'QuantitativeValue', minValue: TRANSPORTE[z.id][0], maxValue: TRANSPORTE[z.id][1], unitCode: 'DAY' } } : {}),
+      },
       shippingDestination: z.id === 'espanha'
         ? { '@type': 'DefinedRegion', addressCountry: 'ES' }
         : { '@type': 'DefinedRegion', addressCountry: 'PT', ...(z.id === 'ilhas' ? { addressRegion: ['PT-20', 'PT-30'] } : {}) },
