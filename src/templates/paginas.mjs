@@ -417,15 +417,22 @@ export function produto(ctx, p) {
     url: ctx.absoluto(caminho),
     priceCurrency: 'EUR',
     price: v.atual.toFixed(2),
-    availability: 'https://schema.org/MadeToOrder',   // não há stock: tudo é feito por encomenda (Célia, 8 out 2026)
+    /* Tudo é feito por encomenda (Célia, 8 out 2026), mas o Google não aceita MadeToOrder nas fichas
+       de comerciante (Search Console, 19 out 2026): a peça pode encomendar-se já, por isso InStock,
+       e o tempo de fabrico vai no handlingTime de cada envio. */
+    availability: 'https://schema.org/InStock',
     itemCondition: 'https://schema.org/NewCondition',
     seller: { '@id': ctx.absoluto('/#loja') },
   };
   if (v.ate) offer.priceValidUntil = v.ate;
-  if (envio) {
-    offer.shippingDetails = zonasEnvio.filter((z) => Number.isFinite(envio[z.id])).map((z) => ({
+  // Sem portes definidos não vai a lista vazia: o Google lê-a como «shippingDetails em falta» na mesma.
+  const zonasComPortes = envio ? zonasEnvio.filter((z) => Number.isFinite(envio[z.id])) : [];
+  if (zonasComPortes.length) {
+    offer.shippingDetails = zonasComPortes.map((z) => ({
       '@type': 'OfferShippingDetails',
       shippingRate: { '@type': 'MonetaryAmount', value: envio[z.id].toFixed(2), currency: 'EUR' },
+      // «fica pronta em 2 a 3 semanas, a contar do pagamento» (site.json, entrega.prazo)
+      deliveryTime: { '@type': 'ShippingDeliveryTime', handlingTime: { '@type': 'QuantitativeValue', minValue: 14, maxValue: 21, unitCode: 'DAY' } },
       shippingDestination: z.id === 'espanha'
         ? { '@type': 'DefinedRegion', addressCountry: 'ES' }
         : { '@type': 'DefinedRegion', addressCountry: 'PT', ...(z.id === 'ilhas' ? { addressRegion: ['PT-20', 'PT-30'] } : {}) },
