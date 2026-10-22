@@ -3,7 +3,8 @@
 import { esc, euros, precoDe, dataPorExtenso, markdown, inline, textoSimples, numeroWhatsApp, moradaCompleta } from './util.mjs';
 import { icones, ilustracoes } from './icones.mjs';
 import { numeroPortugues, idadeTexto, NOTA_IDADE } from '../lib/regras.mjs';
-import { imagem, preco, cartaoProduto, migalhas, botaoSeta, desconto, promocaoAte } from './componentes.mjs';
+import { imagem, preco, cartaoProduto, migalhas, botaoSeta, desconto, promocaoAte, promocaoNota, livroBotao, pecaLegal } from './componentes.mjs';
+import { fraseFormularioHtml } from '../../legal-comum/index.mjs';
 
 const produtosDe = (ctx, cat) => ctx.produtos.filter((p) => p.categoria === cat);
 const categoriaDe = (ctx, slug) => ctx.categorias.find((c) => c.slug === slug);
@@ -228,10 +229,12 @@ function outrosNomes(ctx) {
    livre resolução, mas a personalização é opcional, por isso a regra geral é esta. */
 /* Dias úteis da transportadora por zona, [mínimo, máximo] (Célia, 19 out 2026). */
 const TRANSPORTE = { continente: [1, 1], espanha: [2, 3], ilhas: [10, 10] };
-/* Quando começou cada promoção, pela data em que acaba (Célia, 19 out 2026: as que vão até
-   31 dez começaram a 1 jun). Uma promoção nova, com outra data de fim, fica sem validFrom até
-   se saber o início: mais vale nada do que uma data errada. */
+/* O início de cada promoção é o campo «promocaoDesde» do artigo (22 out 2026). Enquanto a Célia não o
+   preenche, o validFrom do Google continua a sair da data de fim, como até aqui (as que vão até 31 dez
+   começaram a 1 jun, Célia, 19 out); a ficha só mostra o período com o campo preenchido. Uma promoção
+   nova, sem nenhum dos dois, fica sem validFrom: mais vale nada do que uma data errada. */
 const INICIO_PROMOCAO = { '2026-12-31': '2026-06-01' };
+const dataIso = (s) => (typeof s === 'string' && /^\d{4}-\d{2}-\d{2}$/.test(s) ? s : '');
 
 function politicaDevolucao(ctx) {
   return {
@@ -394,13 +397,30 @@ export function produto(ctx, p) {
     ${zonasEnvio.map((z) => `<tr><th scope="row">${esc(z.curto)}</th><td>${linhaEnvio(z)}</td>${complementos.map((k) => `<td>${Number.isFinite(envio[z.id]) && Number.isFinite(k.envioExtra?.[z.id]) ? euros(envio[z.id] + k.envioExtra[z.id]) : 'a confirmar'}</td>`).join('')}</tr>`).join('')}
   </tbody></table>` : '';
   const e = ctx.site.empresa;
-  const fabricante = [e.nome ? `${e.nome} (${ctx.site.marca})` : ctx.site.marca, e.morada ? moradaCompleta(e) : '', ctx.site.contactos.email].filter(Boolean).map(esc).join(' · ');
+  /* Quem fabrica (Regulamento (UE) 2023/988, art. 19.º): o fabricante da peça, quando o artigo o
+     diz por inteiro (nome, morada e email); senão, a loja. */
+  const fab = fabricanteDoArtigo(p);
+  const fabricante = fab
+    ? [fab.nome, fab.morada, fab.email].map(esc).join(' · ')
+    : [e.nome ? `${e.nome} (${ctx.site.marca})` : ctx.site.marca, e.morada ? moradaCompleta(e) : '', ctx.site.contactos.email].filter(Boolean).map(esc).join(' · ');
+  /* A informação legal da peça, à vista junto do botão, só quando está preenchida no painel (22 out
+     2026): os avisos de segurança (um por linha), «Não é um brinquedo», a composição dos tecidos e a
+     referência. Vazios, nada muda na ficha. */
+  const avisosDaPeca = avisosDoArtigo(p);
+  const perigosDaPeca = linhasDe(p.perigos);
+  const infoLegal = avisosDaPeca.length || perigosDaPeca.length || p.naoBrinquedo === true || p.composicao || p.referencia ? `<div class="info-legal">
+    ${avisosDaPeca.length ? `<div class="info-legal__avisos"><p class="info-legal__titulo">${icones.escudo}<span>Avisos de segurança</span></p><ul>${avisosDaPeca.map((t) => `<li>${esc(t)}</li>`).join('')}</ul></div>` : ''}
+    ${perigosDaPeca.length ? `<div class="info-legal__avisos"><p class="info-legal__titulo">${icones.escudo}<span>Perigos</span></p><ul>${perigosDaPeca.map((t) => `<li>${esc(t)}</li>`).join('')}</ul></div>` : ''}
+    ${p.naoBrinquedo === true ? `<p class="info-legal__linha">${icones.info}<span>Não é um brinquedo.</span></p>` : ''}
+    ${p.composicao ? `<p class="info-legal__linha">${icones.folha}<span><strong>Composição:</strong> ${esc(p.composicao)}</span></p>` : ''}
+    ${p.referencia ? `<p class="info-legal__linha">${icones.caixa}<span><strong>Referência:</strong> ${esc(p.referencia)}</span></p>` : ''}
+  </div>` : '';
 
   const acordeoes = `<div class="acordeoes">
     ${medidas ? `<details><summary>${icones.regua}Medidas</summary><div class="acordeoes__corpo">${medidas}<p class="nota">Medidas aproximadas. Cada peça é feita à mão: pode haver pequenas diferenças de uma para outra.</p></div></details>` : ''}
     ${pers.disponivel ? `<details><summary>${icones.gravar}Personalização</summary><div class="acordeoes__corpo"><p>${pers.obrigatoria ? 'O nome vai gravado na régua.' : 'Pode gravar o nome do seu filho, uma frase ou um desenho. A gravação está incluída no preço.'} Só tratamos da personalização depois da encomenda confirmada; a maquete vai para aprovação uns dias antes do envio, e só depois gravamos.</p><p><a href="${ctx.url('/personalizacao/')}">Como funciona a personalização</a></p></div></details>` : ''}
     ${envio ? `<details><summary>${icones.camiao}Envio e entrega</summary><div class="acordeoes__corpo">${quadroEnvio}<p><a href="${ctx.url('/como-encomendar/')}">Como encomendar e prazos</a></p></div></details>` : ''}
-    <details><summary>${icones.escudo}Segurança e fabricante</summary><div class="acordeoes__corpo"><ul><li>Use sempre sob a supervisão de um adulto.</li><li>${/desmontad/i.test(p.montagem || '') ? 'Monte e use' : 'Use'} a peça numa superfície plana e estável${p.categoria === 'torres-de-aprendizagem' ? ', sempre encostada a uma bancada' : ''}.</li></ul><p class="nota">Fabricante: ${fabricante}.</p></div></details>
+    <details><summary>${icones.escudo}Segurança e fabricante</summary><div class="acordeoes__corpo"><ul><li>Use sempre sob a supervisão de um adulto.</li><li>${/desmontad/i.test(p.montagem || '') ? 'Monte e use' : 'Use'} a peça numa superfície plana e estável${p.categoria === 'torres-de-aprendizagem' ? ', sempre encostada a uma bancada' : ''}.</li></ul><p class="nota">Fabricante: ${fabricante}.${p.referencia ? ` Referência: ${esc(p.referencia)}.` : ''}</p></div></details>
   </div>`;
 
   const ops = ctx.opinioes.filter((o) => o.artigo === p.slug);
@@ -422,8 +442,10 @@ export function produto(ctx, p) {
       ${selos ? `<div class="produto__selos">${selos}</div>` : ''}
       <h1 class="produto__nome">${esc(p.nome)}</h1>
       ${preco(ctx, p, { grande: true })}
+      ${promocaoNota(ctx, p)}
       <div class="produto__resumo">${markdown(p.descricao, ctx.url)}</div>
       ${form}
+      ${infoLegal}
       ${entrega}
       ${acordeoes}
     </div>
@@ -448,7 +470,8 @@ export function produto(ctx, p) {
     seller: { '@id': ctx.absoluto('/#loja') },
   };
   if (v.ate) offer.priceValidUntil = v.ate;
-  if (v.anterior && INICIO_PROMOCAO[v.ate]) offer.validFrom = INICIO_PROMOCAO[v.ate];
+  if (v.anterior && (dataIso(p.promocaoDesde) || INICIO_PROMOCAO[v.ate])) offer.validFrom = dataIso(p.promocaoDesde) || INICIO_PROMOCAO[v.ate];
+  if (p.referencia) offer.sku = p.referencia;
   offer.hasMerchantReturnPolicy = politicaDevolucao(ctx);
   // Sem portes definidos não vai a lista vazia: o Google lê-a como «shippingDetails em falta» na mesma.
   const zonasComPortes = envio ? zonasEnvio.filter((z) => Number.isFinite(envio[z.id])) : [];
@@ -480,6 +503,7 @@ export function produto(ctx, p) {
     }),
     brand: { '@type': 'Brand', name: ctx.site.marca },
     category: c.nome,
+    ...(p.referencia ? { sku: p.referencia } : {}),
     offers: offer,
     ...(idade ? { audience: { '@type': 'PeopleAudience', suggestedMinAge: Math.round((p.idade / 12) * 100) / 100 } } : {}),
     /* As estrelas para o Google: só no Product (as de uma loja sobre si mesma, no Store, não contam)
@@ -499,6 +523,18 @@ export function produto(ctx, p) {
     conteudo,
   };
 }
+
+/* O fabricante de uma peça, quando o artigo o diz por inteiro (nome, morada e email); senão null,
+   e a ficha diz a loja. */
+export function fabricanteDoArtigo(p) {
+  const f = p.fabricante;
+  if (!f || typeof f !== 'object') return null;
+  const ok = ['nome', 'morada', 'email'].every((k) => typeof f[k] === 'string' && f[k].trim());
+  return ok ? { nome: f.nome.trim(), morada: f.morada.trim(), email: f.email.trim() } : null;
+}
+/* Os avisos de segurança (e os perigos) de uma peça: um por linha do campo. */
+const linhasDe = (v) => String(typeof v === 'string' ? v : '').split(/\n+/).map((t) => t.trim()).filter(Boolean);
+export const avisosDoArtigo = (p) => linhasDe(p.avisos);
 
 // ---------------------------------------------------------------- carrinho
 export function carrinho(ctx) {
@@ -537,7 +573,8 @@ export function carrinho(ctx) {
             <li data-se-gravacao hidden><strong>Uns dias antes do envio, mandamos a maquete da gravação para aprovar: só gravamos depois do seu «sim».</strong></li>
           </ol>
         </div>
-        <p class="encomenda__aviso">${icones.info}<span>Ao carregar no botão abre-se o WhatsApp com a sua encomenda escrita. Nada do que escreve aqui fica guardado neste site.</span></p>
+        <p class="encomenda__aviso">${icones.info}<span>Ao carregar no botão abre-se o WhatsApp com a sua encomenda escrita. Nada do que escreve aqui fica guardado neste site. <a href="${ctx.url('/termos-e-condicoes/')}">Termos e condições</a></span></p>
+        ${pecaLegal('frase-formulario', fraseFormularioHtml({ urlPolitica: ctx.url('/politica-de-privacidade/'), meses: 36, finalidade: 'preparar a sua encomenda' }))}
         <p class="comprar__erro" data-erro-encomenda role="alert" hidden></p>
         <button class="botao botao--whatsapp botao--largo" type="submit">${icones.whatsapp}<span>Enviar encomenda pelo WhatsApp</span></button>
         <div class="encomenda__enviada" data-enviada hidden>
@@ -661,6 +698,11 @@ export function contactos(ctx) {
   <h1 class="titulo-pagina">Contactos</h1>
   <p class="texto__intro">Encomendas, dúvidas sobre medidas ou uma ideia de personalização: fale connosco. Respondemos pelo WhatsApp, por email ou pelas redes sociais.</p>
   <ul class="contactos">${cartoes.join('')}</ul>
+  <section class="contactos-livro" aria-labelledby="livro-titulo">
+    <h2 id="livro-titulo">Reclamações</h2>
+    <p>Fale primeiro connosco: resolvemos quase tudo numa conversa. Pode também apresentar a reclamação no Livro de Reclamações Eletrónico.</p>
+    ${livroBotao()}
+  </section>
 </div>`;
   return { caminho: '/contactos/', titulo: 'Contactos', descricao: `Fale com a ${ctx.site.marca}: WhatsApp, ${tel ? 'telefone, ' : ''}email, Instagram e Facebook. Oficina em ${ctx.site.local.localidade}.`, jsonld: [m.ld, organizacao(ctx)], conteudo };
 }

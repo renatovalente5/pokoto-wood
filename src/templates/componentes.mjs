@@ -1,6 +1,30 @@
-// Peças repetidas: imagens, preços, cartões de artigo, migalhas.
+// Peças repetidas: imagens, preços, cartões de artigo, migalhas, e as peças legais comuns.
 import { esc, euros, precoDe, dataPorExtenso } from './util.mjs';
 import { icones } from './icones.mjs';
+import { livroReclamacoes, VERSAO as LEGAL_COMUM_VERSAO } from '../../legal-comum/index.mjs';
+
+/* AS PEÇAS DA BIBLIOTECA legal-comum (a cópia está em legal-comum/, instalada por
+   _ferramentas/legal-comum/instalar.mjs), entre os marcadores que o verificar-versoes.mjs dela
+   procura nas páginas publicadas: <!-- legal-comum:<peça> v<versão> --> … <!-- /legal-comum:<peça> -->. */
+export const pecaLegal = (nome, html) => `<!-- legal-comum:${nome} v${LEGAL_COMUM_VERSAO} -->${html}<!-- /legal-comum:${nome} -->`;
+
+/* A ligação ao Livro de Reclamações Electrónico, com o ícone (DL 156/2005, art. 5.º-B, n.º 2: «em local
+   visível e de forma destacada»), na variante DISCRETA da biblioteca (o Renato, 22 out 2026: nada de botão
+   com caixa): a letra, o tamanho e a cor das ligações vizinhas, nunca mais pequena nem esbatida. No rodapé
+   de todas as páginas, na lista da informação legal, e nos Contactos; o CSS (livroCss) vai anexado à folha
+   de estilos na construção. */
+export const livroBotao = () => pecaLegal('livro', livroReclamacoes());
+
+/* A nota legal da promoção, por baixo do preço da ficha (DL 70/2007, art. 5.º): o período e o preço mais
+   baixo dos 30 dias anteriores ao início — que é, por lei, o preço riscado. Só com a data de início
+   (promocaoDesde); sem ela, fica o selo «Promoção até …» de sempre, e as regras lembram a data. */
+export function promocaoNota(ctx, p) {
+  const v = precoDe(p, ctx.hoje);
+  const desde = typeof p.promocaoDesde === 'string' && /^\d{4}-\d{2}-\d{2}$/.test(p.promocaoDesde) ? p.promocaoDesde : '';
+  if (!v.anterior || !v.ate || !desde) return '';
+  const mesmoAno = desde.slice(0, 4) === v.ate.slice(0, 4);
+  return `<p class="preco__promocao">Promoção de ${dataPorExtenso(desde, !mesmoAno)} a ${dataPorExtenso(v.ate, true)} · preço mais baixo nos 30 dias anteriores: ${euros(v.anterior)}</p>`;
+}
 
 // <picture> com AVIF + WebP em várias larguras. «tamanhos» é o atributo sizes: diz ao browser
 // a largura em que a imagem vai aparecer, para escolher a versão certa.

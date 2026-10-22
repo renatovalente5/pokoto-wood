@@ -84,10 +84,19 @@ export const NOMES_ZONAS = Object.freeze({ continente: 'Portugal Continental', i
    ordem (ordenarComo()); as que já estão no ficheiro ficam onde estão. */
 export const CAMPOS_ARTIGO = Object.freeze([
   'nome', 'nomeCurto', 'fotos', 'resumo', 'descricao',
-  'preco', 'precoAnterior', 'promocaoAte',
+  'preco', 'precoAnterior', 'promocaoAte', 'promocaoDesde',
   'medidas', 'montagem', 'idade', 'idadeAte', 'personalizacao', 'complementos', 'envio', 'vendaIsolada', 'video',
+  'referencia', 'fabricante', 'avisos', 'composicao', 'perigos', 'naoBrinquedo',
   'categoria', 'maisVendido', 'novidade', 'publicado', 'ordem',
 ]);
+/* Os campos da informação legal de cada peça (22 out 2026, grupo 1 da auditoria legal), todos
+   opcionais: a referência e o fabricante (Regulamento (UE) 2023/988, art. 19.º: nome, morada e
+   email — vazio, a ficha diz os dados da loja), os avisos de segurança (um por linha, à vista na
+   ficha, junto do botão), a composição dos tecidos (Regulamento (UE) 1007/2011), os perigos de uma
+   mistura vendida com a peça — óleos, tintas, colas (Regulamento (CE) 1272/2008, CLP; um por linha) — e
+   «Não é um brinquedo» (DL 43/2011). E a data de início da promoção (DL 70/2007, art. 5.º: o período e o
+   preço mais baixo dos 30 dias anteriores). */
+export const CAMPOS_FABRICANTE = Object.freeze(['nome', 'morada', 'email']);
 /* Sempre escritos pelo painel, com o valor explícito. Ausentes valem o valor por
    omissão (é o que o gerador faz). */
 export const BOOLEANOS_ARTIGO = Object.freeze(['vendaIsolada', 'maisVendido', 'novidade', 'publicado']);
@@ -95,9 +104,10 @@ export const POR_OMISSAO = Object.freeze({ publicado: true, maisVendido: false, 
 
 export const NOMES_CAMPOS = Object.freeze({
   nome: 'Nome do artigo', nomeCurto: 'Nome curto', fotos: 'Fotografias', resumo: 'Frase curta', descricao: 'Descrição',
-  preco: 'Preço', precoAnterior: 'Preço anterior', promocaoAte: 'Fim da promoção',
+  preco: 'Preço', precoAnterior: 'Preço anterior', promocaoAte: 'Fim da promoção', promocaoDesde: 'Início da promoção',
   medidas: 'Medidas', montagem: 'Como segue', idade: 'Idade recomendada', idadeAte: 'Idade recomendada (até)', personalizacao: 'Personalização', complementos: 'Complementos',
   envio: 'Portes de envio', vendaIsolada: 'Vende-se sozinho', video: 'Vídeo',
+  referencia: 'Referência', fabricante: 'Fabricante', avisos: 'Avisos de segurança', composicao: 'Composição dos tecidos', perigos: 'Perigos (misturas)', naoBrinquedo: 'Não é um brinquedo',
   categoria: 'Categoria', maisVendido: 'Mais vendido', novidade: 'Novidade', publicado: 'Publicado no site', ordem: 'Posição na lista',
 });
 
@@ -110,6 +120,7 @@ export const LIMITES = Object.freeze({ preco: [0.01, 100000], portes: [0, 10000]
 /* Tamanhos máximos dos textos, em caracteres. */
 export const TAMANHOS = Object.freeze({
   nome: 120, nomeCurto: 40, resumo: 300, descricao: 6000, montagem: 200,
+  referencia: 40, avisos: 600, fabricanteNome: 120, fabricanteMorada: 200, composicao: 300, perigos: 400,
   medidaRotulo: 40, medidaValor: 60, medidas: 12, complementos: 6, fotos: 16, nomeFoto: 120, alt: 300,
   marca: 60, descricaoSite: 300, assinatura: 80, fundadores: 80, email: 160, telefone: 20, rede: 60, horario: 120,
   empresaNome: 160, empresaTipo: 80, nif: 20, morada: 160, codigoPostal: 12, localidade: 60, concelho: 60, iva: 200,
@@ -125,6 +136,13 @@ export const TECTOS = Object.freeze({ artigoBytes: 64 * 1024, siteBytes: 64 * 10
    aplicável desde 27 set 2026: alegações ambientais genéricas) e as
    certificações que a Pokóto não nos mostrou (CE, EN 71, FSC). */
 export const RE_ALEGACOES = /\b(ecol[óo]gic[oa]s?|sustent[áa]ve(l|is)|sustentabilidade|amig[oa]s? do ambiente|eco-?friendly|biodegrad[áa]ve(l|is)|neutr[oa]s? em carbono|certificad[oa]s?|FSC|EN ?71|marca[çc][ãa]o CE)\b/i;
+
+/* «Brincar» e «brinquedo» nos TEXTOS GERAIS (a página inicial, as categorias, a marca) apresentam
+   as peças como brinquedos, e um brinquedo só se anuncia com marcação CE (DL 43/2011, art. 34.º),
+   que a Pokóto não tem. É só um lembrete (22 out 2026, grupo 1 da auditoria legal): os textos são
+   da Célia, e a decisão é dela e do Renato. Os textos de cada artigo não passam por aqui. */
+export const RE_BRINCAR = /\b(brinc[a-záéíóúãõç]*|brinquedos?)\b/i;
+export const MENSAGEM_BRINCAR = (palavra) => `«${palavra}» apresenta as peças como brinquedos: sem marcação CE, a lei não deixa anunciá-las assim (DL 43/2011). Troque a palavra (por exemplo, «explorar» ou «usar»), ou fale com o Renato.`;
 
 /* ------------------------------------------------------------------ */
 /* Ajudantes que o painel e o Worker também usam                      */
@@ -391,6 +409,21 @@ export function problemasDoArtigo(a, ctx = {}) {
     else if (vazio(pa)) avisa('promocaoAte', 'promocaoAte', 'Há data de fim da promoção, mas não há preço anterior: escreva o preço anterior, ou apague a data.');
     else if (typeof ctx.hoje === 'string' && ate < ctx.hoje && noSite(a)) lembra('promocao-acabou', 'promocaoAte', `A promoção acabou a ${ate.split('-').reverse().join('/')}: o site já mostra o preço normal (${pa} €). Pode apagar o preço anterior e a data, ou pôr uma data nova.`);
   }
+  /* O INÍCIO DA PROMOÇÃO (DL 70/2007, art. 5.º: a lei pede o período e o preço mais baixo dos 30
+     dias anteriores ao início; o riscado tem de ser esse preço). Com a data, a ficha diz «Promoção
+     de … a … · preço mais baixo nos 30 dias anteriores: …». Sem ela, numa promoção a correr, um
+     lembrete (não pára nada: as promoções de hoje são anteriores a esta regra). */
+  const desde = a.promocaoDesde;
+  const emPromocao = typeof p === 'number' && typeof pa === 'number' && pa > p;
+  const acabou = dataValida(ate) && typeof ctx.hoje === 'string' && ate < ctx.hoje;
+  if (!ausente(desde) && desde !== '') {
+    if (!dataValida(desde)) avisa('promocaoDesde', 'promocaoDesde', 'A data de início da promoção não é uma data válida.');
+    else if (vazio(pa)) avisa('promocaoDesde', 'promocaoDesde', 'Há data de início da promoção, mas não há preço anterior: escreva o preço anterior, ou apague a data.');
+    else if (dataValida(ate) && desde > ate) avisa('promocaoDesde', 'promocaoDesde', 'A promoção começa depois de acabar: confira as duas datas.');
+  } else if (emPromocao && !acabou && noSite(a)) {
+    lembra('promocao-sem-inicio', 'promocaoDesde', 'Falta a data de início da promoção: a lei pede o período e o preço mais baixo dos 30 dias anteriores (DL 70/2007). Com a data, a ficha diz «Promoção de … a … · preço mais baixo nos 30 dias anteriores: …».');
+  }
+  if (emPromocao && vazio(ate) && noSite(a)) lembra('promocao-sem-fim', 'promocaoAte', 'Falta a data de fim da promoção: a lei pede o período da promoção (DL 70/2007). Escolha o último dia.');
   const o = a.ordem;
   if (!ausente(o) && o !== '' && (typeof o !== 'number' || !Number.isInteger(o) || o < LIMITES.ordem[0] || o > LIMITES.ordem[1])) {
     avisa('ordem', 'ordem', `A posição é um número inteiro de 0 a ${LIMITES.ordem[1]} (mais baixo aparece primeiro).`);
@@ -459,6 +492,25 @@ export function problemasDoArtigo(a, ctx = {}) {
   const v = a.video;
   if (!ausente(v) && v !== '' && (typeof v !== 'string' || (videos && !videos.includes(v)))) avisa('video', 'video', 'O vídeo escolhido não existe: escolha outro, ou nenhum.');
 
+  // --- a informação legal da peça (opcional) --------------------------------
+  const fab = a.fabricante;
+  if (!ausente(fab)) {
+    if (!eObjecto(fab)) avisa('fabricante', 'fabricante', 'O fabricante não está gravado como deve ser: escreva-o outra vez.');
+    else {
+      for (const [k, max, rotulo] of [['nome', TAMANHOS.fabricanteNome, 'Nome do fabricante'], ['morada', TAMANHOS.fabricanteMorada, 'Morada do fabricante']]) {
+        const x = fab[k];
+        if (ausente(x) || x === '') continue;
+        if (typeof x !== 'string' || x.length > max || RE_CONTROLO_LINHA.test(x)) avisa(`fabricante.${k}`, `fabricante.${k}`, `«${rotulo}» tem de ser um texto numa linha, até ${max} caracteres.`);
+      }
+      if (!vazio(fab.email) && !emailValido(fab.email)) avisa('fabricante.email', 'fabricante.email', 'O email do fabricante não parece estar certo (ex.: nome@exemplo.pt).');
+      const dados = CAMPOS_FABRICANTE.filter((k) => temTexto(fab[k]));
+      if (dados.length && dados.length < CAMPOS_FABRICANTE.length && noSite(a)) {
+        lembra('fabricante:incompleto', `fabricante.${CAMPOS_FABRICANTE.find((k) => !temTexto(fab[k]))}`, 'O fabricante está incompleto: a lei pede o nome, a morada e o email (Regulamento (UE) 2023/988, art. 19.º). Até estar completo, a ficha mostra os dados da loja.');
+      }
+    }
+  }
+  if (!ausente(a.naoBrinquedo) && typeof a.naoBrinquedo !== 'boolean') avisa('naoBrinquedo', 'naoBrinquedo', '«Não é um brinquedo» tem de ser sim ou não.');
+
   // --- textos -------------------------------------------------------------
   const texto = (campo, max, { linha = true } = {}) => {
     const x = a[campo];
@@ -471,6 +523,19 @@ export function problemasDoArtigo(a, ctx = {}) {
   texto('resumo', TAMANHOS.resumo, { linha: false });
   texto('descricao', TAMANHOS.descricao, { linha: false });
   texto('montagem', TAMANHOS.montagem);
+  texto('referencia', TAMANHOS.referencia);
+  texto('avisos', TAMANHOS.avisos, { linha: false });
+  texto('composicao', TAMANHOS.composicao);
+  texto('perigos', TAMANHOS.perigos, { linha: false });
+  for (const campo of ['referencia', 'avisos', 'composicao', 'perigos']) {
+    if (!ausente(a[campo]) && a[campo] !== '' && typeof a[campo] !== 'string') avisa(`${campo}:tipo`, campo, `«${NOMES_CAMPOS[campo]}» tem de ser texto.`);
+  }
+  /* «Brincar»/«brinquedo» nos textos da peça: a Pokóto não tem marcação CE, e um brinquedo só se
+     anuncia com ela (DL 43/2011). Só um lembrete (grupo 1 da auditoria legal, 22 out 2026). */
+  for (const campo of ['nome', 'nomeCurto', 'resumo', 'descricao']) {
+    const b = typeof a[campo] === 'string' ? a[campo].match(RE_BRINCAR) : null;
+    if (b && noSite(a)) { lembra(`${campo}:brincar`, campo, `«${NOMES_CAMPOS[campo]}»: ${MENSAGEM_BRINCAR(b[0])}`); break; }
+  }
   return out;
 }
 
@@ -527,6 +592,8 @@ export function problemasDoSite(d, { producao = false } = {}) {
     if (RE_PARTE_A_PAGINA.test(v)) bloqueia(`${chave}:parte`, s, campo, `«${rotulo}» tem «</script» ou «<!--», que não podem ir para o site.`);
     const m = v.match(RE_ALEGACOES);
     if (m) bloqueia(`${chave}:alegacao`, s, campo, `«${rotulo}»: «${m[0]}» é uma palavra que a lei só deixa usar com prova (ou uma certificação que não temos). Tire-a.`);
+    const b = v.match(RE_BRINCAR);
+    if (b) avisa(`${chave}:brincar`, s, campo, `«${rotulo}»: ${MENSAGEM_BRINCAR(b[0])}`, { lembrete: true });
   };
 
   // --- contactos ---------------------------------------------------------------
@@ -590,7 +657,7 @@ export function problemasDasCategorias(valor, { fotos = null } = {}) {
   const ficheiro = FICHEIROS.categorias;
   const out = [];
   const bloqueia = (chave, campo, mensagem) => out.push({ classe: 'bloqueia', chave: `categorias:${chave}`, ficheiro, ecra: 'Categorias', campo, mensagem });
-  const avisa = (chave, campo, mensagem) => out.push({ classe: 'avisa', chave: `categorias:${chave}`, ficheiro, ecra: 'Categorias', campo, mensagem });
+  const avisa = (chave, campo, mensagem, extra = {}) => out.push({ classe: 'avisa', chave: `categorias:${chave}`, ficheiro, ecra: 'Categorias', campo, mensagem, ...extra });
   const l = lerJson(valor);
   if (!Array.isArray(l.obj) || !l.obj.length) { bloqueia('forma', undefined, 'As categorias não se conseguem ler: sem elas o site não se consegue gerar. Só o Renato as pode corrigir.'); return out; }
   const slugs = new Set();
@@ -606,6 +673,8 @@ export function problemasDasCategorias(valor, { fotos = null } = {}) {
       if (RE_CONTROLO_TEXTO.test(v) || RE_PARTE_A_PAGINA.test(v)) bloqueia(`${c.slug}.${k}:controlo`, `${i}.${k}`, `«${rotulo}» da categoria ${c.nome || c.slug} tem caracteres que não podem ir para o site.`);
       const m = v.match(RE_ALEGACOES);
       if (m) bloqueia(`${c.slug}.${k}:alegacao`, `${i}.${k}`, `«${rotulo}» da categoria ${c.nome || c.slug}: «${m[0]}» é uma palavra que a lei só deixa usar com prova. Tire-a.`);
+      const b = v.match(RE_BRINCAR);
+      if (b) avisa(`${c.slug}.${k}:brincar`, `${i}.${k}`, `«${rotulo}» da categoria ${c.nome || c.slug}: ${MENSAGEM_BRINCAR(b[0])}`, { lembrete: true });
     }
     if (!nomeDeFotoValido(c.foto) || (fotos && !fotos.has(c.foto))) bloqueia(`${c.slug}.foto`, `${i}.foto`, `A fotografia da categoria ${c.nome || c.slug} não existe na biblioteca: escolha outra.`);
   });
@@ -661,6 +730,8 @@ export function problemasDoInicio(valor, { fotos = null, videos = null } = {}) {
     if (RE_CONTROLO_TEXTO.test(v) || RE_PARTE_A_PAGINA.test(v)) bloqueia(`${caminho}:controlo`, caminho, 'Este texto tem caracteres que não podem ir para o site. Escreva-o outra vez.');
     const m = v.match(RE_ALEGACOES);
     if (m) bloqueia(`${caminho}:alegacao`, caminho, `«${m[0]}» é uma palavra que a lei só deixa usar com prova (ou uma certificação que não temos). Tire-a.`);
+    const b = v.match(RE_BRINCAR);
+    if (b) avisa(`${caminho}:brincar`, caminho, MENSAGEM_BRINCAR(b[0]), { lembrete: true });
   };
   for (const [c, max, ob] of textos) umTexto(c, max, ob);
   if (!vazio(h.capa.ligacao) && (typeof h.capa.ligacao !== 'string' || !/^\/[a-z0-9/-]*$/.test(h.capa.ligacao))) avisa('capa.ligacao', 'capa.ligacao', 'A ligação do botão tem de ser uma página do site (ex.: /loja/).');
@@ -669,7 +740,10 @@ export function problemasDoInicio(valor, { fotos = null, videos = null } = {}) {
     const v = valorEm(caminho);
     if (!Array.isArray(v) || v.length < min || v.length > max || v.some((x) => !temTexto(x) || x.length > TAMANHOS.inicioCurto)) {
       bloqueia(`${caminho}:lista`, caminho, `Esta lista tem de ter de ${min} a ${max} textos curtos, nenhum vazio.`);
+      return;
     }
+    const b = v.map((x) => x.match(RE_BRINCAR)).find(Boolean);
+    if (b) avisa(`${caminho}:brincar`, caminho, MENSAGEM_BRINCAR(b[0]), { lembrete: true });
   };
   listaDeTextos('personalizacao.opcoes', 0, 4);
   listaDeTextos('historia.bolhas', 0, 3);

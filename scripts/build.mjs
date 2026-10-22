@@ -21,6 +21,13 @@ import { esc, euros, hojeEmLisboa, markdown, numeroWhatsApp, numeroLegivel, cust
 import { pagina } from '../src/templates/layout.mjs';
 import * as R from '../src/lib/regras.mjs';
 import * as paginas from '../src/templates/paginas.mjs';
+/* As peças legais comuns aos sites do Renato (a cópia em legal-comum/, instalada por
+   _ferramentas/legal-comum/instalar.mjs; não se edita aqui): o CSS do botão do Livro de
+   Reclamações, os destinatários da política de privacidade e as guardas da identificação, das
+   promoções e das fichas (22 out 2026, grupo 1 da auditoria legal). */
+import { livroCss, destinatariosHtml, CATALOGO_DESTINATARIOS, frasesPrivacidade, prazos as PRAZOS_LEGAIS, verificarIdentificacao, verificarPromocao, verificarProduto, VERSAO as LEGAL_COMUM_VERSAO } from '../legal-comum/index.mjs';
+import { pecaLegal } from '../src/templates/componentes.mjs';
+import { fabricanteDoArtigo, avisosDoArtigo } from '../src/templates/paginas.mjs';
 
 const RAIZ = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const args = process.argv.slice(2);
@@ -103,6 +110,46 @@ const produtos = Object.entries(neutro.artigos)
   .sort((a, b) => (a.ordem ?? 999) - (b.ordem ?? 999) || a.nome.localeCompare(b.nome, 'pt'));
 const fotoExiste = (f) => fotos[f] && dadosRegras.ficheirosFotos.includes(f);
 
+// ---------------------------------------------------------------- as guardas legais (só avisam)
+/* As guardas da biblioteca legal-comum, em modo AVISAR (22 out 2026, grupo 1 da auditoria legal):
+   nada pára nem se esconde por elas; o que dizem vai para os avisos do registo da publicação, para o
+   Renato ver. A identificação (DL 7/2004, art. 10.º), as promoções (DL 70/2007, art. 5.º) e as fichas
+   (Regulamento (UE) 2023/988, art. 19.º). */
+const FORMAS = [[/nome individual|\beni\b/i, 'eni'], [/unipessoal/i, 'unipessoal'], [/\blda\b|limitada/i, 'lda'], [/\bs\.?\s?a\b|an[óo]nima/i, 'sa']];
+{
+  const e = site.empresa || {};
+  const forma = FORMAS.find(([re]) => re.test(e.tipo || ''))?.[1];
+  const r = verificarIdentificacao({
+    nome: e.nome, formaJuridica: forma, nif: e.nif,
+    morada: [e.morada, [e.codigoPostal, e.localidade].filter(Boolean).join(' ')].filter(Boolean).join(', '),
+    email: site.contactos?.email, telefone: site.contactos?.telefone || site.contactos?.whatsapp,
+  }, { modo: 'avisar', ecra: 'Dados da loja › Empresa' });
+  for (const p of r.problemas) avisos.push(`Identificação (${p.campo}): ${p.mensagem}`);
+}
+/* Os conjuntos de Pikler e as peças de que são feitos: o riscado de um conjunto não pode ser a soma
+   dos preços das peças (DL 70/2007, art. 5.º-A, n.º 1, al. b)). Só para o aviso: os preços não se
+   mexem aqui. */
+const CONJUNTOS = {
+  'triangulo-prancha-pikler': ['triangulo-pikler', 'prancha-dupla-face'],
+  'arco-prancha-pikler': ['arco-pikler', 'prancha-dupla-face'],
+  'trio-pikler': ['triangulo-pikler', 'arco-pikler', 'prancha-dupla-face'],
+};
+const precoNormal = (slug) => { const a = produtos.find((x) => x.slug === slug); return a ? (typeof a.precoAnterior === 'number' && a.precoAnterior > a.preco ? a.precoAnterior : a.preco) : null; };
+for (const p of produtos) {
+  if (typeof p.precoAnterior === 'number' && typeof p.preco === 'number' && p.precoAnterior > p.preco) {
+    const pecas = CONJUNTOS[p.slug];
+    const r = verificarPromocao({
+      precoAntes: p.precoAnterior, precoAgora: p.preco, inicio: p.promocaoDesde, fim: p.promocaoAte, historico: [],
+      ...(pecas ? { tipo: 'conjunto', precosUnitarios: pecas.map(precoNormal) } : {}),
+    }, { modo: 'avisar' });
+    for (const x of r.problemas) avisos.push(`Promoção › ${p.nome}: ${x.mensagem}`);
+  }
+  const e = site.empresa || {};
+  const fab = fabricanteDoArtigo(p) || { nome: e.nome, morada: [e.morada, e.codigoPostal, e.localidade].filter(Boolean).join(', '), email: site.contactos?.email };
+  const r = verificarProduto({ nome: p.nome, preco: p.preco, fabricante: fab, referencia: p.referencia, avisos: avisosDoArtigo(p), composicao: p.composicao }, { categoria: 'geral', modo: 'avisar' });
+  for (const x of r.problemas) avisos.push(`Ficha › ${p.nome}: ${x.mensagem}`);
+}
+
 // As páginas de texto (content/paginas/*.md) não passam pelo painel: só o Renato as muda.
 // Conferem-se aqui as alegações e a fotografia.
 for (const f of fs.readdirSync(path.join(CONTEUDO, 'paginas'))) {
@@ -153,7 +200,13 @@ for (const f of fs.readdirSync(path.join(RAIZ, 'media/video')).filter((x) => x.e
 }
 
 // CSS e JS: um ficheiro cada, com o resumo no nome
-const css = fs.readFileSync(path.join(RAIZ, 'src/estilos/site.css'));
+/* A folha de estilos leva no fim o CSS do Livro de Reclamações da biblioteca legal-comum (a variante
+   discreta, .lr-discreto, e o texto só para leitores de ecrã). Vai ANTES do site.css: as regras do
+   rodapé (.rodape__coluna a) ganham, e o Livro fica com a letra e a cor das ligações vizinhas. */
+const css = Buffer.concat([
+  Buffer.from(`/* legal-comum v${LEGAL_COMUM_VERSAO}: o Livro de Reclamações */\n${livroCss()}\n`),
+  fs.readFileSync(path.join(RAIZ, 'src/estilos/site.css')),
+]);
 const js = Buffer.from(['site.js', 'carrinho.js'].map((f) => `// ${f}\n${fs.readFileSync(path.join(RAIZ, 'src/scripts', f), 'utf8')}`).join('\n'));
 const ficheiros = { css: `site-${resumo(css)}.css`, js: `site-${resumo(js)}.js`, videos: ficheirosVideo };
 fs.writeFileSync(path.join(SAIDA, 'assets', ficheiros.css), css);
@@ -282,6 +335,28 @@ function botoesDesistencia() {
   return `<div class="botoes">${b.join('')}</div><p class="nota">Respondemos a confirmar que recebemos a sua desistência.</p>`;
 }
 
+/* Quem recebe dados (destinatariosHtml, da legal-comum). O GitHub (o repositório do site e a
+   publicação) e o Gmail que recebe os avisos das opiniões não cabem nas chaves da configuração (que
+   só tem um alojamento e uma caixa de correio): entram como linhas a mais, com os dados do catálogo
+   da biblioteca. */
+const CONFIG_PRIVACIDADE = {
+  alojamento: 'cloudflare', dns: 'cloudflare', email: 'sapo',
+  whatsapp: true, instagram: true, facebookPage: true,
+  manutencao: { nome: 'Renato Valente', papel: 'subcontratante' },
+  repositorioPublico: true,
+};
+const TRANSFERENCIA = { DPF: 'EUA: consta da lista do Data Privacy Framework (decisão de adequação da Comissão Europeia)', UE: 'Sem transferência: os dados ficam na União Europeia' };
+function destinatariosComExtras() {
+  const extra = [
+    ['github', 'código do site e publicação automática (GitHub Actions): o painel grava lá as mudanças da loja; não leva dados de clientes'],
+    ['google', 'caixa de correio Gmail de quem mantém o site, que recebe os avisos das opiniões novas (o nome e o texto da opinião)'],
+  ].map(([k, finalidade]) => {
+    const d = CATALOGO_DESTINATARIOS[k];
+    return `<tr><td>${esc(d.nome)}</td><td>${esc(finalidade)}</td><td>${esc(d.pais)}</td><td>${esc(TRANSFERENCIA[d.transferencia] || 'Por confirmar')}</td></tr>`;
+  });
+  return destinatariosHtml(CONFIG_PRIVACIDADE).replace('</tbody>', `${extra.join('\n')}\n</tbody>`);
+}
+
 function resolverMarcadores(fonte, onde) {
   const c = site.contactos;
   const tokens = [];
@@ -300,6 +375,18 @@ function resolverMarcadores(fonte, onde) {
     tabelaPortes: () => guardar(tabelaPortes()),
     avisoGravacao: () => guardar(paginas.avisoGravacao(ctx, { exemplos: false })),
     botoesDesistencia: () => guardar(botoesDesistencia()),
+    /* A política de privacidade (RGPD, arts. 13.º e 28.º), pela biblioteca legal-comum: os
+       destinatários reais (o alojamento e o DNS na Cloudflare, o código e a publicação no GitHub, o
+       email no SAPO, o Gmail que recebe os avisos das opiniões, a Meta, e o Renato, que mantém o site
+       e o painel), os prazos, e as frases da Meta e do repositório público. */
+    'privacidade.destinatarios': () => guardar(pecaLegal('privacidade-destinatarios', destinatariosComExtras())),
+    'privacidade.prazos': () => guardar(pecaLegal('privacidade-prazos', `<ul>${[
+      'Pedidos de informação que não chegam a encomenda: 12 meses depois da última mensagem.',
+      'Conversas e dados de uma encomenda: enquanto forem precisos para ela e para a garantia, até 3 anos depois da entrega.',
+      PRAZOS_LEGAIS.encomendas.texto.replace('Encomendas e facturas', 'Faturas'),
+      PRAZOS_LEGAIS.registosTecnicos.texto,
+    ].map((t) => `<li>${esc(t)}</li>`).join('')}</ul>`)),
+    'privacidade.frases': () => guardar(pecaLegal('privacidade-frases', frasesPrivacidade(CONFIG_PRIVACIDADE).map((t) => `<p>${esc(t)}</p>`).join(''))),
     avisoGarantia: () => guardar(`<figure class="aviso-garantia"><img src="${ctx.asset('legal/aviso-garantia-legal-pt.svg')}" width="600" height="848" alt="${esc(AVISO_ALT)}" loading="lazy"><figcaption><a href="${ctx.asset('legal/aviso-garantia-legal-pt.pdf')}">Descarregar o aviso oficial (PDF)</a> · <a href="https://europa.eu/youreurope/garantias" target="_blank" rel="noopener">europa.eu/youreurope/garantias</a></figcaption></figure>`),
   };
   const texto = fonte.replace(/\{\{([\w.]+)\}\}/g, (todo, chave) => {
@@ -402,6 +489,7 @@ for (const f of todosHtml) {
   const onde = path.relative(SAIDA, f);
   for (const lixo of ['{{', 'undefined', 'NaN', '[object Object]']) if (html.includes(lixo)) problemas.push(`${onde}: contém «${lixo}»`);
   if (producao && html.includes('por-confirmar')) problemas.push(`${onde}: ainda tem texto por confirmar`);
+  if (!html.includes('<!-- legal-comum:livro ')) problemas.push(`${onde}: falta o botão do Livro de Reclamações`);
   for (const m of html.matchAll(/<img\b[^>]*>/g)) if (!/\salt="/.test(m[0])) problemas.push(`${onde}: imagem sem alt: ${m[0].slice(0, 80)}`);
   for (const m of html.matchAll(/\s(?:href|src|poster)="([^"]+)"/g)) {
     let u = m[1].replace(/&amp;/g, '&');

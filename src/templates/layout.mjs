@@ -1,9 +1,7 @@
 // A moldura de todas as páginas: <head>, aviso, cabeçalho, rodapé, gaveta do carrinho e menu.
 import { esc, euros, numeroWhatsApp, precoDe } from './util.mjs';
 import { icones } from './icones.mjs';
-import { imagem } from './componentes.mjs';
-
-const LIVRO = 'https://www.livroreclamacoes.pt/inicio';
+import { imagem, livroBotao } from './componentes.mjs';
 
 function logotipo(ctx, { alto = 64, classe = 'logo' } = {}) {
   const l = ctx.manifesto.logo;
@@ -124,7 +122,7 @@ function rodape(ctx) {
         <li><a href="${ctx.url('/garantia/')}">Garantia legal</a></li>
         <li><a href="${ctx.url('/desistir/')}">Desistir de uma compra</a></li>
         <li><a href="${ctx.url('/resolucao-de-litigios/')}">Resolução de litígios</a></li>
-        <li><a href="${LIVRO}" target="_blank" rel="noopener">Livro de Reclamações</a></li>
+        <li>${livroBotao()}</li>
       </ul>
     </div>
   </div>

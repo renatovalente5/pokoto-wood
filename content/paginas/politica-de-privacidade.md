@@ -1,6 +1,6 @@
 titulo: Política de privacidade
 descricao: Que dados pessoais tratamos, para quê e por quanto tempo: as encomendas seguem pelo WhatsApp e este site não guarda nada do que escreve.
-atualizado: 2026-10-16
+atualizado: 2026-10-22
 ---
 ## Quem trata os seus dados
 
@@ -34,16 +34,22 @@ Uma opinião publicada fica no site enquanto a peça estiver à venda, e nunca m
 
 ## Por quanto tempo
 
-As conversas e os dados de uma encomenda guardam-se enquanto forem precisos para ela e para a garantia (3 anos a contar da entrega). As faturas guardam-se durante o prazo que a lei fiscal obriga (10 anos).
+{{privacidade.prazos}}
 
 ## Com quem partilhamos
 
-- **WhatsApp (Meta Platforms Ireland Ltd.)**, por onde seguem as encomendas e as conversas. O WhatsApp tem a sua própria política de privacidade.
 - **Transportadoras**, quando há envio: o nome, a morada e o contacto necessários para a entrega.
 - **Contabilista e Autoridade Tributária**, para a faturação.
-- **Alojamento do site**: as páginas são servidas pela Cloudflare, Inc., que trata os endereços IP de quem as visita para as entregar e por razões de segurança.
 
-Algumas destas entidades podem tratar dados fora da União Europeia, ao abrigo de decisões de adequação (como o Quadro de Proteção de Dados UE–EUA) ou de cláusulas contratuais-tipo.
+E os fornecedores que usamos para o site, o email e as conversas:
+
+{{privacidade.destinatarios}}
+
+O WhatsApp, o Instagram e o Facebook têm as suas próprias políticas de privacidade.
+
+## Redes sociais e ficheiros do site
+
+{{privacidade.frases}}
 
 ## Ligações para outros sites
 
