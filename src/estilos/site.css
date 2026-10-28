@@ -694,10 +694,6 @@ html:has(dialog[open]) { overflow: hidden; }
 .contactos h2 { font-size: 1.25rem; margin-bottom: .3em; }
 .contactos p { margin: 0; }
 @media (min-width: 800px) { .contactos { grid-template-columns: repeat(3, 1fr); } }
-/* As reclamações, nos Contactos: o botão do Livro de Reclamações (legal-comum). */
-.contactos-livro { margin-top: 32px; background: var(--creme); border-radius: var(--raio); padding: 22px; }
-.contactos-livro h2 { font-size: 1.25rem; margin-bottom: .3em; }
-.contactos-livro p { margin: 0 0 14px; max-width: 60ch; }
 /* A política de privacidade: a tabela dos destinatários e as frases (legal-comum). */
 .destinatarios { width: 100%; border-collapse: collapse; margin: 12px 0 20px; font-size: .92rem; }
 .destinatarios th, .destinatarios td { text-align: left; vertical-align: top; padding: 10px 12px 10px 0; border-bottom: 1px solid var(--linha); }
