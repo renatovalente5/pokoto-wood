@@ -352,10 +352,10 @@ export function produto(ctx, p) {
     : `<form class="comprar" data-comprar="${esc(p.slug)}" novalidate>
       ${pers.disponivel ? `<div class="campo">
         <label for="pers-${p.slug}">Personalização${pers.obrigatoria ? '' : ' <span class="campo__opcional">(grátis, opcional)</span>'}</label>
-        <input id="pers-${p.slug}" name="personalizacao" type="text" maxlength="80" autocomplete="off"${pers.obrigatoria ? ' required' : ''} placeholder="${pers.obrigatoria ? 'O nome a gravar' : 'Ex.: o nome ou uma frase'}" aria-describedby="${pers.obrigatoria ? '' : `pers-ajuda-${p.slug} `}pers-desistir-${p.slug} pers-aviso-${p.slug}">
-        ${pers.obrigatoria ? '' : `<p class="campo__ajuda" id="pers-ajuda-${p.slug}">Para um desenho, descreva a ideia em poucas palavras.</p>`}
-        <p class="campo__ajuda" id="pers-desistir-${p.slug}">${pers.obrigatoria ? 'Com a gravação, a peça é feita para si e não tem os 14 dias para desistir.' : 'Com gravação, a peça é feita para si e não tem os 14 dias para desistir; sem gravação tem.'}</p>
-        ${avisoGravacao(ctx, { id: `pers-aviso-${p.slug}` })}
+        <input id="pers-${p.slug}" name="personalizacao" type="text" maxlength="80" autocomplete="off"${pers.obrigatoria ? ' required' : ''} placeholder="${pers.obrigatoria ? 'O nome a gravar' : 'Ex.: o nome ou uma frase'}" aria-describedby="pers-desistir-${p.slug}">
+        ${/* Aparece quando se escreve a gravação (o Renato, 8 nov 2026: menos texto na ficha); o carrinho
+            volta a dizê-lo antes do botão. A caixa «Só tratamos da personalização…» saiu da ficha: está no
+            separador «Personalização», logo abaixo, no carrinho e na página da personalização. */ ''}<p class="campo__ajuda" id="pers-desistir-${p.slug}" data-aviso-ao-escrever hidden>${pers.obrigatoria ? 'Com a gravação, a peça é feita para si e não tem os 14 dias para desistir.' : 'Com gravação, a peça é feita para si e não tem os 14 dias para desistir; sem gravação tem.'}</p>
       </div>` : ''}
       ${complementos.length ? `<fieldset class="complementos"><legend>Complete com</legend>${complementos.map((k) => {
         const kv = precoDe(k.p, ctx.hoje);
@@ -386,8 +386,8 @@ export function produto(ctx, p) {
   const entrega = `<div class="entrega-caixa">
     ${idade ? `<p class="entrega-caixa__linha" data-idade>${icones.crianca}<span><strong>${esc(idade)}.</strong> ${esc(NOTA_IDADE)}</span></p>` : ''}
     ${prazoCurto ? `<p class="entrega-caixa__linha">${icones.relogio}<span>${esc(prazoCurto)}</span></p>` : ''}
-    <p class="entrega-caixa__linha">${icones.local}<span><strong>Levantamento grátis</strong> na nossa oficina, em ${esc(ctx.site.local.localidade)}.</span></p>
-    ${envio ? `<p class="entrega-caixa__linha">${icones.camiao}<span><strong>Envio:</strong> ${zonasEnvio.map((z) => `${esc(z.curto)} <span data-envio-zona="${z.id}">${linhaEnvio(z)}</span>`).join(' · ')}</span></p>` : ''}
+    ${envio ? `<p class="entrega-caixa__linha">${icones.camiao}<span><strong>Envio:</strong> ${zonasEnvio.map((z) => `${esc(z.curto)} <span data-envio-zona="${z.id}">${linhaEnvio(z)}</span>`).join(' · ')} · levantamento grátis na oficina</span></p>`
+      : `<p class="entrega-caixa__linha">${icones.local}<span><strong>Levantamento grátis</strong> na nossa oficina, em ${esc(ctx.site.local.localidade)}.</span></p>`}
     ${p.montagem ? `<p class="entrega-caixa__linha">${icones.caixa}<span>${inline(p.montagem, ctx.url)}</span></p>` : ''}
   </div>`;
 
@@ -419,7 +419,8 @@ export function produto(ctx, p) {
   const acordeoes = `<div class="acordeoes">
     ${medidas ? `<details><summary>${icones.regua}Medidas</summary><div class="acordeoes__corpo">${medidas}<p class="nota">Medidas aproximadas. Cada peça é feita à mão: pode haver pequenas diferenças de uma para outra.</p></div></details>` : ''}
     ${pers.disponivel ? `<details><summary>${icones.gravar}Personalização</summary><div class="acordeoes__corpo"><p>${pers.obrigatoria ? 'O nome vai gravado na régua.' : 'Pode gravar o nome do seu filho, uma frase ou um desenho. A gravação está incluída no preço.'} Só tratamos da personalização depois da encomenda confirmada; a maquete vai para aprovação uns dias antes do envio, e só depois gravamos.</p><p><a href="${ctx.url('/personalizacao/')}">Como funciona a personalização</a></p></div></details>` : ''}
-    ${envio ? `<details><summary>${icones.camiao}Envio e entrega</summary><div class="acordeoes__corpo">${quadroEnvio}<p><a href="${ctx.url('/como-encomendar/')}">Como encomendar e prazos</a></p></div></details>` : ''}
+    ${/* Sem complementos, o quadro só repetia a linha do envio da caixa de cima; com eles, diz os portes
+        de cada combinação e fica. */ ''}${envio && complementos.length ? `<details><summary>${icones.camiao}Envio e entrega</summary><div class="acordeoes__corpo">${quadroEnvio}<p><a href="${ctx.url('/como-encomendar/')}">Como encomendar e prazos</a></p></div></details>` : ''}
     <details><summary>${icones.escudo}Segurança e fabricante</summary><div class="acordeoes__corpo"><ul><li>Use sempre sob a supervisão de um adulto.</li><li>${/desmontad/i.test(p.montagem || '') ? 'Monte e use' : 'Use'} a peça numa superfície plana e estável${p.categoria === 'torres-de-aprendizagem' ? ', sempre encostada a uma bancada' : ''}.</li></ul><p class="nota">Fabricante: ${fabricante}.${p.referencia ? ` Referência: ${esc(p.referencia)}.` : ''}</p></div></details>
   </div>`;
 

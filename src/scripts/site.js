@@ -467,6 +467,10 @@
     const erro = $('[data-erro]', form);
     const total = $('[data-total]', form);
     const pers = form.elements.personalizacao;
+    /* O aviso dos 14 dias aparece quando se escreve a gravação (o Renato, 8 nov 2026). */
+    const desistir = $('[data-aviso-ao-escrever]', form);
+    const pintarDesistir = () => { if (pers && desistir) desistir.hidden = pers.value.trim() === ''; };
+    if (pers && desistir) { pers.addEventListener('input', pintarDesistir); pintarDesistir(); }
     // ?com=prancha-dupla-face vem da página da prancha: já vem escolhida
     const com = new URLSearchParams(location.search).get('com');
     if (com) $$('input[name="complemento"]', form).forEach((c) => { if (c.value === com) c.checked = true; });
@@ -494,6 +498,7 @@
       }
       await window.PokotoCarrinho.juntar({ produto: slug, complementos: escolhidos(), personalizacao: texto, qtd: quantidade() });
       if (pers) pers.value = '';
+      pintarDesistir();
       form.elements.quantidade.value = 1;
       $$('input[name="complemento"]', form).forEach((c) => { c.checked = false; });
       mostrarTotal();
