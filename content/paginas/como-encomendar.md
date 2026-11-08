@@ -21,7 +21,7 @@ Preencha o nome e, se for envio, a morada. Ao carregar em «Enviar encomenda pel
 
 ## 4. Confirmamos consigo
 
-Respondemos com o total, a forma de pagamento e o prazo. A encomenda fica feita quando a confirmarmos consigo.
+Respondemos com o resumo da encomenda: artigos, total com IVA, portes, prazo e forma de pagamento. A encomenda fica feita quando confirma esse resumo por mensagem; depois enviamos-lhe a confirmação por email.
 
 ## Pagamento
 

@@ -1,6 +1,6 @@
 titulo: Termos e condições
 descricao: As condições das encomendas feitas na Pokóto Wood: quem vende, preços, portes, como se encomenda pelo WhatsApp, prazos, desistência e garantia.
-atualizado: 2026-10-14
+atualizado: 2026-11-08
 ---
 ## Quem vende
 
@@ -12,7 +12,7 @@ Estas condições aplicam-se às encomendas feitas a partir deste site. Nada nel
 
 ## As peças
 
-Todas as peças são feitas por nós, à mão, em madeira. Por isso, cada uma tem pequenas diferenças de outra e da fotografia: os veios e o tom da madeira, a posição de um pormenor gravado. Não são defeitos — é o que distingue uma peça feita à mão.
+Todas as peças são feitas por nós, à mão, em madeira. Por isso, cada uma tem pequenas diferenças de outra e da fotografia: os nós e os veios, pequenas variações de cor e de medida, a posição de um pormenor gravado. São marcas próprias da madeira e do trabalho à mão. Isto não afeta a garantia legal.
 
 As medidas indicadas são aproximadas. As cores no seu ecrã podem não ser exatamente as da peça.
 
@@ -33,11 +33,13 @@ Os portes não estão incluídos no preço dos artigos. Dependem do artigo e do 
 1. Junta ao carrinho os artigos e, se quiser, escreve a personalização de cada um.
 2. No carrinho escolhe a entrega e vê os portes e o total.
 3. Ao carregar em «Enviar encomenda pelo WhatsApp», abre-se o WhatsApp com a encomenda escrita, para a enviar para nós.
-4. Respondemos a confirmar o total, a personalização, a forma de pagamento e o prazo.
+4. Respondemos pelo WhatsApp com o resumo da encomenda: os artigos, o total com IVA, os portes, o prazo e a forma de pagamento.
+5. A encomenda fica feita quando confirma esse resumo por mensagem.
+6. A seguir enviamos-lhe por email, para o endereço que nos indicar, a confirmação da encomenda com estas condições.
 
-**O contrato só fica celebrado quando confirmarmos a encomenda pelo WhatsApp.** Até lá, pode alterá-la ou desistir sem qualquer custo. Se um artigo não puder ser feito, dizemos-lhe antes de confirmar.
+**A encomenda só fica feita quando confirma o nosso resumo por mensagem.** Até lá, pode alterá-la ou desistir sem qualquer custo. Se um artigo não puder ser feito, dizemos-lhe antes de enviar o resumo.
 
-Reservamo-nos o direito de corrigir erros manifestos de preço. Se isso acontecer, avisamos antes de confirmar a encomenda e pode desistir sem qualquer custo.
+Reservamo-nos o direito de corrigir erros manifestos de preço. Se isso acontecer, avisamos no resumo, antes de a encomenda ficar feita, e pode desistir sem qualquer custo.
 
 ## Pagamento
 
@@ -67,7 +69,7 @@ Devolvemos tudo o que pagou, incluindo os portes de envio de valor mais baixo, n
 
 As peças têm a garantia legal de conformidade de 3 anos a contar da entrega (Decreto-Lei n.º 84/2021). Se uma peça não estiver conforme, contacte-nos com uma fotografia: pode ter direito à reparação ou à substituição e, em certos casos, à redução do preço ou ao reembolso. [Ver o aviso da garantia legal](/garantia/).
 
-As diferenças próprias da madeira e do trabalho à mão, descritas acima, não são falta de conformidade.
+Os nós, os veios e as pequenas variações de cor e de medida são marcas próprias da madeira e do trabalho à mão, descritas em «As peças». Isto não afeta a garantia legal.
 
 ## Segurança
 
@@ -79,4 +81,4 @@ Pode reclamar connosco por {{email}} ou no [Livro de Reclamações Eletrónico](
 
 ## Lei aplicável
 
-Aplica-se a lei portuguesa.
+Aplica-se a lei portuguesa, sem prejuízo das normas imperativas do país onde o consumidor reside.

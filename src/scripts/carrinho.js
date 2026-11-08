@@ -298,9 +298,11 @@
   // ---------------------------------------------------------------- a mensagem e o envio
   // (Até 12 out 2026 a mensagem acabava com uma referência ao acaso, «Ref.ª PW-H5292»: não
   // ficava registada em lado nenhum e mudava a cada envio. Saiu, a pedido do Renato.)
+  // Desde 8 nov 2026 leva os portes da zona numa linha própria, o total «com IVA» e a forma de
+  // pagamento (DL 24/2014, arts. 4.º e 5.º): a Pokóto responde com o resumo e o cliente confirma-o.
   function mensagem(cat, c, dados) {
     const z = cat.zonas.find((x) => x.id === estado.zona);
-    const linhas = [`Olá ${cat.marca}! Gostava de fazer esta encomenda:`, ''];
+    const linhas = [`Olá ${cat.marca}! Quero fazer esta encomenda:`, ''];
     for (const d of c.validas) {
       linhas.push(`*${d.linha.qtd}× ${d.p.nome}* — ${euros(d.total)}`);
       for (const x of d.comps) linhas.push(`   + ${x.c.nome}`);
@@ -308,9 +310,11 @@
     }
     linhas.push('');
     linhas.push(`Artigos: ${euros(c.artigos)}`);
-    if (estado.zona === 'levantamento') linhas.push(`Entrega: ${z.nome} (grátis)`);
-    else linhas.push(`Entrega: ${z.nome} — ${c.portesPorConfirmar ? 'portes a confirmar' : euros(c.portes)}`);
-    linhas.push(c.portesPorConfirmar && estado.zona !== 'levantamento' ? `*Total: ${euros(c.artigos)} + portes*` : `*Total: ${euros(c.total)}*`);
+    linhas.push(`Entrega: ${z.nome}`);
+    if (estado.zona === 'levantamento') linhas.push('Portes: grátis');
+    else linhas.push(`Portes: ${c.portesPorConfirmar ? 'a confirmar' : euros(c.portes)}`);
+    linhas.push(c.portesPorConfirmar && estado.zona !== 'levantamento' ? `*Total com IVA: ${euros(c.artigos)} + portes*` : `*Total com IVA: ${euros(c.total)}*`);
+    linhas.push(`Pagamento: ${PAGAMENTO}`);
     linhas.push('');
     linhas.push(`Nome: ${dados.nome}`);
     if (z.morada) linhas.push(`Morada: ${dados.morada}, ${dados.codigoPostal} ${dados.localidade}`);
@@ -322,6 +326,8 @@
     return linhas.join('\n');
   }
   const ORIGENS = { meta: 'Vi o vosso anúncio no Instagram/Facebook.', google: 'Encontrei-vos num anúncio do Google.' };
+  // As formas de pagamento, como em content/site.json › entrega.pagamento (a Célia, 8 out 2026).
+  const PAGAMENTO = 'MB WAY ou transferência bancária';
 
   /* ABRIR O WHATSAPP. No telemóvel, a própria página segue para o wa.me, que é uma ligação
      universal: abre logo a aplicação, e o separador fica no carrinho. No computador, um separador

@@ -353,8 +353,9 @@ export function produto(ctx, p) {
     : `<form class="comprar" data-comprar="${esc(p.slug)}" novalidate>
       ${pers.disponivel ? `<div class="campo">
         <label for="pers-${p.slug}">Personalização${pers.obrigatoria ? '' : ' <span class="campo__opcional">(grátis, opcional)</span>'}</label>
-        <input id="pers-${p.slug}" name="personalizacao" type="text" maxlength="80" autocomplete="off"${pers.obrigatoria ? ' required' : ''} placeholder="${pers.obrigatoria ? 'O nome a gravar' : 'Ex.: o nome ou uma frase'}" aria-describedby="${pers.obrigatoria ? '' : `pers-ajuda-${p.slug} `}pers-aviso-${p.slug}">
+        <input id="pers-${p.slug}" name="personalizacao" type="text" maxlength="80" autocomplete="off"${pers.obrigatoria ? ' required' : ''} placeholder="${pers.obrigatoria ? 'O nome a gravar' : 'Ex.: o nome ou uma frase'}" aria-describedby="${pers.obrigatoria ? '' : `pers-ajuda-${p.slug} `}pers-desistir-${p.slug} pers-aviso-${p.slug}">
         ${pers.obrigatoria ? '' : `<p class="campo__ajuda" id="pers-ajuda-${p.slug}">Para um desenho, descreva a ideia em poucas palavras.</p>`}
+        <p class="campo__ajuda" id="pers-desistir-${p.slug}">${pers.obrigatoria ? 'Com a gravação, a peça é feita para si e não tem os 14 dias para desistir.' : 'Com gravação, a peça é feita para si e não tem os 14 dias para desistir; sem gravação tem.'}</p>
         ${avisoGravacao(ctx, { id: `pers-aviso-${p.slug}` })}
       </div>` : ''}
       ${complementos.length ? `<fieldset class="complementos"><legend>Complete com</legend>${complementos.map((k) => {
@@ -568,10 +569,11 @@ export function carrinho(ctx) {
         <div class="seguir">
           <p class="seguir__titulo">O que acontece a seguir</p>
           <ol>
-            <li>Confirmamos consigo, pelo WhatsApp, o total e o prazo: só aí a encomenda fica feita.</li>
-            <li>Enviamos-lhe os dados para o pagamento.</li>
+            <li>Respondemos pelo WhatsApp com o resumo da encomenda: artigos, total com IVA, portes, prazo e pagamento. A encomenda fica feita quando o confirmar por mensagem; depois enviamos-lhe a confirmação por email.</li>
+            <li>Pagamento por MB WAY ou transferência bancária, na totalidade: enviamos-lhe os dados depois de confirmar.</li>
             <li data-se-gravacao hidden><strong>Uns dias antes do envio, mandamos a maquete da gravação para aprovar: só gravamos depois do seu «sim».</strong></li>
           </ol>
+          <p class="seguir__desistir">As peças com gravação são feitas para si e não têm os 14 dias para desistir; as outras têm.</p>
         </div>
         <p class="encomenda__aviso">${icones.info}<span>Ao carregar no botão abre-se o WhatsApp com a sua encomenda escrita. Nada do que escreve aqui fica guardado neste site. <a href="${ctx.url('/termos-e-condicoes/')}">Termos e condições</a></span></p>
         ${pecaLegal('frase-formulario', fraseFormularioHtml({ urlPolitica: ctx.url('/politica-de-privacidade/'), meses: 36, finalidade: 'preparar a sua encomenda' }))}
@@ -579,7 +581,7 @@ export function carrinho(ctx) {
         <button class="botao botao--whatsapp botao--largo" type="submit">${icones.whatsapp}<span>Enviar encomenda pelo WhatsApp</span></button>
         <div class="encomenda__enviada" data-enviada hidden>
           <p class="encomenda__enviada-cabeca">${icones.certo}<span>Abrimos o WhatsApp com a sua encomenda escrita<span data-enviada-quando></span>.</span></p>
-          <p>Se ainda não carregou em enviar na conversa, faça-o lá. A encomenda fica feita quando a confirmarmos consigo pelo WhatsApp, com o total, o pagamento e o prazo. Se pediu uma gravação, enviamos a maquete para aprovar uns dias antes do envio.</p>
+          <p>Se ainda não carregou em enviar na conversa, faça-o lá. Respondemos com o resumo da encomenda (total com IVA, portes, prazo e pagamento): a encomenda fica feita quando o confirmar por mensagem. Se pediu uma gravação, enviamos a maquete para aprovar uns dias antes do envio.</p>
           ${ctx.site.contactos.instagram ? `<p class="encomenda__instagram">${icones.instagram}<span>Enquanto espera, veja as peças em casa das famílias no nosso Instagram: <a href="https://www.instagram.com/${esc(ctx.site.contactos.instagram)}/" target="_blank" rel="noopener">@${esc(ctx.site.contactos.instagram)}</a></span></p>` : ''}
           <button class="botao botao--whatsapp botao--largo" type="button" data-continuar>${icones.whatsapp}<span>Continuar no WhatsApp</span></button>
           <button class="botao botao--contorno botao--largo" type="button" data-copiar>${icones.copiar}<span>Copiar a mensagem</span></button>
