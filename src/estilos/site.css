@@ -706,7 +706,6 @@ html:has(dialog[open]) { overflow: hidden; }
   .destinatarios td { border: 0; padding: 2px 0; }
   .destinatarios td:first-child { font-weight: 700; }
 }
-.privacidade-formulario { font-size: .88rem; color: var(--tinta-2); margin: 10px 0 14px; }
 .erro { text-align: center; padding-block: 60px; }
 
 /* ------------------------------------------------------------------ movimento */

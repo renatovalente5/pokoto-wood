@@ -3,8 +3,7 @@
 import { esc, euros, precoDe, dataPorExtenso, markdown, inline, textoSimples, numeroWhatsApp, moradaCompleta } from './util.mjs';
 import { icones, ilustracoes } from './icones.mjs';
 import { numeroPortugues, idadeTexto, NOTA_IDADE } from '../lib/regras.mjs';
-import { imagem, preco, cartaoProduto, migalhas, botaoSeta, desconto, promocaoAte, promocaoNota, pecaLegal } from './componentes.mjs';
-import { fraseFormularioHtml } from '../../legal-comum/index.mjs';
+import { imagem, preco, cartaoProduto, migalhas, botaoSeta, desconto, promocaoAte, promocaoNota } from './componentes.mjs';
 
 const produtosDe = (ctx, cat) => ctx.produtos.filter((p) => p.categoria === cat);
 const categoriaDe = (ctx, slug) => ctx.categorias.find((c) => c.slug === slug);
@@ -576,7 +575,6 @@ export function carrinho(ctx) {
           <p class="seguir__desistir">As peças com gravação são feitas para si e não têm os 14 dias para desistir; as outras têm.</p>
         </div>
         <p class="encomenda__aviso">${icones.info}<span>Ao carregar no botão abre-se o WhatsApp com a sua encomenda escrita. Nada do que escreve aqui fica guardado neste site. <a href="${ctx.url('/termos-e-condicoes/')}">Termos e condições</a></span></p>
-        ${pecaLegal('frase-formulario', fraseFormularioHtml({ urlPolitica: ctx.url('/politica-de-privacidade/'), meses: 36, finalidade: 'preparar a sua encomenda' }))}
         <p class="comprar__erro" data-erro-encomenda role="alert" hidden></p>
         <button class="botao botao--whatsapp botao--largo" type="submit">${icones.whatsapp}<span>Enviar encomenda pelo WhatsApp</span></button>
         <div class="encomenda__enviada" data-enviada hidden>
